@@ -11,6 +11,25 @@ import { disposeGroup } from '../scenes/materials.ts';
 import { Morph } from './Morph.ts';
 import type { ViewController } from './ViewController.ts';
 
+/**
+ * Envuelve el modelo y lo escala para que quepa en cada vista sin cortarse,
+ * sea cual sea su tamaño original (procedural o .glb).
+ */
+const FIT_RADIUS = 1.1;
+function fit(model: THREE.Group): THREE.Group {
+  model.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(model);
+  const wrapper = new THREE.Group();
+  wrapper.add(model);
+  if (box.isEmpty()) return wrapper;
+  const center = box.getCenter(new THREE.Vector3());
+  const radius = box.getSize(new THREE.Vector3()).length() / 2 || 1;
+  const k = FIT_RADIUS / radius;
+  wrapper.scale.setScalar(k);
+  wrapper.position.copy(center).multiplyScalar(-k);
+  return wrapper;
+}
+
 export class SceneManager {
   current: SceneModule | null = null;
   private root: THREE.Group | null = null;
@@ -38,7 +57,7 @@ export class SceneManager {
     const next = factory();
     const group = next.build();
     const override = await this.loadOverride(id);
-    const nextRoot = override ?? group;
+    const nextRoot = fit(override ?? group);
     nextRoot.visible = false;
     this.pivot.add(nextRoot);
 

@@ -32,8 +32,8 @@ export const DEFAULT_OPTIONS: HoloOptions = {
   mode: 'piramide',
   mirror: false,
   flip: false,
-  gap: 0.06,
-  viewSize: 0.36,
+  gap: 0.02,
+  viewSize: 0.46,
   rotation: 0,
 };
 
@@ -81,7 +81,10 @@ export class HoloRenderer {
       const rt = new THREE.WebGLRenderTarget(512, 512, { samples: 4 });
       rt.texture.colorSpace = THREE.SRGBColorSpace;
       this.targets.push(rt);
-      const quad = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: rt.texture, toneMapped: false }));
+      const quad = new THREE.Mesh(
+        new THREE.PlaneGeometry(1, 1),
+        new THREE.MeshBasicMaterial({ map: rt.texture, toneMapped: false, alphaTest: 0.5 }),
+      );
       this.quads.push(quad);
       this.composeRoot.add(quad);
     }
@@ -133,8 +136,12 @@ export class HoloRenderer {
         { x: 0, y: offset, rot: 0 },
         { x: -offset, y: 0, rot: -Math.PI / 2 },
       ];
+      // Cada vista se recorta a su cuña (triángulo hacia su cara de la
+      // pirámide) para que las esquinas no se pisen entre vistas.
+      const mask = this.wedgeMask(offset / size, flip);
       placements.forEach((p, i) => {
         const q = this.quads[i];
+        this.setMask(q, mask);
         q.visible = true;
         q.position.set(p.x, p.y, 0);
         q.rotation.z = p.rot;
@@ -144,10 +151,46 @@ export class HoloRenderer {
       const size = short * 0.95;
       this.quads.forEach((q, i) => {
         q.visible = i === 0;
+        this.setMask(q, null);
         q.position.set(0, 0, 0);
         q.rotation.z = 0;
         q.scale.set(size * sx, size * sy, 1);
       });
+    }
+  }
+
+  private mask: THREE.DataTexture | null = null;
+  private maskKey = '';
+
+  /** Máscara en forma de cuña: visible solo donde |x| <= y - yc (en unidades de la vista). */
+  private wedgeMask(centerDist: number, flipped: boolean): THREE.DataTexture {
+    const key = `${centerDist.toFixed(3)}|${flipped}`;
+    if (this.mask && key === this.maskKey) return this.mask;
+    const n = 256;
+    const data = new Uint8Array(n * n * 4);
+    for (let j = 0; j < n; j++) {
+      for (let i = 0; i < n; i++) {
+        const x = (i + 0.5) / n - 0.5;
+        let y = (j + 0.5) / n - 0.5;
+        if (flipped) y = -y;
+        const inside = Math.abs(x) <= y + centerDist;
+        const k = (j * n + i) * 4;
+        const v = inside ? 255 : 0;
+        data[k] = data[k + 1] = data[k + 2] = data[k + 3] = v;
+      }
+    }
+    this.mask?.dispose();
+    this.mask = new THREE.DataTexture(data, n, n, THREE.RGBAFormat);
+    this.mask.needsUpdate = true;
+    this.maskKey = key;
+    return this.mask;
+  }
+
+  private setMask(q: THREE.Mesh, mask: THREE.Texture | null) {
+    const m = q.material as THREE.MeshBasicMaterial;
+    if (m.alphaMap !== mask) {
+      m.alphaMap = mask;
+      m.needsUpdate = true;
     }
   }
 
