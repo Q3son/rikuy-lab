@@ -125,6 +125,11 @@ export class HoloRenderer {
     const sx = mirror ? -1 : 1;
     const sy = flip ? -1 : 1;
 
+    // En la pirámide la cuña se angosta hacia el centro: se sube el modelo
+    // hacia la parte ancha de cada cara para que no se recorte.
+    const lift = mode === 'piramide' ? -0.3 : 0;
+    for (const cam of this.cameras) cam.lookAt(0, lift, 0);
+
     if (mode === 'piramide') {
       const size = short * viewSize;
       const offset = short * gap + size / 2;
