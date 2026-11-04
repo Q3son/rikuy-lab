@@ -22,7 +22,7 @@ import { HandGestures } from '../input/gestures.ts';
 import { handleUtterance } from '../session.ts';
 import { STATIC } from '../env.ts';
 
-const OPTS_KEY = 'rikuy.holo';
+const OPTS_KEY = 'rikuy.holo.v2';
 const params = new URLSearchParams(location.search);
 const room = roomFromUrl();
 localStorageSet('rikuy.sala', room);
