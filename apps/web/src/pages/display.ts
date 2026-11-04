@@ -20,6 +20,7 @@ import { attachTouchpad } from '../input/touch.ts';
 import { VoiceInput, speak, voiceSupported } from '../input/voice.ts';
 import { HandGestures } from '../input/gestures.ts';
 import { handleUtterance } from '../session.ts';
+import { STATIC } from '../env.ts';
 
 const OPTS_KEY = 'rikuy.holo';
 const params = new URLSearchParams(location.search);
@@ -198,7 +199,7 @@ function renderSettings() {
     .join('');
   panel.innerHTML = `
     <div class="row" style="justify-content:space-between"><h2>Rikuy Lab · display</h2><button data-close aria-label="Cerrar ajustes">✕</button></div>
-    <p class="muted">Sala <b>${room}</b> · <span class="pill ${bus.connected ? 'ok' : 'off'}">${bus.connected ? 'en línea' : 'solo local'}</span></p>
+    <p class="muted">Sala <b>${room}</b> · <span class="pill ${bus.connected ? 'ok' : 'off'}">${bus.connected ? 'en línea' : STATIC ? 'sin servidor' : 'solo local'}</span></p>
 
     <h3>Tipo de proyector</h3>
     <div class="seg">${modes.map(([id, l]) => `<button data-mode="${id}" class="${o.mode === id ? 'on' : ''}">${l}</button>`).join('')}</div>
@@ -231,7 +232,7 @@ function renderSettings() {
 
     <h3>Sala</h3>
     <div class="row"><input type="text" value="${room}" data-room style="flex:1"><button data-room-go>Cambiar</button></div>
-    <p class="muted" style="font-size:13px">Abre <b>${location.origin}/control.html?sala=${room}</b> en otro celular para manejarlo a distancia.</p>
+    <p class="muted" style="font-size:13px">${STATIC ? 'Versión sin servidor: usa el micrófono 🎙 y el toque en este mismo celular.' : `Abre <b>${new URL(`control.html?sala=${room}`, location.href).href}</b> en otro celular para manejarlo a distancia.`}</p>
     <p class="muted" style="font-size:12px">Teclas: flechas girar · +/- zoom · M espejo · F voltear · espacio micrófono · S ajustes</p>
   `;
 }

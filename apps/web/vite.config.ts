@@ -8,6 +8,9 @@ import { resolve } from 'node:path';
  * avisa del certificado propio: "Avanzado" → "Continuar".
  */
 export default defineConfig({
+  // Rutas relativas: funciona en la raíz del servidor del aula y en
+  // subcarpetas como https://q3son.github.io/rikuy-lab/
+  base: './',
   plugins: [basicSsl()],
   server: {
     host: true,

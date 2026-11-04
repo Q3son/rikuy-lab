@@ -9,10 +9,10 @@ document.querySelectorAll<HTMLAnchorElement>('[data-role]').forEach((a) => {
     e.preventDefault();
     const v = sala.value.trim().toLowerCase() || 'aula1';
     localStorageSet('rikuy.sala', v);
-    location.href = `/${a.dataset.role}?sala=${encodeURIComponent(v)}`;
+    location.href = `${a.dataset.role}?sala=${encodeURIComponent(v)}`;
   });
 });
 
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
+  navigator.serviceWorker.register('sw.js').catch(() => {});
 }
