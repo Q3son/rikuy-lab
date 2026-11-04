@@ -1,0 +1,26 @@
+{
+  "name": "rikuy-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Laboratorio de ciencias holográfico y agéntico para colegios sin laboratorio (Hack4Edu 2026, Reto 17).",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,magenta \"npm run dev -w @rikuy/server\" \"npm run dev -w @rikuy/web\"",
+    "build": "npm run build -w @rikuy/core && npm run build -w @rikuy/web && npm run build -w @rikuy/server",
+    "start": "npm run start -w @rikuy/server",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
