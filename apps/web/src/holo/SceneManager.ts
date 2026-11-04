@@ -15,7 +15,7 @@ import type { ViewController } from './ViewController.ts';
  * Envuelve el modelo y lo escala para que quepa en cada vista sin cortarse,
  * sea cual sea su tamaño original (procedural o .glb).
  */
-const FIT_RADIUS = 1.0;
+const FIT_RADIUS = 1.05;
 function fit(model: THREE.Group): THREE.Group {
   model.updateMatrixWorld(true);
   const box = new THREE.Box3().setFromObject(model);
