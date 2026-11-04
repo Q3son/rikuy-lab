@@ -35,11 +35,11 @@ export class HandGestures {
 
   async start(facingMode: 'user' | 'environment' = 'user') {
     this.ev.onStatus('Cargando modelo de manos…');
-    const local = await exists('/mediapipe/gesture_recognizer.task');
+    const local = await exists('mediapipe/gesture_recognizer.task');
     const { FilesetResolver, GestureRecognizer } = await import('@mediapipe/tasks-vision');
-    const files = await FilesetResolver.forVisionTasks(local ? '/mediapipe/wasm' : WASM);
+    const files = await FilesetResolver.forVisionTasks(local ? new URL('mediapipe/wasm', location.href).href : WASM);
     this.recognizer = await GestureRecognizer.createFromOptions(files, {
-      baseOptions: { modelAssetPath: local ? '/mediapipe/gesture_recognizer.task' : MODEL, delegate: 'GPU' },
+      baseOptions: { modelAssetPath: local ? 'mediapipe/gesture_recognizer.task' : MODEL, delegate: 'GPU' },
       runningMode: 'VIDEO',
       numHands: 1,
     });

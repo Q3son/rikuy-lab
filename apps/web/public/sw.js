@@ -2,13 +2,13 @@
 // Las llamadas a /api y /ws siempre van a la red.
 const CACHE = 'rikuy-v1';
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['/', '/display.html', '/control.html', '/panel.html'])).catch(() => {}));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['./', 'display.html', 'control.html', 'panel.html'])).catch(() => {}));
   self.skipWaiting();
 });
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
-  if (e.request.method !== 'GET' || url.pathname.startsWith('/api') || url.pathname.startsWith('/ws')) return;
+  if (e.request.method !== 'GET' || url.pathname.includes('/api/') || url.pathname.endsWith('/ws')) return;
   e.respondWith(
     fetch(e.request)
       .then((res) => {
@@ -18,6 +18,6 @@ self.addEventListener('fetch', (e) => {
         }
         return res;
       })
-      .catch(() => caches.match(e.request).then((r) => r || caches.match('/'))),
+      .catch(() => caches.match(e.request).then((r) => r || caches.match('./'))),
   );
 });
