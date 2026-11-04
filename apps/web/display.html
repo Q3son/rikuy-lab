@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <title>Rikuy Lab · proyector</title>
+</head>
+<body class="display">
+  <canvas id="holo"></canvas>
+  <button class="corner tl" id="gear" aria-label="Ajustes">⚙</button>
+  <button class="corner br" id="mic" aria-label="Hablar">🎙</button>
+  <div id="caption"></div>
+  <video id="gestureCam" playsinline muted></video>
+  <aside id="settings"></aside>
+  <script type="module" src="/src/pages/display.ts"></script>
+</body>
+</html>
