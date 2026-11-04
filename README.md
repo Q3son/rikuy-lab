@@ -19,6 +19,14 @@ sin dar la respuesta. El docente ve en un panel qué está entendiendo cada grup
 | **Panel docente** (`panel.html`) | Tipos de pregunta, razonamiento (variable · predicción · justificación), mapa de conceptos explorados, frases que sustentan cada indicador y una sugerencia por grupo. Orienta, no califica. |
 | **Tutor** (`apps/server`) | Agente con herramientas (`ir_a`, `fijar_variable`, `rotar`, `zoom`, `dar_pista`...). Funciona con Claude, con un modelo local vía Ollama o, sin nada, con un agente de reglas. |
 
+## Probar solo con el celular
+
+Abrir **https://q3son.github.io/rikuy-lab/** en Chrome, elegir *Proyector*, poner el
+celular bajo la pirámide o la cajita y usar el micrófono 🎙 de la esquina.
+Esta versión no necesita laptop ni servidor: el tutor de reglas corre en el navegador.
+Para que otro celular sea el control remoto y para el panel docente con varios grupos,
+hace falta el servidor (sección siguiente).
+
 ## Arrancar
 
 Requisitos: Node.js 22 o superior.
