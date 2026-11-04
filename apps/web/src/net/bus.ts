@@ -5,6 +5,7 @@
  * Si el servidor no responde, sigue funcionando en local y reintenta.
  */
 import type { BusMessage, Role } from '@rikuy/core';
+import { STATIC } from '../env.ts';
 
 type Handler = (msg: BusMessage) => void;
 
@@ -24,9 +25,12 @@ export class Bus {
   }
 
   private connect() {
+    if (STATIC) return; // sin servidor: solo BroadcastChannel
     const proto = location.protocol === 'https:' ? 'wss' : 'ws';
     try {
-      this.ws = new WebSocket(`${proto}://${location.host}/ws`);
+      const url = new URL('ws', location.href);
+      url.protocol = `${proto}:`;
+      this.ws = new WebSocket(url);
     } catch {
       this.scheduleReconnect();
       return;

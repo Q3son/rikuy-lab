@@ -6,6 +6,7 @@
 import '../style.css';
 import { CONCEPTS, conceptById, summarize, type ClassSummary, type LearningEvent } from '@rikuy/core';
 import { Bus, roomFromUrl } from '../net/bus.ts';
+import { STATIC } from '../env.ts';
 
 const room = roomFromUrl();
 const bus = new Bus(room, 'panel');
@@ -25,14 +26,15 @@ const TYPE_LABEL: Record<string, string> = {
 
 async function load() {
   try {
-    const res = await fetch(`/api/dashboard?room=${encodeURIComponent(room)}`);
+    if (STATIC) throw new Error('sin servidor');
+    const res = await fetch(`api/dashboard?room=${encodeURIComponent(room)}`);
     if (!res.ok) throw new Error();
     data = (await res.json()) as ClassSummary;
     source = 'servidor';
   } catch {
     // Sin servidor: se resume lo que llegó por el bus en este navegador.
     data = summarize(live);
-    source = 'solo esta red local';
+    source = STATIC ? 'este navegador (versión sin servidor)' : 'este navegador (servidor no disponible)';
   }
   render();
 }
@@ -104,7 +106,7 @@ function render() {
     <div class="row" style="justify-content:space-between">
       <div><h1>Panel docente · sala ${esc(room)}</h1>
       <span class="muted">Orienta tu intervención; no es una nota. Datos: ${source}. Grupos con seudónimo.</span></div>
-      <div class="row"><button id="refresh">Actualizar</button><a href="/api/dashboard?room=${encodeURIComponent(room)}" target="_blank"><button>JSON</button></a></div>
+      <div class="row"><button id="refresh">Actualizar</button><a href="api/dashboard?room=${encodeURIComponent(room)}" target="_blank"><button>JSON</button></a></div>
     </div>
     <div class="kpis">
       <div class="card kpi"><div class="v">${n}</div><div class="l">grupos activos</div></div>

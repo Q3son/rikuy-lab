@@ -3,6 +3,7 @@
  * Los eventos se guardan en el dispositivo y se sincronizan cuando hay red.
  */
 import type { LearningEvent } from '@rikuy/core';
+import { STATIC } from '../env.ts';
 import { localStorageGet, localStorageSet, type Bus } from '../net/bus.ts';
 
 const KEY = 'rikuy.cola';
@@ -38,9 +39,9 @@ export class Tracker {
 
   async flush() {
     const queue = this.queue();
-    if (!queue.length) return;
+    if (STATIC || !queue.length) return;
     try {
-      const res = await fetch(`/api/events?room=${encodeURIComponent(this.bus.room)}`, {
+      const res = await fetch(`api/events?room=${encodeURIComponent(this.bus.room)}`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ events: queue }),
