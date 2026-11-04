@@ -26,15 +26,18 @@ export interface HoloOptions {
   viewSize: number;
   /** Rotación de toda la composición, en grados (para alinear con la pirámide). */
   rotation: number;
+  /** Encuadre: 9:16 (como los videos verticales) o toda la pantalla. */
+  aspect: '9:16' | 'libre';
 }
 
 export const DEFAULT_OPTIONS: HoloOptions = {
   mode: 'piramide',
   mirror: false,
   flip: false,
-  gap: 0.02,
-  viewSize: 0.46,
+  gap: 0,
+  viewSize: 0.33,
   rotation: 0,
+  aspect: '9:16',
 };
 
 export class HoloRenderer {
@@ -112,7 +115,20 @@ export class HoloRenderer {
     this.layout();
   }
 
-  /** Coloca las vistas en coordenadas de píxeles (cámara ortográfica = pantalla). */
+  /** Rectángulo útil: 9:16 centrado (16:9 si el celular está horizontal) o toda la pantalla. */
+  private frame() {
+    const w = this.width;
+    const h = this.height;
+    if (this.options.aspect === 'libre') return { w, h };
+    const ratio = w >= h ? 16 / 9 : 9 / 16;
+    return w / h > ratio ? { w: h * ratio, h } : { w, h: w / ratio };
+  }
+
+  /**
+   * Coloca las vistas en coordenadas de píxeles (cámara ortográfica = pantalla).
+   * Pirámide: cuadrícula de 3 × 3 con el centro vacío; las 4 vistas nunca se
+   * tocan, así cada cara de la pirámide refleja solo la suya.
+   */
   private layout() {
     const { mode, mirror, flip, gap, viewSize, rotation } = this.options;
     const w = this.width;
@@ -121,18 +137,18 @@ export class HoloRenderer {
     this.composeCamera.updateProjectionMatrix();
     this.composeRoot.rotation.z = THREE.MathUtils.degToRad(rotation);
 
-    const short = Math.min(w, h);
+    const f = this.frame();
+    const short = Math.min(f.w, f.h);
     const sx = mirror ? -1 : 1;
     const sy = flip ? -1 : 1;
-
-    // En la pirámide la cuña se angosta hacia el centro: se sube el modelo
-    // hacia la parte ancha de cada cara para que no se recorte.
-    const lift = mode === 'piramide' ? -0.3 : 0;
-    for (const cam of this.cameras) cam.lookAt(0, lift, 0);
+    this.directCamera.aspect = f.w / f.h;
+    this.directCamera.updateProjectionMatrix();
 
     if (mode === 'piramide') {
-      const size = short * viewSize;
-      const offset = short * gap + size / 2;
+      const extra = short * gap;
+      // Que la cruz completa (1.5 vistas + hueco a cada lado) quepa en el lado corto.
+      const size = Math.min(short * viewSize, (short / 2 - extra) / 1.5);
+      const offset = size + extra;
       // Orden: abajo, derecha, arriba, izquierda. El "arriba" de cada vista
       // apunta hacia afuera del centro: así el reflejo queda de pie.
       const placements = [
@@ -141,12 +157,8 @@ export class HoloRenderer {
         { x: 0, y: offset, rot: 0 },
         { x: -offset, y: 0, rot: -Math.PI / 2 },
       ];
-      // Cada vista se recorta a su cuña (triángulo hacia su cara de la
-      // pirámide) para que las esquinas no se pisen entre vistas.
-      const mask = this.wedgeMask(offset / size, flip);
       placements.forEach((p, i) => {
         const q = this.quads[i];
-        this.setMask(q, mask);
         q.visible = true;
         q.position.set(p.x, p.y, 0);
         q.rotation.z = p.rot;
@@ -156,46 +168,10 @@ export class HoloRenderer {
       const size = short * 0.95;
       this.quads.forEach((q, i) => {
         q.visible = i === 0;
-        this.setMask(q, null);
         q.position.set(0, 0, 0);
         q.rotation.z = 0;
         q.scale.set(size * sx, size * sy, 1);
       });
-    }
-  }
-
-  private mask: THREE.DataTexture | null = null;
-  private maskKey = '';
-
-  /** Máscara en forma de cuña: visible solo donde |x| <= y - yc (en unidades de la vista). */
-  private wedgeMask(centerDist: number, flipped: boolean): THREE.DataTexture {
-    const key = `${centerDist.toFixed(3)}|${flipped}`;
-    if (this.mask && key === this.maskKey) return this.mask;
-    const n = 256;
-    const data = new Uint8Array(n * n * 4);
-    for (let j = 0; j < n; j++) {
-      for (let i = 0; i < n; i++) {
-        const x = (i + 0.5) / n - 0.5;
-        let y = (j + 0.5) / n - 0.5;
-        if (flipped) y = -y;
-        const inside = Math.abs(x) <= y + centerDist;
-        const k = (j * n + i) * 4;
-        const v = inside ? 255 : 0;
-        data[k] = data[k + 1] = data[k + 2] = data[k + 3] = v;
-      }
-    }
-    this.mask?.dispose();
-    this.mask = new THREE.DataTexture(data, n, n, THREE.RGBAFormat);
-    this.mask.needsUpdate = true;
-    this.maskKey = key;
-    return this.mask;
-  }
-
-  private setMask(q: THREE.Mesh, mask: THREE.Texture | null) {
-    const m = q.material as THREE.MeshBasicMaterial;
-    if (m.alphaMap !== mask) {
-      m.alphaMap = mask;
-      m.needsUpdate = true;
     }
   }
 
@@ -204,7 +180,12 @@ export class HoloRenderer {
     if (mode === 'normal') {
       this.renderer.setRenderTarget(null);
       this.renderer.domElement.style.transform = `scale(${mirror ? -1 : 1}, ${flip ? -1 : 1})`;
+      const f = this.frame();
+      this.renderer.setViewport(0, 0, this.width, this.height);
+      this.renderer.clear();
+      this.renderer.setViewport((this.width - f.w) / 2, (this.height - f.h) / 2, f.w, f.h);
       this.renderer.render(this.scene, this.directCamera);
+      this.renderer.setViewport(0, 0, this.width, this.height);
       return;
     }
     this.renderer.domElement.style.transform = '';

@@ -22,7 +22,7 @@ import { HandGestures } from '../input/gestures.ts';
 import { handleUtterance } from '../session.ts';
 import { STATIC } from '../env.ts';
 
-const OPTS_KEY = 'rikuy.holo.v2';
+const OPTS_KEY = 'rikuy.holo.v3';
 const params = new URLSearchParams(location.search);
 const room = roomFromUrl();
 localStorageSet('rikuy.sala', room);
@@ -213,11 +213,17 @@ function renderSettings() {
     </div>
     <p class="muted" style="font-size:13px">Si el texto o el modelo se ven al revés en la lámina, activa Espejo. Si sale de cabeza, Voltear.</p>
 
+    <h3>Encuadre</h3>
+    <div class="seg" style="grid-template-columns:repeat(2,1fr)">
+      <button data-aspect="9:16" class="${o.aspect === '9:16' ? 'on' : ''}">9:16</button>
+      <button data-aspect="libre" class="${o.aspect === 'libre' ? 'on' : ''}">Pantalla completa</button>
+    </div>
+
     <h3>Tamaño</h3>
     <label class="var"><span class="muted">Tamaño de cada vista</span>
-      <input type="range" min="0.2" max="0.5" step="0.01" value="${o.viewSize}" data-range="viewSize"></label>
-    <label class="var"><span class="muted">Hueco central</span>
-      <input type="range" min="0" max="0.25" step="0.005" value="${o.gap}" data-range="gap"></label>
+      <input type="range" min="0.15" max="0.34" step="0.005" value="${o.viewSize}" data-range="viewSize"></label>
+    <label class="var"><span class="muted">Separación extra</span>
+      <input type="range" min="0" max="0.12" step="0.005" value="${o.gap}" data-range="gap"></label>
     <button data-reset-opts>Restablecer proyección</button>
 
     <h3>Escena</h3>
@@ -242,6 +248,7 @@ panel.addEventListener('click', (e) => {
   if (!t) return;
   if ('close' in t.dataset) toggleSettings();
   else if (t.dataset.mode) setOpt({ mode: t.dataset.mode as HoloMode });
+  else if (t.dataset.aspect) setOpt({ aspect: t.dataset.aspect as HoloOptions['aspect'] });
   else if (t.dataset.toggle === 'mirror') setOpt({ mirror: !holo.options.mirror });
   else if (t.dataset.toggle === 'flip') setOpt({ flip: !holo.options.flip });
   else if ('rot' in t.dataset) setOpt({ rotation: (holo.options.rotation + 90) % 360 });
