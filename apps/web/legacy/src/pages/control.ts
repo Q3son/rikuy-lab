@@ -9,7 +9,7 @@ import '../style.css';
 import { PRACTICES, practiceById, type AgentContext, type Command, type DisplayState } from '@rikuy/core';
 import { Bus, localStorageGet, localStorageSet, roomFromUrl } from '../net/bus.ts';
 import { Tracker } from '../analytics/tracker.ts';
-import { attachTouchpad } from '../input/touch.ts';
+import { attachTouchpad } from '@rikuy/holo/engine';
 import { VoiceInput, speak } from '../input/voice.ts';
 import { HandGestures } from '../input/gestures.ts';
 import { handleUtterance } from '../session.ts';

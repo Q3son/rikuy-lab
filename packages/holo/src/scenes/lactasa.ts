@@ -7,7 +7,7 @@
  * real (AlphaFold P09848) en formato PDB sin cambiar esta interfaz.
  */
 import * as THREE from 'three';
-import { lactaseActivity, lactaseUnfolding } from '@rikuy/core';
+import { lactaseActivity, lactaseUnfolding } from './physics.ts';
 import type { SceneModule } from './types.ts';
 import { PALETTE, at, holo, pulse } from './materials.ts';
 

@@ -4,7 +4,7 @@
  * péndulo real; ver input/motion.ts.
  */
 import * as THREE from 'three';
-import { pendulumAngle, pendulumPeriod } from '@rikuy/core';
+import { pendulumAngle, pendulumPeriod } from './physics.ts';
 import type { SceneModule } from './types.ts';
 import { PALETTE, at, holo } from './materials.ts';
 
