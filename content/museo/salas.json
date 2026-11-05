@@ -1,0 +1,9 @@
+[
+  { "id": "sala-fisica", "area": "ciencia-y-tecnologia", "competencia": 2, "plantilla": "sala-tematica", "titulo": { "es": "Física", "quy": "Kallpa" } },
+  { "id": "sala-biologia", "area": "ciencia-y-tecnologia", "competencia": 2, "plantilla": "sala-tematica", "titulo": { "es": "Biología", "quy": "Kawsay" } },
+  { "id": "sala-quimica", "area": "ciencia-y-tecnologia", "competencia": 2, "plantilla": "sala-tematica", "titulo": { "es": "Química", "quy": "Tikray" } },
+  { "id": "sala-tierra", "area": "ciencia-y-tecnologia", "competencia": 2, "plantilla": "sala-tematica", "titulo": { "es": "Tierra y ambiente", "quy": "Pacha" } },
+  { "id": "sala-taller", "area": "ciencia-y-tecnologia", "competencia": 3, "plantilla": "sala-tematica", "titulo": { "es": "Taller" } },
+  { "id": "patio", "area": "juegos", "plantilla": "patio", "titulo": { "es": "Patio de juegos" } },
+  { "id": "auditorio", "area": "reuniones", "plantilla": "auditorio", "titulo": { "es": "Auditorio" } }
+]
