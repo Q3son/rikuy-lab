@@ -292,7 +292,7 @@ describe('announcements through live regions', () => {
         vi.advanceTimersByTime(1100);
       });
       act(() => result.current('Oscilación 3', 'polite', { clave: 'cronometro' }));
-      expect(screen.getByRole('status').textContent?.replace(/​/g, '')).toBe('Oscilación 3');
+      expect(screen.getByRole('status').textContent?.replaceAll(String.fromCharCode(0x200b), '')).toBe('Oscilación 3');
     } finally {
       vi.useRealTimers();
     }
@@ -311,7 +311,7 @@ describe('announcements through live regions', () => {
     const primero = screen.getByRole('status').textContent;
     act(() => result.current('Enviado.'));
     expect(screen.getByRole('status').textContent).not.toBe(primero);
-    expect(screen.getByRole('status').textContent?.replace(/​/g, '')).toBe('Enviado.');
+    expect(screen.getByRole('status').textContent?.replaceAll(String.fromCharCode(0x200b), '')).toBe('Enviado.');
   });
 });
 

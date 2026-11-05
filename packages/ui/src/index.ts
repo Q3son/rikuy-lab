@@ -32,3 +32,4 @@ export { ESCALAS_TEXTO, escalaSiguiente, normalizarEscala, porcentajeEscala, typ
 export { crearHaptica, PATRONES_HAPTICOS, type Haptica, type PatronHaptico } from './a11y/haptica.ts';
 export { TextoResaltado, type RangoResaltado } from './components/texto-resaltado.tsx';
 export { OpcionesRadio, type OpcionRadio } from './components/ui/opciones-radio.tsx';
+export { ConstructorFrases, type EtiquetasConstructor, type Pictograma } from './components/constructor-frases.tsx';

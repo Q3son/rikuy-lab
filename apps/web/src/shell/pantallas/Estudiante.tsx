@@ -2,6 +2,8 @@ import { Button, Chip, HallSign, KnotIcon, Mascot, type SalaId } from '@rikuy/ui
 import { QrCode } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { efectosDeNivel } from '../nivel.ts';
+import { ConstructorDeFrases } from '../frases/ConstructorDeFrases.tsx';
 import { TarjetaNarrable } from '../TarjetaNarrable.tsx';
 import { useSesion } from '../sesion.ts';
 import { AjustesGenerales } from './AjustesGenerales.tsx';
@@ -30,12 +32,33 @@ export function Museo() {
 /** E-22 Lab home: continue the exhibit in progress. Empty until F3 reports one. */
 export function Lab() {
   const { t } = useTranslation();
-  return (
+  const conApoyo = efectosDeNivel(useSesion((s) => s.nivel)).pictogramas;
+  const inicio = (
     <TarjetaNarrable id="lab-vacio" titulo={t('lab.vacio.titulo')} texto={t('lab.vacio.texto')}>
       <Button asChild className="mt-3 w-full" size="lg">
         <Link to="/museo">{t('lab.irMuseo')}</Link>
       </Button>
     </TarjetaNarrable>
+  );
+  const frases = (
+    <div className="flex flex-col gap-2">
+      <h2 className="m-0 text-title-sm font-bold">
+        {t('frases.titulo')}
+      </h2>
+      <ConstructorDeFrases />
+    </div>
+  );
+  // With support the pictogram builder comes first: it is the main way to say a prediction.
+  return conApoyo ? (
+    <>
+      {frases}
+      {inicio}
+    </>
+  ) : (
+    <>
+      {inicio}
+      {frases}
+    </>
   );
 }
 
