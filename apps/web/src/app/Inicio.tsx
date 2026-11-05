@@ -56,9 +56,6 @@ export function Inicio() {
         ))}
       </div>
 
-      <a href="./clasico.html" className="rk-hit mt-auto inline-flex items-center justify-center rounded-ctl border-2 border-line-strong px-4 text-body font-semibold text-primary">
-        {t('roles.clasico')}
-      </a>
     </main>
   );
 }

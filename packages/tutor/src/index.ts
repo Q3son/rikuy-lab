@@ -21,3 +21,5 @@ export * from './reglas/recuerdos.ts';
 export * from './result.ts';
 export * from './texto.ts';
 export * from './validar.ts';
+export * from './dialogo/guiones.ts';
+export * from './dialogo/motor.ts';

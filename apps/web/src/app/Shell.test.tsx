@@ -12,12 +12,12 @@ import { renderApp } from '../test-utils.tsx';
 const GRUPO = { rol: 'grupo', codigo: 'ABC123', apodo: 'Puma' } as const;
 
 describe('entry: role selection', () => {
-  it('shows the Rikuy heading, two roles and keeps the classic hologram reachable', async () => {
+  it('shows the Rikuy heading and two roles; the classic hologram is a backup reachable only by URL', async () => {
     await renderApp('/');
     expect(screen.getByRole('heading', { level: 1, name: 'Rikuy' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Soy docente/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Somos un grupo/ })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /holográfico/ })).toHaveAttribute('href', './clasico.html');
+    expect(screen.queryByRole('link', { name: /holográfico/ })).toBeNull();
     expect(screen.queryByRole('tablist')).toBeNull();
   });
 
