@@ -1,5 +1,6 @@
 import { createElement } from 'react';
 import type { RouteObject } from 'react-router';
+import { TableroAyudas } from './ayudante/TableroAyudas.tsx';
 import { ListaMuseo } from './ListaMuseo.tsx';
 import { MuseoPagina } from './MuseoPagina.tsx';
 
@@ -7,5 +8,7 @@ import { MuseoPagina } from './MuseoPagina.tsx';
 export const rutas: RouteObject[] = [
   { path: 'museo', element: createElement(MuseoPagina) },
   { path: 'museo/lista', element: createElement(ListaMuseo) },
+  // T-23, teacher view of the help flows (F6 may embed TableroAyudas in its panel)
+  { path: 'museo/ayudas', element: createElement(TableroAyudas) },
   { path: 'museo/:salaId', element: createElement(MuseoPagina) },
 ];

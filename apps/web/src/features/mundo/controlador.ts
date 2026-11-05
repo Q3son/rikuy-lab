@@ -18,6 +18,7 @@ export class ControladorMundo {
   dir = 6;
   camino: Punto[] = [];
   private objetivo: Destino | null = null;
+  private abrirAlLlegar = true;
 
   constructor(
     readonly escena: Escena,
@@ -27,13 +28,15 @@ export class ControladorMundo {
     this.pos = inicio ?? { ...escena.aparicion };
   }
 
-  irA(destinoId: string): boolean {
+  /** Walks to a destination; with `abrir: false` the group only meets there (Ayudante del museo). */
+  irA(destinoId: string, { abrir = true }: { abrir?: boolean } = {}): boolean {
     const d = this.escena.destinos.find((x) => x.id === destinoId);
     if (!d) return false;
     const camino = caminoHacia(this.escena.grilla, this.pos, d.rect, ALCANCE);
     if (!camino) return false;
     this.camino = camino;
     this.objetivo = d;
+    this.abrirAlLlegar = abrir;
     if (camino.length === 0) this.llegar();
     return true;
   }
@@ -85,6 +88,6 @@ export class ControladorMundo {
   private llegar() {
     const d = this.objetivo;
     this.objetivo = null;
-    if (d) this.alLlegar(d);
+    if (d && this.abrirAlLlegar) this.alLlegar(d);
   }
 }

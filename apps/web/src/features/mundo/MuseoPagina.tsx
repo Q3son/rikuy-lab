@@ -11,6 +11,8 @@ import { ControladorMundo } from './controlador.ts';
 import { registroMuseo, visita } from './eventos.ts';
 import { GRUPO_DEMO } from './grupo.ts';
 import { Glifo, Rikuy } from './Iconos.tsx';
+import { PanelAyudante } from './ayudante/PanelAyudante.tsx';
+import { useAyudante } from './ayudante/servicio.ts';
 import { colorDeSala } from './paleta.ts';
 import { Reacciones } from './presencia/Reacciones.tsx';
 import { usePresencia } from './presencia/usePresencia.ts';
@@ -52,6 +54,7 @@ export function MuseoPagina() {
   const simulados = sim !== null && /^\d{1,3}$/.test(sim) ? Number(sim) : null;
   const [saludo] = useState(primeraVisita);
   const presencia = usePresencia(museo, escena?.id ?? 'vestibulo', simulados);
+  const ayudante = useAyudante((s) => s.estado);
   const animado = useRef(false);
   const alActivar = useCallback((activo: boolean) => {
     animado.current = activo;
@@ -97,6 +100,10 @@ export function MuseoPagina() {
       : {}),
   });
   const sugerencia = direccion.senalar ? controlador.caminoA(direccion.senalar) : [];
+  const exhibicionesSala = escena.destinos.filter((d) => d.tipo === 'exhibicion' && d.exhibicionId);
+  const exhibicionAyuda =
+    exhibicionesSala.find((d) => d.exhibicionId === EXHIBICION_DEL_DIA)?.exhibicionId ?? exhibicionesSala[0]?.exhibicionId ?? EXHIBICION_DEL_DIA;
+  const pidoAyuda = ayudante.pedidos.some((p) => p.grupoPideId === GRUPO_DEMO.id && ['ofrecido', 'en_curso', 'escalado'].includes(p.estado));
 
   const ir = (d: Destino) => {
     if (textoBloqueo(d)) return;
@@ -135,6 +142,7 @@ export function MuseoPagina() {
             etiqueta: GRUPO_DEMO.apodo,
             integrantes: GRUPO_DEMO.integrantes,
             propio: true,
+            pideAyuda: pidoAyuda,
           }),
           otros: presencia.otros,
           alPaso: () => presencia.actualizar(controlador.pos.x, controlador.pos.y, controlador.dir),
@@ -178,6 +186,18 @@ export function MuseoPagina() {
           </li>
         </ul>
       </nav>
+
+      {ayudante.config.activo && escena.id === 'vestibulo' && (
+        <p className="rk-chip" style={{ margin: '0 16px' }}>
+          El Ayudante del museo está encendido: pueden pedir y dar ayuda entre grupos.
+        </p>
+      )}
+      <PanelAyudante
+        exhibicionId={exhibicionAyuda}
+        {...(escena.destinos.some((d) => d.exhibicionId === exhibicionAyuda)
+          ? { alIrAExhibicion: () => controlador.irA(`exh-${exhibicionAyuda}`, { abrir: false }) }
+          : {})}
+      />
 
       <Reacciones alReaccionar={presencia.reaccionar} />
     </main>
