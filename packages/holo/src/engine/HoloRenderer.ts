@@ -89,8 +89,9 @@ export class HoloRenderer {
     for (let i = 0; i < 4; i++) {
       const cam = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
       const a = (i * Math.PI) / 2;
-      cam.position.set(Math.sin(a) * 4.45, 0.5, Math.cos(a) * 4.45);
-      cam.lookAt(0, -0.12, 0);
+      // Tight framing: the exhibit fills each small pyramid view (the views fade out at the border).
+      cam.position.set(Math.sin(a) * 4.0, 0.45, Math.cos(a) * 4.0);
+      cam.lookAt(0, -0.24, 0);
       this.cameras.push(cam);
       const rt = new THREE.WebGLRenderTarget(512, 512, { samples: 4 });
       rt.texture.colorSpace = THREE.SRGBColorSpace;
@@ -128,8 +129,8 @@ export class HoloRenderer {
     this.composeRoot.add(this.guides);
     this.composeScene.add(this.composeRoot);
     this.composeCamera.position.z = 5;
-    this.directCamera.position.set(0, 0.45, 4.3);
-    this.directCamera.lookAt(0, -0.1, 0);
+    this.directCamera.position.set(0, 0.4, 4.0);
+    this.directCamera.lookAt(0, -0.14, 0);
 
     this.resize();
     window.addEventListener('resize', this.onResize);

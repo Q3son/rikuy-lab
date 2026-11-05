@@ -24,6 +24,8 @@ export default function VisorExhibicion3D({
   variables,
   onEstado,
   espejo = false,
+  guias = false,
+  tamanoVista,
   sinMarco = false,
   etiqueta,
 }: VisorExhibicionProps) {
@@ -81,8 +83,8 @@ export default function VisorExhibicion3D({
   }, []);
 
   useEffect(() => {
-    engineRef.current?.holo.setOptions({ mode: rendererModeFor(modo), mirror: espejo });
-  }, [modo, espejo]);
+    engineRef.current?.holo.setOptions({ mode: rendererModeFor(modo), mirror: espejo, guides: guias, ...(tamanoVista ? { viewSize: tamanoVista } : {}) });
+  }, [modo, espejo, guias, tamanoVista]);
 
   useEffect(() => {
     void engineRef.current?.scenes.goTo(escena);

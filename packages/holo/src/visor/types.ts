@@ -23,6 +23,10 @@ export interface VisorExhibicionProps {
   onEstado?: (estado: DisplayState) => void;
   /** Mirror and flip for the acetate (pyramid and box). */
   espejo?: boolean;
+  /** Calibration of the pyramid: alignment guides (center cross, view outlines). */
+  guias?: boolean;
+  /** Size of each pyramid view, as a fraction of the short side (0.2..0.333). */
+  tamanoVista?: number;
   /** Hides the frame chrome (the display phone under the pyramid). */
   sinMarco?: boolean;
   /** Accessible label of the canvas. */

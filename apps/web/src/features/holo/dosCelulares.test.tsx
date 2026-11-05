@@ -13,9 +13,9 @@ vi.mock('@rikuy/holo', async (orig) => {
   const { useEffect } = await import('react');
   return {
     ...real,
-    VisorExhibicion: ({ canal, modo }: { canal?: ViewerChannel; modo?: string }) => {
+    VisorExhibicion: ({ canal, modo, guias, tamanoVista }: { canal?: ViewerChannel; modo?: string; guias?: boolean; tamanoVista?: number }) => {
       useEffect(() => canal?.subscribe((a) => applied.push(a)), [canal]);
-      return <div data-testid="visor" data-modo={modo} />;
+      return <div data-testid="visor" data-modo={modo} data-guias={String(!!guias)} data-tamano={tamanoVista} />;
     },
   };
 });
@@ -61,6 +61,41 @@ describe('two-phone hologram: projector', () => {
     await waitFor(() => expect(acks).toContain('✓ Pausa'));
     expect(await screen.findByText('Pausa')).toBeTruthy(); // short amber label on the projector
     control.close();
+  });
+
+  it('one tap projects: hides the join card and asks for the whole screen', async () => {
+    const pedir = vi.fn(async () => {});
+    Object.defineProperty(document.documentElement, 'requestFullscreen', { value: pedir, configurable: true });
+    renderAt('/holo/proyector/k7m2');
+    fireEvent.click(screen.getByRole('button', { name: /Proyectar en pantalla completa/ }));
+    expect(pedir).toHaveBeenCalled();
+    expect(screen.queryByText('K7M2')).toBeNull();
+  });
+
+  it('calibration: center cross and view size reach the hologram', () => {
+    renderAt('/holo/proyector/k7m2');
+    fireEvent.click(screen.getByRole('button', { name: 'Ajustes del proyector' }));
+    fireEvent.click(screen.getByRole('switch', { name: /Cruz central/ }));
+    fireEvent.change(screen.getByRole('slider'), { target: { value: '0.75' } });
+    const visor = screen.getByTestId('visor');
+    expect(visor.dataset.guias).toBe('true');
+    expect(Number(visor.dataset.tamano)).toBeCloseTo(0.25);
+  });
+
+  it('while projecting, the settings button fades out until the next touch', () => {
+    vi.useFakeTimers();
+    try {
+      renderAt('/holo/proyector/k7m2');
+      fireEvent.click(screen.getByRole('button', { name: /Ocultar sin pantalla completa/ }));
+      const boton = screen.getByRole('button', { name: 'Ajustes del proyector' });
+      expect(boton.className).toContain('opacity-100');
+      act(() => void vi.advanceTimersByTime(4000));
+      expect(boton.className).toContain('opacity-0');
+      act(() => void window.dispatchEvent(new Event('pointerdown')));
+      expect(boton.className).toContain('opacity-100');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 

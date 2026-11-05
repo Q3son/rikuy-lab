@@ -155,11 +155,11 @@ export function pendulo(): SceneModule {
       g.add(trailLine, trailDots);
 
       // Readout inside the hologram, above the beam.
-      label = newLabel(1.5);
-      label.sprite.position.set(0, PIVOT_Y + 0.42, 0);
+      label = newLabel(1.9);
+      label.sprite.position.set(0, PIVOT_Y + 0.46, 0);
       root.add(label.sprite);
       // Length tag that rides beside the middle of the rope.
-      lengthTag = newLabel(0.85);
+      lengthTag = newLabel(1.1);
       g.add(lengthTag.sprite);
 
       // Fixed footprint so the auto-fit framing never changes with the length.
@@ -205,7 +205,7 @@ export function pendulo(): SceneModule {
       }
       trailAttr.needsUpdate = true;
 
-      lengthTag.sprite.position.set(0.36 + x * 0.5, PIVOT_Y - v * 0.5, 0);
+      lengthTag.sprite.position.set(0.95 + x * 0.5, PIVOT_Y - v * 0.5, 0);
 
       if (highlightLeft > 0) {
         highlightLeft -= dt;
@@ -222,7 +222,7 @@ export function pendulo(): SceneModule {
         shownDamping = model.damping;
         label.set([
           { text: `T ${measured ? '=' : '≈'} ${(T / 100).toFixed(2)} s`, color: '#F5B301', size: 92 },
-          { text: measured ? (model.damping ? 'medido · con rozamiento' : 'periodo medido') : 'midiendo…', color: '#5FE3FF', size: 42 },
+          { text: measured ? (model.damping ? 'medido · con rozamiento' : 'periodo medido') : 'midiendo…', color: '#5FE3FF', size: 54 },
         ]);
       }
       if (L !== shownL) {
