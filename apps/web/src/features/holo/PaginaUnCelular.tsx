@@ -6,6 +6,7 @@ import { practicaDeEscena } from '../mundo/catalogo.ts';
 import { BotonesTactiles, CamaraActiva, ControlesPendulo, EstadoCamara, GestoReconocido, GuiaGestos } from './componentes.tsx';
 import { DiscreteGate } from './sala/room.ts';
 import { useGestosMano } from './useGestosMano.ts';
+import { ConversacionRikuy } from './ConversacionRikuy.tsx';
 
 export function PaginaUnCelular() {
   const escena = useParams().escena ?? 'pendulo';
@@ -41,6 +42,7 @@ export function PaginaUnCelular() {
         {encendida && <CamaraActiva onApagar={gestos.stop} />}
       </header>
       <VisorExhibicion escena={escena} modo="pantalla" canal={canal} practica={practica} />
+      {(escena === 'pendulo' || escena === 'lactasa') && <ConversacionRikuy key={escena} practica={escena} enviar={enviar} />}
       {!encendida && gestos.status !== 'blocked' && (
         <button type="button" onClick={() => void gestos.start()} className="h-14 rounded-xl bg-[#075E6C] text-lg font-bold text-white">
           ✋ Activar cámara de manos
