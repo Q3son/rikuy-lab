@@ -1,0 +1,23 @@
+{
+  "name": "@rikuy/cloud",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cloud gateway: AI with keys, package registry, aggregated reports intake.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.18",
+    "@rikuy/ai": "*",
+    "@rikuy/contracts": "*",
+    "@rikuy/core": "*",
+    "@rikuy/curriculum-cneb": "*",
+    "@rikuy/reportes": "*",
+    "@rikuy/sync": "*",
+    "hono": "^4.13.16",
+    "tsx": "^4.23.15"
+  }
+}
