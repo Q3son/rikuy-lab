@@ -1,5 +1,14 @@
 /**
- * @rikuy/campus: Museum domain (Tiled map, rooms, exhibits, collision, BFS) plus Canvas renderer.
- * Sprint 0 skeleton. The owning front fills it in (docs/ecosistema/ARQUITECTURA_ECOSISTEMA.md, 5.4).
+ * @rikuy/campus: Museo Rikuy domain (Tiled maps, halls, exhibits, collision, BFS, director, presence client,
+ * Ayudante del museo). The Canvas renderer lives in `@rikuy/campus/canvas`.
+ * Pattern credit: AulaQuipu by paoloose (https://github.com/paoloose/aulaquipu). No code or art copied.
  */
 export const packageName = '@rikuy/campus' as const;
+export * from './caminante.ts';
+export * from './contenido.ts';
+export * from './director.ts';
+export * from './generador.ts';
+export * from './grilla.ts';
+export * from './puertos.ts';
+export * from './salas.ts';
+export * from './tiled.ts';
