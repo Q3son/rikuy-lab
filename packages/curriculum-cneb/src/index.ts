@@ -13,3 +13,4 @@ export { ARISTAS, CONCEPTOS, NIVELES_CONCEPTO, RELACIONES, SISTEMAS, conceptoPor
 export type { ConceptoArista, ConceptoNodo, GrafoConceptos, NivelConcepto, Relacion, Sistema } from './conceptos.ts';
 export { corregirEnsayo, validarClaves, validarEnsayo } from './ensayo.ts';
 export type { ClavesEnsayo, Ensayo, PreguntaEnsayo, ResultadoEnsayo } from './ensayo.ts';
+export { PRACTICAS, SLUGS_PRACTICAS, practicaPorClave, slugDePractica, textosParaEstudiantes } from './practicas.ts';

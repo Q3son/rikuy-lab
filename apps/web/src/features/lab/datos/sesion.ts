@@ -1,24 +1,19 @@
 /**
- * Local session of the lab while the class join flow (F1/F2) is not wired: class, group and device
- * ids are created once per device. Also a ULID and HLC generator for the event envelopes (3.3).
- * F2's @rikuy/core/@rikuy/sync replace these when they land.
+ * Local session of the lab: class, group and device ids are created once per device until the class
+ * join (F1/F2) hands them over. ULIDs and HLCs come from @rikuy/core (F2); the HLC node is derived
+ * from the device id with @rikuy/sync's `hlcNode`, like every other event writer.
  */
-const CROCKFORD = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+import { aleatorioSistema, createHlcClock, createUlidFactory, relojSistema, type HlcClock } from '@rikuy/core';
+import { hlcNode } from '@rikuy/sync';
+
 const KEY = 'rikuy.lab.sesion';
+const CROCKFORD = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 
-function randomChars(n: number, alphabet: string): string {
-  const bytes = crypto.getRandomValues(new Uint8Array(n));
-  return Array.from(bytes, (b) => alphabet[b % alphabet.length]).join('');
-}
+/** Monotonic ULID factory of @rikuy/core. */
+export const newUlid: () => string = createUlidFactory(relojSistema, aleatorioSistema);
 
-export function newUlid(now = Date.now()): string {
-  let t = now;
-  let time = '';
-  for (let i = 0; i < 10; i++) {
-    time = CROCKFORD[t % 32] + time;
-    t = Math.floor(t / 32);
-  }
-  return time + randomChars(16, CROCKFORD);
+function dispositivoNuevo(): string {
+  return Array.from(aleatorioSistema.bytes(10), (b) => CROCKFORD[b % 32]).join('');
 }
 
 export interface SesionLab {
@@ -37,12 +32,8 @@ export function crearSesion(storage: Store = safeStorage()): SesionLab {
   } catch {
     /* corrupted or blocked: new session */
   }
-  const s: SesionLab = {
-    claseId: newUlid(),
-    grupoId: newUlid(),
-    dispositivo: randomChars(10, '0123456789ABCDEFGHJKMNPQRSTVWXYZ'),
-    nodo: randomChars(8, 'abcdefghijklmnopqrstuvwxyz0123456789'),
-  };
+  const dispositivo = dispositivoNuevo();
+  const s: SesionLab = { claseId: newUlid(), grupoId: newUlid(), dispositivo, nodo: hlcNode(dispositivo) };
   try {
     storage?.setItem(KEY, JSON.stringify(s));
   } catch {
@@ -51,28 +42,19 @@ export function crearSesion(storage: Store = safeStorage()): SesionLab {
   return s;
 }
 
-/** Hybrid logical clock: msUnix(13)-counter(4)-node(8). */
+/** Hybrid logical clock of @rikuy/core: msUnix(13)-counter(4)-node(8). */
 export class Hlc {
-  private last = 0;
-  private counter = 0;
-  constructor(private readonly node: string) {}
+  private readonly reloj: HlcClock;
+  constructor(node: string) {
+    this.reloj = createHlcClock(node, relojSistema);
+  }
 
-  tick(now = Date.now()): string {
-    if (now > this.last) {
-      this.last = now;
-      this.counter = 0;
-    } else {
-      this.counter++;
-    }
-    return `${String(this.last).padStart(13, '0')}-${String(this.counter).padStart(4, '0')}-${this.node}`;
+  tick(): string {
+    return this.reloj.now();
   }
 
   observe(hlc: string): void {
-    const ms = Number(hlc.slice(0, 13));
-    if (ms > this.last) {
-      this.last = ms;
-      this.counter = Number(hlc.slice(14, 18));
-    }
+    this.reloj.receive(hlc);
   }
 }
 

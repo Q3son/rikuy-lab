@@ -64,6 +64,7 @@ test('the whole pendulum practice works offline and its events stay on the devic
   await expect(page.getByRole('table', { name: /Tus mediciones/ }).getByRole('row')).toHaveCount(2);
   await medir(page, '50 cm', '14.2');
   await medir(page, '100 cm', '20.9');
+  await medir(page, '200 cm', '28.4');
 
   await page.getByRole('button', { name: /Comparar con el modelo/ }).click();
   const comparacion = page.getByRole('table', { name: /Comparación con el modelo/ });

@@ -9,7 +9,7 @@ import { VisorExhibicion } from '@rikuy/holo';
 import { comparisonTable, type MeasurementSource } from '@rikuy/lab-engine';
 import { speak, speechAvailable } from '../../platform/voz/speech.ts';
 import { leerComparacion, leerTabla } from './audio.ts';
-import { PRACTICAS, PRACTICA_PENDULO } from './catalogo.ts';
+import { OSCILACIONES_POR_MEDIDA, practicaDelLab } from './catalogo.ts';
 import { RegistroLab } from './datos/registro.ts';
 import { crearSesion } from './datos/sesion.ts';
 import { cm, formatoNumero } from './formato.ts';
@@ -32,7 +32,7 @@ const VELOCIDADES = [0.75, 1, 1.25];
 const campo = 'min-h-12 rounded-xl border-2 border-[#6A7568] px-3 py-2 text-[17px]';
 
 export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: PaginaPracticaProps) {
-  const practica = PRACTICAS[useParams().practicaId ?? ''] ?? PRACTICA_PENDULO;
+  const practica = practicaDelLab(useParams().practicaId);
   const sesion = useMemo(() => crearSesion(), []);
   const registro = useMemo(() => registroProp ?? new RegistroLab(sesion), [registroProp, sesion]);
   const tutor = useMemo(() => tutorProp ?? new ModeloTutorSimulado(), [tutorProp]);
@@ -62,7 +62,7 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
   }, [tutorMsg, audio, velocidad]);
 
   if (!estado) return <p role="status" className="p-4">Cargando la práctica…</p>;
-  const n = practica.protocolo.repeticiones;
+  const n = OSCILACIONES_POR_MEDIDA;
   const tabla = comparisonTable(estado);
 
   async function guardarPrediccion() {
@@ -181,7 +181,7 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
       {estado.phase === 'measurement' && (
         <section className={tarjeta} aria-label="Medir">
           <h2 className="text-xl font-extrabold">Mide {n} oscilaciones</h2>
-          <div role="radiogroup" aria-label="Largo de la cuerda" className="grid grid-cols-3 gap-2">
+          <div role="radiogroup" aria-label="Largo de la cuerda" className="grid grid-cols-4 gap-2">
             {practica.protocolo.valoresIndependiente.map((L) => (
               <button key={L} type="button" role="radio" aria-checked={largo === L} onClick={() => setLargo(L)} className={`h-12 rounded-xl border-2 font-bold ${largo === L ? 'border-[#04474F] bg-[#075E6C] text-white' : 'border-[#6A7568] bg-white'}`}>
                 {cm(L)}

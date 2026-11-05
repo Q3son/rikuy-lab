@@ -566,3 +566,8 @@ evento 'grupo.piedra' datos: { grupoId, piedra }   // cosmético; desbloqueos le
 ### F5-7. Colores de sala faltantes (DESIGN.md, no es contrato)
 
 Taller, Patio de juegos y Auditorio no tienen color de sala en DESIGN.md. Provisionalmente: Taller = `ink-2`, Patio = `sol`, Auditorio = `ink`; glifos `taller`, `juego`, `usuarios`.
+
+# Integración
+
+- **`Practica.protocolo.repeticiones`**: F3 lo leía como oscilaciones por medida (10) y F9 lo escribió como repeticiones por largo (3 en `pendulo.json`). El laboratorio ahora usa la práctica de F9 y fija 10 oscilaciones (`OSCILACIONES_POR_MEDIDA`). Propuesta: campo opcional `protocolo.oscilaciones` (o `ciclosPorMedida`) para separar ambas ideas.
+- **Id de `pendulo.json`** (`TKTQRM5ZA5335H979P5CPAJZ95`): pasa la expresión `Ulid` del contrato, pero su primer carácter es mayor que `7`, así que `ulidTime` lo lee fuera del rango de 48 bits. Propuesta: que `Ulid` exija `^[0-7]` y regenerar los ids de `content/practicas/`.

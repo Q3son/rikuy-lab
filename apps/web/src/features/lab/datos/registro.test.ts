@@ -7,10 +7,11 @@ import { RegistroLab } from './registro.ts';
 import { crearSesion, newUlid } from './sesion.ts';
 
 describe('demo pendulum practice', () => {
-  it('is a valid approved contract practice with 3 lengths × 10 oscillations', () => {
+  it('is the F9 pendulum of content/practicas: valid contract, 4 lengths × 10 oscillations', () => {
     const p = Practica.parse(PRACTICA_PENDULO);
-    expect(p.estado).toBe('aprobada');
-    expect(protocoloPendulo()).toEqual({ lengthsM: [0.25, 0.5, 1], oscillations: 10 });
+    expect(p.modelo.id).toBe('pendulo');
+    expect(p.textos?.es?.revisado).toBe(true);
+    expect(protocoloPendulo()).toEqual({ lengthsM: [0.25, 0.5, 1, 2], oscillations: 10 });
   });
 });
 

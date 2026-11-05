@@ -78,6 +78,6 @@ describe('audio-first mode', () => {
     fireEvent.click(await screen.findByRole('switch', { name: /Modo audio/ }));
     fireEvent.click(screen.getByRole('radio', { name: '0,75x' }));
     fireEvent.click(screen.getByRole('button', { name: /Escuchar la pregunta/ }));
-    expect(speak).toHaveBeenLastCalledWith('¿De qué depende el tiempo que tarda el péndulo en ir y volver?', 0.75);
+    expect(speak).toHaveBeenLastCalledWith('Si alargas la cuerda, ¿el péndulo irá más rápido o más lento?', 0.75);
   });
 });

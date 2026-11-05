@@ -43,7 +43,7 @@ async function medirManual(cm: string, segundos: string) {
 describe('pendulum practice page', () => {
   it('GATE: there is no way to measure before the prediction', async () => {
     setup();
-    expect(await screen.findByText('¿De qué depende el tiempo que tarda el péndulo en ir y volver?')).toBeTruthy();
+    expect(await screen.findByText('Si alargas la cuerda, ¿el péndulo irá más rápido o más lento?')).toBeTruthy();
     expect(screen.queryByRole('timer')).toBeNull();
     expect(screen.queryByRole('button', { name: /Guardar esta medida/ })).toBeNull();
     expect((screen.getByRole('button', { name: /Guardar predicción/ }) as HTMLButtonElement).disabled).toBe(true);
@@ -58,6 +58,7 @@ describe('pendulum practice page', () => {
     await medirManual('25 cm', '10.3');
     await medirManual('50 cm', '14.2');
     await medirManual('100 cm', '20.9');
+    await medirManual('200 cm', '28.4');
 
     fireEvent.click(screen.getByRole('button', { name: /Comparar con el modelo/ }));
     const tabla = await screen.findByRole('table', { name: /Comparación con el modelo/ });
@@ -71,7 +72,7 @@ describe('pendulum practice page', () => {
     expect(await screen.findByText(/Práctica terminada/)).toBeTruthy();
 
     await waitFor(async () => expect((await registro.todos()).map((e) => e.tipo)).toEqual([
-      'respuesta.registrada', 'medicion.registrada', 'medicion.registrada', 'medicion.registrada', 'respuesta.registrada',
+      'respuesta.registrada', 'medicion.registrada', 'medicion.registrada', 'medicion.registrada', 'medicion.registrada', 'respuesta.registrada',
     ]));
   });
 

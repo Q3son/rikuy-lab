@@ -39,3 +39,14 @@ describe('content/practicas', () => {
     expect(pendulo.pistas).toHaveLength(3);
   });
 });
+
+describe('bundled practices (@rikuy/curriculum-cneb)', () => {
+  it('exposes the same three practices as content/practicas, valid and by slug or id', async () => {
+    const { PRACTICAS, practicaPorClave, slugDePractica, textosParaEstudiantes } = await import('./practicas.ts');
+    expect(Object.keys(PRACTICAS).sort()).toEqual(archivos.map((a) => a.replace('.json', '')).sort());
+    const p = PRACTICAS.pendulo!;
+    expect(practicaPorClave(p.id)).toBe(p);
+    expect(slugDePractica(p.id)).toBe('pendulo');
+    expect(textosParaEstudiantes(p)?.preguntaGuia).toBe(p.preguntaGuia);
+  });
+});
