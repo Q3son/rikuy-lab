@@ -4,7 +4,7 @@
  */
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { PRACTICES, practiceById, type Command, type DisplayState } from '@rikuy/core';
+import type { Comando, DisplayState } from '@rikuy/contracts';
 import { SCENES } from '../scenes/registry.ts';
 import type { SceneContext, SceneModule } from '../scenes/types.ts';
 import { disposeGroup } from '../scenes/materials.ts';
@@ -30,6 +30,23 @@ function fit(model: THREE.Group): THREE.Group {
   return wrapper;
 }
 
+type Command = Comando;
+
+/**
+ * Practice data the scenes need: default variable values and the hint ladder.
+ * Injected (it used to come from @rikuy/core, which @rikuy/holo may not import, 2.3).
+ */
+export interface SceneCatalog {
+  defaults: Record<string, number>;
+  hints(practice: string): readonly string[];
+}
+
+export interface SceneManagerOptions {
+  catalog?: SceneCatalog;
+  /** Base URL of `models/<id>.glb` overrides (Vite BASE_URL). */
+  modelsBaseUrl?: string;
+}
+
 export class SceneManager {
   current: SceneModule | null = null;
   private root: THREE.Group | null = null;
@@ -39,10 +56,15 @@ export class SceneManager {
   onChange: (state: DisplayState) => void = () => {};
   onHint: (text: string, level: number) => void = () => {};
 
-  constructor(private readonly pivot: THREE.Group, private readonly view: ViewController) {
+  private readonly catalog: SceneCatalog;
+  private readonly modelsBaseUrl: string;
+
+  constructor(private readonly pivot: THREE.Group, private readonly view: ViewController, options: SceneManagerOptions = {}) {
+    this.catalog = options.catalog ?? { defaults: {}, hints: () => [] };
+    this.modelsBaseUrl = options.modelsBaseUrl ?? './';
     pivot.add(this.morph.points);
     // Valores por defecto de todas las variables de todas las prácticas.
-    for (const p of PRACTICES) for (const v of p.variables) this.ctx.variables[v.id] ??= v.default;
+    Object.assign(this.ctx.variables, this.catalog.defaults);
   }
 
   /** Cambia de escena con la transformación de partículas. */
@@ -81,7 +103,7 @@ export class SceneManager {
   /** Si existe public/models/<id>.glb, se usa en lugar del modelo procedural. */
   private async loadOverride(id: string): Promise<THREE.Group | null> {
     try {
-      const url = `${import.meta.env.BASE_URL}models/${id}.glb`;
+      const url = `${this.modelsBaseUrl}models/${id}.glb`;
       const head = await fetch(url, { method: 'HEAD' });
       if (!head.ok || !(head.headers.get('content-type') ?? '').includes('model')) return null;
       const gltf = await new GLTFLoader().loadAsync(url);
@@ -128,9 +150,9 @@ export class SceneManager {
           this.view.reset();
           break;
         case 'dar_pista': {
-          const p = practiceById.get(this.current?.practice ?? 'lactasa');
-          const level = Math.max(1, Math.min(3, c.args.nivel));
-          const hint = p?.hints[level - 1];
+          const hints = this.catalog.hints(this.current?.practice ?? 'lactasa');
+          const level = Math.max(1, Math.min(hints.length || 1, c.args.nivel));
+          const hint = hints[level - 1];
           if (hint) this.onHint(hint, level);
           break;
         }

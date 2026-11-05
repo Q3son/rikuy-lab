@@ -97,7 +97,20 @@ export class HoloRenderer {
     this.directCamera.lookAt(0, 0, 0);
 
     this.resize();
-    window.addEventListener('resize', () => this.resize());
+    window.addEventListener('resize', this.onResize);
+  }
+
+  private readonly onResize = () => this.resize();
+
+  /** Frees GPU resources and listeners (the React viewer mounts and unmounts it). */
+  dispose() {
+    window.removeEventListener('resize', this.onResize);
+    this.targets.forEach((t) => t.dispose());
+    this.quads.forEach((q) => {
+      q.geometry.dispose();
+      (q.material as THREE.Material).dispose();
+    });
+    this.renderer.dispose();
   }
 
   setOptions(patch: Partial<HoloOptions>) {

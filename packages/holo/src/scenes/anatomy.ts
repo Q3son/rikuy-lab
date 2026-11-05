@@ -4,7 +4,7 @@
  * reales (por ejemplo derivados de Z-Anatomy) cuando estén disponibles.
  */
 import * as THREE from 'three';
-import { breathingRate } from '@rikuy/core';
+import { breathingRate } from './physics.ts';
 import type { SceneModule } from './types.ts';
 import { PALETTE, at, holo, pulse, tube, glowLine } from './materials.ts';
 

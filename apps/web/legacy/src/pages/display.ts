@@ -10,13 +10,9 @@
 import '../style.css';
 import * as THREE from 'three';
 import { PRACTICES, practiceById, type AgentContext, type Command } from '@rikuy/core';
-import { DEFAULT_OPTIONS, HoloRenderer, type HoloMode, type HoloOptions } from '../holo/HoloRenderer.ts';
-import { ViewController } from '../holo/ViewController.ts';
-import { SceneManager } from '../holo/SceneManager.ts';
-import { SCENES } from '../scenes/registry.ts';
+import { DEFAULT_OPTIONS, HoloRenderer, SCENES, SceneManager, ViewController, attachTouchpad, type HoloMode, type HoloOptions } from '@rikuy/holo/engine';
 import { Bus, localStorageGet, localStorageSet, roomFromUrl } from '../net/bus.ts';
 import { Tracker } from '../analytics/tracker.ts';
-import { attachTouchpad } from '../input/touch.ts';
 import { VoiceInput, speak, voiceSupported } from '../input/voice.ts';
 import { HandGestures } from '../input/gestures.ts';
 import { handleUtterance } from '../session.ts';
@@ -32,7 +28,13 @@ const canvas = document.getElementById('holo') as HTMLCanvasElement;
 const saved = readOptions();
 const holo = new HoloRenderer(canvas, saved);
 const view = new ViewController(holo.pivot);
-const scenes = new SceneManager(holo.pivot, view);
+const scenes = new SceneManager(holo.pivot, view, {
+  catalog: {
+    defaults: Object.fromEntries(PRACTICES.flatMap((p) => p.variables.map((v) => [v.id, v.default]))),
+    hints: (id) => practiceById.get(id)?.hints ?? [],
+  },
+  modelsBaseUrl: import.meta.env.BASE_URL,
+});
 
 const bus = new Bus(room, 'display');
 const tracker = new Tracker(bus, params.get('grupo') ?? localStorageGet('rikuy.grupo') ?? 'G1');
