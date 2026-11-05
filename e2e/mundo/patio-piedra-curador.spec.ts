@@ -1,4 +1,7 @@
-import { expect, test } from '../_arnes/avion.ts';
+import { comoGrupo, expect, test } from '../_arnes/avion.ts';
+
+// The shell sends a device without a role to the entry screen.
+test.beforeEach(({ page }) => comoGrupo(page));
 
 test('Patio: a challenge station in the museum opens the challenge and progress is per group', async ({ page }) => {
   await page.goto('./#/museo/patio');
@@ -24,7 +27,7 @@ test('the group names its stone and the name is kept', async ({ page }) => {
   await page.goto('./#/museo/piedra');
   await page.getByLabel('Nombre de la piedra').fill('Rumi');
   await page.getByRole('button', { name: 'Guardar nuestra piedra' }).click();
-  await expect(page.getByRole('status')).toContainText('Rumi');
+  await expect(page.getByRole('status').filter({ hasText: 'Rumi' })).toBeVisible();
   await page.reload();
   await expect(page.getByLabel('Nombre de la piedra')).toHaveValue('Rumi');
 });

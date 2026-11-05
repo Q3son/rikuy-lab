@@ -34,3 +34,19 @@ export const test = base.extend<{ peticionesExternas: string[] }>({
 });
 
 export { expect };
+
+type Sesion = { rol: 'docente' | 'grupo'; codigoClase?: string; apodo?: string };
+
+/**
+ * Starts the page with a role already chosen (the shell sends a device without a role to the entry).
+ * Written before any app script runs, in the shape of the persisted F1 session (`rikuy.sesion`).
+ */
+export async function conSesion(page: Page, s: Sesion): Promise<void> {
+  const estado = { rol: s.rol, codigoClase: s.codigoClase ?? null, apodo: s.apodo ?? null, nivel: 'normal' };
+  await page.addInitScript((valor) => {
+    if (!localStorage.getItem('rikuy.sesion')) localStorage.setItem('rikuy.sesion', valor);
+  }, JSON.stringify({ state: estado, version: 0 }));
+}
+
+export const comoDocente = (page: Page) => conSesion(page, { rol: 'docente' });
+export const comoGrupo = (page: Page, codigoClase = 'ABC123', apodo = 'Puma') => conSesion(page, { rol: 'grupo', codigoClase, apodo });

@@ -1,4 +1,7 @@
-import { expect, test } from '../_arnes/avion.ts';
+import { comoDocente, expect, test } from '../_arnes/avion.ts';
+
+// The shell sends a device without a role to the entry screen.
+test.beforeEach(({ page }) => comoDocente(page));
 
 // 5.6 "Sin fugas": during the class, with iaNube=false, nothing leaves the origin.
 test('no request leaves the origin while running the teacher flow', async ({ page, peticionesExternas }) => {

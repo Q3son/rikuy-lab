@@ -1,4 +1,7 @@
-import { expect, test } from '../_arnes/avion.ts';
+import { comoGrupo, expect, test } from '../_arnes/avion.ts';
+
+// The shell sends a device without a role to the entry screen.
+test.beforeEach(({ page }) => comoGrupo(page));
 
 const SALAS = ['Física', 'Biología', 'Química', 'Tierra y ambiente', 'Taller', 'Patio de juegos', 'Auditorio'];
 const RUTAS = ['sala-fisica', 'sala-biologia', 'sala-quimica', 'sala-tierra', 'sala-taller', 'patio', 'auditorio'];
@@ -7,7 +10,7 @@ test('the vestibule draws the world and Rikuy points to today’s hall', async (
   await page.goto('./#/museo');
   await expect(page.getByRole('heading', { name: 'Vestíbulo del Museo Rikuy' })).toBeVisible();
   await expect(page.getByRole('img', { name: /Mapa del vestíbulo/ })).toBeVisible();
-  await expect(page.getByRole('status').first()).toContainText('El péndulo');
+  await expect(page.getByRole('status').filter({ hasText: 'El péndulo' }).first()).toBeVisible();
   expect(peticionesExternas).toEqual([]);
 });
 
@@ -22,11 +25,11 @@ test('every door is reachable from the keyboard: the group walks there and the h
   }
 });
 
-test('from the Física hall the pendulum exhibit door opens the exhibit route', async ({ page }) => {
+test('from the Física hall the pendulum exhibit door opens the pendulum practice', async ({ page }) => {
   await page.goto('./#/museo/sala-fisica');
   await page.getByRole('button', { name: 'Ir a El péndulo' }).focus();
   await page.keyboard.press('Enter');
-  await expect(page).toHaveURL(/#\/exhibicion\/exh-pendulo$/, { timeout: 15_000 });
+  await expect(page).toHaveURL(/#\/lab\/pendulo$/, { timeout: 15_000 });
 });
 
 test('the arrow keys walk the group inside the canvas', async ({ page }) => {
@@ -43,5 +46,5 @@ test('list mode reaches every hall and the pendulum without the map', async ({ p
   await page.goto('./#/museo/lista');
   for (const sala of SALAS) await expect(page.getByRole('link', { name: `Entrar a la Sala ${sala}` })).toBeVisible();
   await page.getByRole('link', { name: /Entrar a la exhibición El péndulo/ }).click();
-  await expect(page).toHaveURL(/#\/exhibicion\/exh-pendulo$/);
+  await expect(page).toHaveURL(/#\/lab\/pendulo$/);
 });

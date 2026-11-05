@@ -1,4 +1,7 @@
-import { expect, test } from '../_arnes/avion.ts';
+import { comoGrupo, expect, test } from '../_arnes/avion.ts';
+
+// The shell sends a device without a role to the entry screen.
+test.beforeEach(({ page }) => comoGrupo(page));
 
 /** Debug hook exposed by apps/web/src/features/mundo/VistaMundo.tsx. */
 declare global {

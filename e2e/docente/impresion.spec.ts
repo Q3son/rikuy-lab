@@ -1,5 +1,8 @@
 import { renderInforme } from '@rikuy/evidencia';
-import { expect, test } from '../_arnes/avion.ts';
+import { comoDocente, expect, test } from '../_arnes/avion.ts';
+
+// The shell sends a device without a role to the entry screen.
+test.beforeEach(({ page }) => comoDocente(page));
 
 const paginasDelPdf = (pdf: Buffer): number => (pdf.toString('latin1').match(/\/Type\s*\/Page\b(?!s)/g) ?? []).length;
 

@@ -17,6 +17,9 @@ export default defineConfig({
   use: {
     baseURL: `https://localhost:${PORT}/`,
     ignoreHTTPSErrors: true,
+    // `ignoreHTTPSErrors` does not cover service worker scripts: Chromium refuses to register a worker
+    // over the self-signed preview certificate without this switch, so the airplane-mode gates need it.
+    launchOptions: { args: ['--ignore-certificate-errors'] },
     trace: 'on-first-retry',
   },
   projects: [

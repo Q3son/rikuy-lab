@@ -4,11 +4,12 @@
  * the "read from photo" path (jsQR), out of order and with repeats. No network between them.
  */
 import { devices, type Browser, type Page } from '@playwright/test';
-import { expect, test } from '../_arnes/avion.ts';
+import { comoDocente, expect, test } from '../_arnes/avion.ts';
 
 async function device(browser: Browser, baseURL: string): Promise<Page> {
   const context = await browser.newContext({ ...devices['Pixel 5'], baseURL, ignoreHTTPSErrors: true });
   const page = await context.newPage();
+  await comoDocente(page); // the relevo screen has its own Docente / Grupo tabs
   await page.goto('./#/relevo');
   await expect(page.getByRole('heading', { name: 'Relevo por QR' })).toBeVisible();
   return page;
@@ -58,7 +59,7 @@ test('page A shows the QR frames, page B reads them and converges', async ({ bro
   // The group reads J and joins.
   await group.getByRole('tab', { name: 'Grupo' }).click();
   await showPhotos(group, 'Leer QR de unión: leer desde foto', [...join].reverse());
-  await expect(group.getByRole('status')).toHaveText(`Unido a la clase ${codigo}`);
+  await expect(group.getByRole('status').filter({ hasText: 'Unido a la clase' })).toHaveText(`Unido a la clase ${codigo}`);
 
   // The group records 50 measurements and shows its events (E).
   await group.getByRole('button', { name: 'Registrar 50 mediciones de prueba' }).click();
@@ -71,7 +72,7 @@ test('page A shows the QR frames, page B reads them and converges', async ({ bro
   const half = Math.ceil(events.length / 2);
   const shuffled = [...events.slice(half).reverse(), events[0], ...events.slice(0, half), events[events.length - 1]];
   await showPhotos(teacher, 'Leer QR de un grupo: leer desde foto', shuffled);
-  await expect(teacher.getByRole('status')).toHaveText(/^Eventos recibidos: 51 nuevos, 0 repetidos, 0 rechazados$/);
+  await expect(teacher.getByRole('status').filter({ hasText: 'Eventos recibidos' })).toHaveText(/^Eventos recibidos: 51 nuevos, 0 repetidos, 0 rechazados$/);
   await expect(teacher.getByTestId('total-mediciones')).toHaveText('50');
   await expect(teacher.getByTestId('total-grupos')).toHaveText('1');
   await expect(teacher.getByTestId('total-eventos')).toHaveText('52');
@@ -80,5 +81,5 @@ test('page A shows the QR frames, page B reads them and converges', async ({ bro
   const ack = await captureFrames(teacher);
   expect(ack).toHaveLength(1);
   await showPhotos(group, 'Leer QR de confirmación: leer desde foto', ack);
-  await expect(group.getByRole('status')).toHaveText('La docente confirmó la entrega');
+  await expect(group.getByRole('status').filter({ hasText: 'La docente confirmó' })).toHaveText('La docente confirmó la entrega');
 });

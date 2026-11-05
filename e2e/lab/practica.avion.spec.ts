@@ -4,7 +4,10 @@
  * The reload-offline variant waits for F1's service worker (see the fixme below).
  */
 import type { Page } from '@playwright/test';
-import { alModoAvion, expect, test } from '../_arnes/avion.ts';
+import { alModoAvion, comoGrupo, expect, test } from '../_arnes/avion.ts';
+
+// The shell sends a device without a role to the entry screen.
+test.beforeEach(({ page }) => comoGrupo(page));
 
 const HOLO_CHUNK = /VisorExhibicion3D|ViewController/;
 
@@ -78,9 +81,9 @@ test('the whole pendulum practice works offline and its events stay on the devic
 
   const eventos = await eventosGuardados(page);
   expect(eventos.map((e) => e.tipo)).toEqual([
-    'respuesta.registrada', 'medicion.registrada', 'medicion.registrada', 'medicion.registrada', 'respuesta.registrada',
+    'respuesta.registrada', 'medicion.registrada', 'medicion.registrada', 'medicion.registrada', 'medicion.registrada', 'respuesta.registrada',
   ]);
-  expect(eventos.map((e) => e.seq)).toEqual([1, 2, 3, 4, 5]);
+  expect(eventos.map((e) => e.seq)).toEqual([1, 2, 3, 4, 5, 6]);
   expect(peticionesExternas).toEqual([]);
 
   // Back online, a reload resumes the finished practice from the event log.
@@ -89,8 +92,7 @@ test('the whole pendulum practice works offline and its events stay on the devic
   await expect(page.getByText(/Práctica terminada/)).toBeVisible();
 });
 
-// Pending F1's Workbox service worker (same reason as e2e/_arnes/shell.avion.spec.ts).
-test.fixme('the practice reopens after an offline reload', async ({ page }) => {
+test('the practice reopens after an offline reload', async ({ page }) => {
   await alModoAvion(page, './#/lab/pendulo');
   await expect(page.getByRole('heading', { level: 1, name: /péndulo/i })).toBeVisible();
 });

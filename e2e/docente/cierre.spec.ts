@@ -1,4 +1,7 @@
-import { expect, test } from '../_arnes/avion.ts';
+import { comoDocente, expect, test } from '../_arnes/avion.ts';
+
+// The shell sends a device without a role to the entry screen.
+test.beforeEach(({ page }) => comoDocente(page));
 
 test('closing by QR: the group QR gives literal quotes and the Indaga report', async ({ page }) => {
   await page.goto('./#/docente');
@@ -11,7 +14,7 @@ test('closing by QR: the group QR gives literal quotes and the Indaga report', a
   await expect(page.getByText('«si la cuerda es más larga tarda más en volver»')).toBeVisible();
   await expect(page.getByText('Sin evidencia aún').first()).toBeVisible();
 
-  await page.getByRole('link', { name: 'Reportes' }).click();
+  await page.getByRole('tab', { name: 'Reportes' }).click();
   await expect(page.getByRole('heading', { name: /Indaga mediante métodos científicos/ })).toBeVisible();
 });
 

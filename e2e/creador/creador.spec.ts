@@ -6,7 +6,10 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import net from 'node:net';
-import { expect, test } from '../_arnes/avion.ts';
+import { comoDocente, expect, test } from '../_arnes/avion.ts';
+
+// The shell sends a device without a role to the entry screen.
+test.beforeEach(({ page }) => comoDocente(page));
 
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const ORIGEN_APP = 'https://localhost:4173';
@@ -98,7 +101,7 @@ test('approval is blocked when an edited hint reveals the numeric result', async
   await expect(page.getByLabel('Pista 3')).toBeVisible();
   await page.getByLabel('Pista 3').fill('Debe salir 1,9 s con la cuerda de 0,9 m.');
   await page.getByRole('button', { name: 'Aprobar y firmar' }).click();
-  await expect(page.getByRole('alert')).toContainText('pista 3');
+  await expect(page.getByRole('alert').filter({ hasText: 'No se puede aprobar' })).toContainText('pista 3');
   await expect(page.getByRole('heading', { name: /Práctica aprobada y firmada/ })).toHaveCount(0);
 });
 

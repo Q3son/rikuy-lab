@@ -16,7 +16,7 @@ test('a teacher reaches "Mi clase de hoy" and every tab with no network', async 
   await expect(page.getByRole('heading', { name: 'Mi clase de hoy' })).toBeVisible();
   for (const [tab, titulo] of [['Clase', 'Clase'], ['Evidencia', 'Evidencia'], ['Reportes', 'Reportes'], ['Ajustes', 'Ajustes'], ['Hoy', 'Mi clase de hoy']] as const) {
     await page.getByRole('tab', { name: tab }).click();
-    await expect(page.getByRole('heading', { level: 1, name: titulo })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: titulo, exact: true })).toBeVisible();
   }
   await expect(page.getByText('Sin red, todo guardado').first()).toBeVisible();
 });
@@ -28,7 +28,7 @@ test('a group joins with a code and a nickname with no network', async ({ page }
   await page.getByLabel('Código de la clase').fill('CYT2B4');
   await page.getByLabel('Apodo del grupo').selectOption('Puma');
   await page.getByRole('button', { name: 'Entrar al museo' }).click();
-  await expect(page.getByRole('heading', { level: 1, name: 'Museo Rikuy' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Museo Rikuy', exact: true })).toBeVisible();
   await page.getByRole('tab', { name: 'Quipu' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Quipu de logros' })).toBeVisible();
 });
