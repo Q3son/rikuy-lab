@@ -9,8 +9,6 @@ import { resolverFfmpeg } from '../../../tools/audio/ffmpeg.ts';
 import { argumentosProcesado, FILTRO_AUDIO, procesarGrabacion, duracionDeAudio } from '../../../tools/audio/procesar.ts';
 import { actualizarManifiesto, entradaDesdeOpus, type DatosGrabacion } from '../../../tools/audio/manifiesto.ts';
 
-const FFMPEG_CANDIDATO = 'C:/Users/marro/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-9.0.2-full_build/bin/ffmpeg.exe';
-
 function sistemaDeArchivos(existentes: string[]): (ruta: string) => boolean {
   const conjunto = new Set(existentes.map((r) => r.replace(/\\/g, '/')));
   return (ruta) => conjunto.has(ruta.replace(/\\/g, '/'));
@@ -27,7 +25,8 @@ function ffmpegDisponible(): string | undefined {
   }
 }
 
-const ffmpeg = ffmpegDisponible() ?? (sistemaDeArchivos([FFMPEG_CANDIDATO])(FFMPEG_CANDIDATO) ? FFMPEG_CANDIDATO : undefined);
+// Sin ffmpeg instalado (como en GitHub Actions) las pruebas de integración se omiten.
+const ffmpeg = ffmpegDisponible();
 const tieneFfmpeg = ffmpeg !== undefined;
 
 function generarWav(carpeta: string, nombre: string, segundosSilencio: number, segundosTono: number): string {
