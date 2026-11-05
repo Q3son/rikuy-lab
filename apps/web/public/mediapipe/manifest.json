@@ -1,0 +1,23 @@
+{
+  "tasksVision": "1.2.2",
+  "files": [
+    {
+      "path": "wasm/vision_wasm_module_internal.js",
+      "sha256": "72fba0ac8a4034ce9d63f68389df1dead52069409ea621688eedf97f01d4362f",
+      "bytes": 334166,
+      "source": "npm:@mediapipe/tasks-vision@1.2.2"
+    },
+    {
+      "path": "wasm/vision_wasm_module_internal.wasm",
+      "sha256": "b8927a2eebfe80dd98a426a210a9e820c8215168c06f3bcf5d4d09080f623db5",
+      "bytes": 14603372,
+      "source": "npm:@mediapipe/tasks-vision@1.2.2"
+    },
+    {
+      "path": "hand_landmarker.task",
+      "sha256": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+      "bytes": 7819105,
+      "source": "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"
+    }
+  ]
+}

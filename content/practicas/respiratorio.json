@@ -1,0 +1,54 @@
+{
+  "id": "MC6F7AJKM7PT3CFX5RNCNXZ7NG",
+  "version": 1,
+  "titulo": "¿Por qué en la altura respiramos más rápido?",
+  "desempeno": {
+    "nivel": "secundaria",
+    "grado": 2,
+    "area": "ciencia-y-tecnologia",
+    "competencia": 2,
+    "desempeno": 7,
+    "cita": "Describe cómo a través de los procesos de fotosíntesis y respiración se produce la energía que la célula utiliza para producir sustancias orgánicas."
+  },
+  "preguntaGuia": "En Puno o Cusco hay menos oxígeno por bocanada. ¿Qué crees que hace tu cuerpo?",
+  "prediccionRequerida": true,
+  "materiales": [
+    { "nombre": "Cronómetro (celular)", "casero": true },
+    { "nombre": "Reloj con segundero", "casero": true }
+  ],
+  "variables": [
+    { "id": "altitud", "etiqueta": "Altitud", "unidad": "msnm", "min": 0, "max": 5000, "paso": 100, "porDefecto": 2335 }
+  ],
+  "protocolo": {
+    "repeticiones": 3,
+    "valoresIndependiente": [0, 2335, 3500, 5000],
+    "magnitud": "frecuencia respiratoria",
+    "unidad": "resp/min"
+  },
+  "modelo": { "id": "respiracion", "version": 1 },
+  "pistas": [
+    "¿Qué gas necesitan tus células y de dónde lo sacan?",
+    "Si cada respiración trae menos oxígeno, ¿cómo podría el cuerpo compensarlo?"
+  ],
+  "limitaciones": [
+    "La frecuencia respiratoria mostrada es una aproximación ilustrativa, no un valor clínico."
+  ],
+  "escenaHolo": "respiratorio",
+  "textos": {
+    "es": {
+      "preguntaGuia": "En Puno o Cusco hay menos oxígeno por bocanada. ¿Qué crees que hace tu cuerpo?",
+      "pistas": [
+        "¿Qué gas necesitan tus células y de dónde lo sacan?",
+        "Si cada respiración trae menos oxígeno, ¿cómo podría el cuerpo compensarlo?"
+      ],
+      "revisado": true,
+      "revisor": "equipo Rikuy (demo)"
+    }
+  },
+  "procedencia": {
+    "generadoPor": "catalogo",
+    "modelos": [],
+    "revisiones": []
+  },
+  "estado": "borrador"
+}

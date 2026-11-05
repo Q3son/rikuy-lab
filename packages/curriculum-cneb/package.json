@@ -1,0 +1,24 @@
+{
+  "name": "@rikuy/curriculum-cneb",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CNEB subset (science and technology, primary and secondary), exact literal quote lookup, concept graph.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "extraer": "node --experimental-strip-types scripts/extraer-cyt.ts"
+  },
+  "dependencies": {
+    "@rikuy/contracts": "*",
+    "@rikuy/core": "*"
+  },
+  "devDependencies": {
+    "d3-force": "^3.0.0"
+  }
+}

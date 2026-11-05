@@ -1,0 +1,24 @@
+{
+  "name": "@rikuy/holo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Exhibit viewer: Three.js renderer and scenes.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./engine": "./src/engine.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@rikuy/contracts": "*",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.187.0"
+  }
+}

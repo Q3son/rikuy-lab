@@ -1,0 +1,68 @@
+{
+  "pendulo.preguntaGuia": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  },
+  "pendulo.pista.1": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  },
+  "pendulo.pista.2": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  },
+  "pendulo.pista.3": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  },
+  "lactasa.preguntaGuia": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  },
+  "lactasa.pista.1": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  },
+  "lactasa.pista.2": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  },
+  "lactasa.pista.3": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  },
+  "respiratorio.preguntaGuia": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  },
+  "respiratorio.pista.1": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  },
+  "respiratorio.pista.2": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Ayacucho-Chanka"
+  }
+}

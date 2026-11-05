@@ -1,0 +1,22 @@
+{
+  "name": "@rikuy/campus",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Museum domain (Tiled map, rooms, exhibits, collision, BFS) plus Canvas renderer.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./canvas": "./src/canvas/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@rikuy/contracts": "*",
+    "@rikuy/core": "*",
+    "@rikuy/curriculum-cneb": "*"
+  }
+}

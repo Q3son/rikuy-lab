@@ -1,0 +1,31 @@
+{
+  "name": "@rikuy/hub",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local hub: Hono + node:sqlite + WS (sync and presence) + Ollama proxy.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.19.18",
+    "@hono/node-ws": "^1.3.1",
+    "@rikuy/ai": "*",
+    "@rikuy/contracts": "*",
+    "@rikuy/core": "*",
+    "@rikuy/evidencia": "*",
+    "@rikuy/memoria": "*",
+    "@rikuy/presencia": "*",
+    "@rikuy/sync": "*",
+    "@rikuy/tutor": "*",
+    "hono": "^4.13.16",
+    "qrcode": "^1.5.4",
+    "tsx": "^4.23.15"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.6"
+  }
+}

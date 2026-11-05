@@ -1,0 +1,19 @@
+.rk-gd { font-family: var(--rk-font-sans, system-ui, sans-serif); color: var(--rk-ink, #0d2b33); background: var(--rk-surface, #fff); border: 2px solid var(--rk-border, #d3d9cc); border-radius: 16px; padding: 16px; display: grid; gap: 14px; max-width: 480px; }
+.rk-gd h2, .rk-gd h3 { margin: 0; font-weight: 800; }
+.rk-gd h2 { font-size: 19px; }
+.rk-gd h3 { font-size: 15px; color: var(--rk-ink-2, #33494f); }
+.rk-gd fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
+.rk-gd legend { font-weight: 700; padding: 0; margin-bottom: 6px; }
+.rk-gd-celdas { display: flex; flex-wrap: wrap; gap: 8px; }
+.rk-gd button, .rk-gd-radio { min-height: 48px; border-radius: 12px; border: 2px solid var(--rk-border-strong, #6a7568); background: var(--rk-surface, #fff); color: inherit; font: inherit; font-weight: 600; padding: 0 14px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.rk-gd button[aria-pressed='true'] { background: var(--rk-primary-tint, #dcebec); border-color: var(--rk-primary, #075e6c); }
+.rk-gd button[aria-pressed='true']::after { content: '✓'; }
+.rk-gd button.rk-primario { background: var(--rk-primary, #075e6c); color: var(--rk-on-primary, #fff); border-color: var(--rk-primary, #075e6c); }
+.rk-gd button:disabled { background: var(--rk-surface-2, #e9ece4); color: var(--rk-muted, #4d6368); cursor: not-allowed; }
+.rk-gd button:focus-visible, .rk-gd input:focus-visible, .rk-gd textarea:focus-visible { outline: 3px solid var(--rk-focus, #0d2b33); outline-offset: 2px; }
+.rk-gd-radio input { width: 20px; height: 20px; }
+.rk-gd-fila { display: flex; flex-wrap: wrap; gap: 8px; }
+.rk-gd textarea { min-height: 72px; border: 2px solid var(--rk-border-strong, #6a7568); border-radius: 12px; padding: 10px; font: inherit; }
+.rk-gd-aviso { background: var(--rk-sol-tint, #fff1cc); border: 2px solid var(--rk-sol, #f5b301); border-radius: 12px; padding: 12px; }
+.rk-gd-chip { font-size: 14px; font-weight: 600; background: var(--rk-surface-2, #e9ece4); border-radius: 999px; padding: 4px 10px; justify-self: start; }
+@media (prefers-reduced-motion: reduce) { .rk-gd * { transition: none !important; animation: none !important; } }
