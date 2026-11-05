@@ -64,3 +64,24 @@ describe('museum exhibits open their F9 practice', () => {
     await waitFor(() => expect(router.state.location.pathname).toBe('/holo/ver/lactasa'));
   });
 });
+
+describe('golden demo (Ajustes > Cargar demo)', () => {
+  it('loads 2.º B with 4 groups, Yeni\'s literal quote and the example Guardián and doubt trays', async () => {
+    const { router } = await renderApp('/docente/ajustes', { rol: 'docente' });
+    await userEvent.click(await screen.findByRole('button', { name: 'Cargar demo' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Sí, cargar la demo' }));
+    expect(await screen.findByText(/Demo cargada/)).toBeInTheDocument();
+    expect(screen.getAllByText(/2\.º B/).length).toBeGreaterThan(0);
+
+    await router.navigate('/docente/evidencia/evidencias');
+    expect(await screen.findByText(/si la cuerda es más larga tarda más en volver/)).toBeInTheDocument();
+
+    await router.navigate('/docente/clase/acercarse');
+    expect(await screen.findByText('Pidió hablar con usted.')).toBeInTheDocument();
+    await router.navigate('/docente/reportes/curso');
+    expect(await screen.findByText(/6 participan|6 de/)).toBeInTheDocument();
+    await router.navigate('/docente/reportes/dudas');
+    expect(await screen.findByRole('heading', { name: 'Caja de dudas de la clase' })).toBeInTheDocument();
+    expect(screen.queryByText('Todavía no hay dudas.')).toBeNull();
+  });
+});

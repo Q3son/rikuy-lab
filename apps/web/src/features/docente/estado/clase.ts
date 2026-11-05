@@ -40,7 +40,11 @@ export interface EstadoClase {
   esDemo: boolean;
   practica: Practica | null;
   crearClase(d: DatosNuevaClase): void;
-  cargarDemo(): void;
+  /**
+   * Example class (2.º B, 4 groups). `completa`: every group already delivered its evidence (the golden
+   * demo); `padron`: private alias -> first name list kept on this phone only.
+   */
+  cargarDemo(opciones?: { completa?: boolean; padron?: Record<string, string> }): void;
   recibirGrupoDeEjemplo(apodo: string): void;
   ingestar(eventos: Evento[]): { nuevos: number; ignorados: number };
   confirmar(evidenciaId: string, nivel?: 0 | 1 | 2 | 3 | 'NO'): void;
@@ -125,12 +129,12 @@ export function crearAlmacenClase(srv: ServiciosDocente, memoria: AlmacenMemoria
         aplicar({ eventos, contexto: d.contexto, padron, esDemo: false, practica });
       },
 
-      cargarDemo() {
+      cargarDemo(opciones = {}) {
         const esc = construirEscenario();
         aplicar({
-          eventos: partirEscenario(esc).base,
+          eventos: opciones.completa ? esc.eventos : partirEscenario(esc).base,
           contexto: { region: 'Arequipa', zona: 'rural', lenguaComunidad: 'quy', festividades: ['Yaku Raymi'], floraFauna: ['llama', 'ichu'], materialesCaseros: ['cuerda', 'piedra'] },
-          padron: {},
+          padron: opciones.padron ?? {},
           esDemo: true,
           practica: esc.practica,
         });
