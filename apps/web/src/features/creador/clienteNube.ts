@@ -33,7 +33,14 @@ export interface ClienteNube {
 
 export class ErrorNube extends Error {}
 
+/** Gateway URL: a teacher setting (`rikuy.nube`), then the build variable, then the local default. Never a key. */
 export function urlNubePorDefecto(): string {
+  try {
+    const guardada = localStorage.getItem('rikuy.nube');
+    if (guardada) return guardada;
+  } catch {
+    /* storage can be blocked */
+  }
   return (import.meta.env.VITE_CLOUD_URL as string | undefined) ?? 'http://localhost:8788';
 }
 
