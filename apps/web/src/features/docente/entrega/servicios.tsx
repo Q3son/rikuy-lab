@@ -1,15 +1,8 @@
 /* eslint-disable react-refresh/only-export-components -- provider, hooks and factories live together on purpose */
-import {
-  crearAdaptadorSimulado,
-  crearColaSalida,
-  type AlmacenSalida,
-  type ColaSalida,
-  type ItemSalida,
-  type PuertoEntrega,
-} from '@rikuy/evidencia';
+import { AdaptadorEnlaceWame, AdaptadorEntregaSimulado, type PuertoEntrega } from '@rikuy/mensajeria';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { enlaceWame } from '../../familia/compartir.ts';
 import type { Contactos } from './borradores.ts';
+import { crearColaSalida, type AlmacenSalida, type ColaSalida, type ItemSalida } from './salida.ts';
 
 /** "The hub synced": F2/F8 dispatch `rikuy:sync` on `window`; coming back online also counts. */
 export interface SenalSync {
@@ -68,16 +61,18 @@ export interface Entrega {
   simulado: boolean;
 }
 
-/** `wa.me` adapter: opens WhatsApp with the text ready. Never claims "delivered". */
+/** `wa.me` adapter of `@rikuy/mensajeria`, plus opening the prepared link. Never claims "delivered". */
 export function crearAdaptadorWame(abrir: (url: string) => void): PuertoEntrega {
+  const base = new AdaptadorEnlaceWame();
   return {
-    canal: 'enlace_wame',
-    capacidades: () => ({ plantillasAprobadas: false, audioAdjunto: false, estadoEntrega: false }),
+    canal: base.canal,
+    capacidades: () => base.capacidades(),
     async enviar(mensaje, destino) {
-      abrir(enlaceWame(mensaje.cuerpo.texto, destino.direccion));
-      return { ok: true, valor: { acuseId: `wame-${mensaje.id}`, manual: true } };
+      const res = await base.enviar(mensaje, destino);
+      if (res.ok && res.valor.enlace) abrir(res.valor.enlace);
+      return res;
     },
-    estado: async () => 'enviado_proveedor',
+    estado: () => base.estado(),
   };
 }
 
@@ -85,7 +80,7 @@ export function crearEntregaSimulada(o: { almacen?: AlmacenSalida; contactos?: C
   const ahora = o.ahora ?? (() => Date.now());
   return {
     cola: crearColaSalida({ almacen: o.almacen ?? almacenSalidaLocal, ahora, desfaseMin: -300 }),
-    puertos: { whatsapp: crearAdaptadorSimulado('whatsapp'), correo: crearAdaptadorSimulado('correo') },
+    puertos: { whatsapp: new AdaptadorEntregaSimulado({ canal: 'whatsapp' }), correo: new AdaptadorEntregaSimulado({ canal: 'correo' }) },
     senal: o.senal ?? senalSyncDelNavegador,
     enLinea: o.enLinea ?? (() => (typeof navigator === 'undefined' ? true : navigator.onLine)),
     ahora,

@@ -1,4 +1,4 @@
-import type { ItemSalida } from '@rikuy/evidencia';
+import type { ItemSalida } from '../entrega/salida.ts';
 import { useState, type FormEvent } from 'react';
 import { enlaceWame } from '../../familia/compartir.ts';
 import { urlDeFamilia } from '../../familia/enlace.ts';

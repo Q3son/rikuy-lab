@@ -1,5 +1,6 @@
 /**
- * Persistent outbox (`salida_mensajes`). Rules of FUNCIONES_EXTRA 1.6 and the user priority:
+ * Approval-gated persistent outbox (`salida_mensajes`) of the teacher phone, over the
+ * `@rikuy/mensajeria` delivery port. Rules of FUNCIONES_EXTRA 1.6 and the user priority:
  *  - nothing is sent before the teacher previews and approves it;
  *  - individual (variant B) messages are approved one by one, never in a batch;
  *  - sending waits for the network and flushes on sync, idempotently;
@@ -7,8 +8,8 @@
  *  - an expired weekly message is dropped, not sent late;
  *  - the record (acta) keeps template, version, content hash, consent and approver, never child text.
  */
-import { sha256 } from './sha256.ts';
-import type { Canal, Destino, EstadoEntrega, MensajeSaliente, Plantilla, PuertoEntrega } from './puertos.ts';
+import { sha256 } from '@rikuy/evidencia';
+import type { Canal, Destino, EstadoEntrega, MensajeSaliente, Plantilla, PuertoEntrega } from '@rikuy/mensajeria';
 
 export type EstadoSalida = 'borrador' | 'descartado' | 'vencido' | EstadoEntrega;
 

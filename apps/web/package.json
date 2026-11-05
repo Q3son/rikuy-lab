@@ -23,6 +23,7 @@
     "@rikuy/lab-engine": "*",
     "@rikuy/lenguas": "*",
     "@rikuy/memoria": "*",
+    "@rikuy/mensajeria": "*",
     "@rikuy/presencia": "*",
     "@rikuy/quipu": "*",
     "@rikuy/reportes": "*",

@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { crearColaSalida, dentroDeVentana, type AlmacenSalida } from './cola.ts';
-import type { Destino, MensajeSaliente, PuertoEntrega } from './puertos.ts';
-import { crearAdaptadorSimulado } from './simulado.ts';
+import { AdaptadorEnlaceWame, AdaptadorEntregaSimulado, err, type Destino, type MensajeSaliente, type OpcionesEntregaSimulada, type PuertoEntrega } from '@rikuy/mensajeria';
+import { crearColaSalida, dentroDeVentana, type AlmacenSalida } from './salida.ts';
+
+const simulado = (o: OpcionesEntregaSimulada = {}) => new AdaptadorEntregaSimulado({ canal: 'whatsapp', ...o });
+
+/** A provider that answers BAJA: the family withdrew consent. */
+const conBaja: PuertoEntrega = {
+  canal: 'whatsapp',
+  capacidades: () => ({ plantillasAprobadas: true, audioAdjunto: false, estadoEntrega: true }),
+  enviar: async () => err({ tipo: 'sin_consentimiento', detalle: 'La familia respondió BAJA.' }),
+  estado: async () => 'baja',
+};
 
 const T0 = Date.UTC(2026, 10, 6, 22, 30); // Friday 17:30 in Lima (UTC-5)
 const HORA = 3_600_000;
@@ -18,14 +27,14 @@ const msg = (n: number, extra: Partial<MensajeSaliente> = {}): MensajeSaliente =
   consentimientoRef: 'alta-2026-03',
   ...extra,
 });
-const wa: Destino = { canal: 'whatsapp', direccion: '+51900000001' };
+const wa: Destino = { canal: 'whatsapp', direccion: '+51900000001', ref: 'familia:1' };
 
 function montar(opciones: { reloj?: { t: number }; almacen?: AlmacenSalida } = {}) {
   const reloj = opciones.reloj ?? { t: T0 };
   let guardado = '[]';
   const almacen = opciones.almacen ?? { cargar: async () => JSON.parse(guardado), guardar: async (x) => void (guardado = JSON.stringify(x)) };
   const cola = crearColaSalida({ almacen, ahora: () => reloj.t, desfaseMin: -300 });
-  return { cola, reloj, almacen, puerto: crearAdaptadorSimulado('whatsapp') };
+  return { cola, reloj, almacen, puerto: simulado() };
 }
 const puertos = (p: PuertoEntrega) => ({ whatsapp: p }) as Record<string, PuertoEntrega>;
 
@@ -34,13 +43,13 @@ describe('outbox: the teacher approves before anything is sent', () => {
     const { cola, puerto } = montar();
     await cola.agregarBorrador(msg(1), wa);
     await cola.drenar({ enLinea: true, puertos: puertos(puerto) });
-    expect(puerto.bandeja).toHaveLength(0);
+    expect(puerto.bandeja()).toHaveLength(0);
 
     await expect(cola.aprobar('01JC00000000000000000MSG01', 'docente')).rejects.toThrow(/vista previa/);
     await cola.marcarVista('01JC00000000000000000MSG01');
     await cola.aprobar('01JC00000000000000000MSG01', 'docente');
     await cola.drenar({ enLinea: true, puertos: puertos(puerto) });
-    expect(puerto.bandeja).toHaveLength(1);
+    expect(puerto.bandeja()).toHaveLength(1);
   });
 
   it('batch approval works for group messages but never for individual (variant B) ones', async () => {
@@ -80,11 +89,11 @@ describe('outbox: offline queue and flush when the hub syncs', () => {
 
     const sin = await cola.drenar({ enLinea: false, puertos: puertos(puerto) });
     expect(sin.enviados).toBe(0);
-    expect(puerto.bandeja).toHaveLength(0);
+    expect(puerto.bandeja()).toHaveLength(0);
 
     const con = await cola.drenar({ enLinea: true, puertos: puertos(puerto) });
     expect(con.enviados).toBe(2);
-    expect(puerto.bandeja.map((b) => b.mensaje.id)).toEqual([msg(1).id, msg(2).id]);
+    expect(puerto.bandeja().map((b) => b.mensajeId)).toEqual([msg(1).id, msg(2).id]);
   });
 
   it('is idempotent: two syncs in a row do not send twice, even in parallel', async () => {
@@ -94,7 +103,7 @@ describe('outbox: offline queue and flush when the hub syncs', () => {
     await cola.aprobar(msg(1).id, 'docente');
     await Promise.all([cola.drenar({ enLinea: true, puertos: puertos(puerto) }), cola.drenar({ enLinea: true, puertos: puertos(puerto) })]);
     await cola.drenar({ enLinea: true, puertos: puertos(puerto) });
-    expect(puerto.bandeja).toHaveLength(1);
+    expect(puerto.bandeja()).toHaveLength(1);
   });
 
   it('does not duplicate a draft with the same idempotency key', async () => {
@@ -115,7 +124,7 @@ describe('outbox: offline queue and flush when the hub syncs', () => {
     await a.cola.drenar({ enLinea: true, puertos: puertos(a.puerto) });
     const b = montar({ reloj, almacen });
     await b.cola.drenar({ enLinea: true, puertos: puertos(b.puerto) });
-    expect(b.puerto.bandeja).toHaveLength(0);
+    expect(b.puerto.bandeja()).toHaveLength(0);
     expect((await b.cola.lista())[0].estado).toBe('enviado_proveedor');
   });
 
@@ -126,13 +135,13 @@ describe('outbox: offline queue and flush when the hub syncs', () => {
     await cola.aprobar(msg(1).id, 'docente');
     reloj.t = T0 + 3 * HORA;
     await cola.drenar({ enLinea: true, puertos: puertos(puerto) });
-    expect(puerto.bandeja).toHaveLength(0);
+    expect(puerto.bandeja()).toHaveLength(0);
     expect((await cola.lista())[0].estado).toBe('vencido');
   });
 });
 
 describe('outbox: retries and honest states', () => {
-  async function aprobado(puerto = crearAdaptadorSimulado('whatsapp', { fallarNVeces: 2 })) {
+  async function aprobado(puerto = simulado({ fallarNVeces: 2 })) {
     const m = montar();
     await m.cola.agregarBorrador(msg(1), wa);
     await m.cola.marcarVista(msg(1).id);
@@ -155,7 +164,7 @@ describe('outbox: retries and honest states', () => {
   });
 
   it('gives up after 5 attempts and shows the manual wa.me path', async () => {
-    const { cola, puerto, reloj } = await aprobado(crearAdaptadorSimulado('whatsapp', { fallarNVeces: 99 }));
+    const { cola, puerto, reloj } = await aprobado(simulado({ fallarNVeces: 99 }));
     for (let i = 0; i < 6; i += 1) {
       reloj.t += 3 * HORA;
       await cola.drenar({ enLinea: true, puertos: puertos(puerto) });
@@ -164,20 +173,20 @@ describe('outbox: retries and honest states', () => {
   });
 
   it('marks a bounce as rebotado and a withdrawn consent as baja, and never retries them', async () => {
-    const { cola, puerto } = await aprobado(crearAdaptadorSimulado('whatsapp', { rebote: true }));
+    const { cola, puerto } = await aprobado(simulado({ rebote: true }));
     await cola.drenar({ enLinea: true, puertos: puertos(puerto) });
     expect((await cola.lista())[0].estado).toBe('rebotado');
     const b = montar();
     await b.cola.agregarBorrador(msg(1), wa);
     await b.cola.marcarVista(msg(1).id);
     await b.cola.aprobar(msg(1).id, 'docente');
-    const p2 = crearAdaptadorSimulado('whatsapp', { bajas: [wa.direccion] });
+    const p2 = conBaja;
     await b.cola.drenar({ enLinea: true, puertos: puertos(p2) });
     expect((await b.cola.lista())[0].estado).toBe('baja');
   });
 
   it('refreshes sent messages to delivered from the provider state', async () => {
-    const { cola, puerto } = await aprobado(crearAdaptadorSimulado('whatsapp'));
+    const { cola, puerto } = await aprobado(simulado());
     await cola.drenar({ enLinea: true, puertos: puertos(puerto) });
     await cola.refrescarEstados(puertos(puerto));
     expect((await cola.lista())[0].estado).toBe('entregado');
@@ -185,8 +194,8 @@ describe('outbox: retries and honest states', () => {
 
   it('the wa.me adapter is manual: prepared, never claimed as delivered', async () => {
     const m = montar();
-    const wame = crearAdaptadorSimulado('enlace_wame', { manual: true });
-    await m.cola.agregarBorrador(msg(1), { canal: 'enlace_wame', direccion: '+51900000001' });
+    const wame = new AdaptadorEnlaceWame();
+    await m.cola.agregarBorrador(msg(1), { canal: 'enlace_wame', direccion: '987654321', ref: 'familia:1' });
     await m.cola.marcarVista(msg(1).id);
     await m.cola.aprobar(msg(1).id, 'docente');
     await m.cola.drenar({ enLinea: true, puertos: { enlace_wame: wame } as Record<string, PuertoEntrega> });
@@ -211,9 +220,9 @@ describe('sending window', () => {
     await m.cola.marcarVista(msg(1).id);
     await m.cola.aprobar(msg(1).id, 'docente');
     await m.cola.drenar({ enLinea: true, puertos: puertos(m.puerto), respetarVentana: true });
-    expect(m.puerto.bandeja).toHaveLength(0);
+    expect(m.puerto.bandeja()).toHaveLength(0);
     m.reloj.t = T0;
     await m.cola.drenar({ enLinea: true, puertos: puertos(m.puerto), respetarVentana: true });
-    expect(m.puerto.bandeja).toHaveLength(1);
+    expect(m.puerto.bandeja()).toHaveLength(1);
   });
 });

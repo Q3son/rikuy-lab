@@ -330,6 +330,8 @@ Reglas ya probadas con instantáneas y pruebas de contrato: sin datos de Guardi�
 
 Se implementó **dentro de `packages/evidencia/src/mensajeria/`** para no tocar la configuración de raíz (`.dependency-cruiser.cjs`). Mover tal cual a `packages/mensajeria/` cuando el Sprint 0 lo cree, con las reglas `mensajeria → reportes, core, lenguas` y `mensajeria ✗→ senales`.
 
+> **Resuelto en la integración:** el puerto duplicado se eliminó de `evidencia`. La bandeja con aprobación de F6 (`crearColaSalida`) y `construirMensajeSaliente` viven ahora en `apps/web/src/features/docente/entrega/` sobre `PuertoEntrega` de `@rikuy/mensajeria` (F7), con sus adaptadores simulado y `wa.me`. `Destino.ref` lleva la clave opaca del destinatario. `evidencia` conserva las plantillas y `sha256`.
+
 Contenido: `Canal`, `EstadoEntrega`, `Plantilla`, `MensajeSaliente`, `Destino`, `AcuseEnvio`, `FalloEntrega`, `PuertoEntrega` (nombres de la especificación), `AdaptadorEntregaSimulado` (`crearAdaptadorSimulado`), cola persistente `crearColaSalida` con `AlmacenSalida`.
 
 Decisiones de implementación que conviene confirmar:

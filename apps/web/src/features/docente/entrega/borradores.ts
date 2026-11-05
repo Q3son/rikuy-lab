@@ -4,19 +4,18 @@ import {
   coberturaPorCapacidad,
   componerDirector,
   componerTutora,
-  construirMensajeSaliente,
   construirVistaEvidencias,
   medicionesEsperadas,
   proyectar,
   renderFamilia,
   renderInforme,
   renderTutora,
-  type Destino,
-  type MensajeSaliente,
 } from '@rikuy/evidencia';
+import type { Destino, MensajeSaliente } from '@rikuy/mensajeria';
 import { entradaFamilia, semanaDeLima } from '../../familia/mensajeFamilia.ts';
 import { fraseLocal, type ContextoAula } from '../estado/contexto.ts';
 import { crearUlid } from '../estado/ids.ts';
+import { construirMensajeSaliente } from './mensaje.ts';
 
 export interface ContactoFamilia {
   id: string;
@@ -70,7 +69,9 @@ export function crearBorradores(d: Datos): Borrador[] {
   const frase = fraseLocal(d.contexto);
   const salida: Borrador[] = [];
   let n = 0;
-  const agregar = (mensaje: Omit<Parameters<typeof construirMensajeSaliente>[0], 'id'>, destino: Destino) => {
+  /** The opaque guardian reference of the destination is the recipient key, never the address. */
+  const agregar = (mensaje: Omit<Parameters<typeof construirMensajeSaliente>[0], 'id'>, sobre: Omit<Destino, 'ref'>) => {
+    const destino: Destino = { ...sobre, ref: mensaje.destinatarioClave };
     n += 1;
     salida.push({ mensaje: construirMensajeSaliente({ id: nuevoId(n), ...mensaje }), destino });
   };

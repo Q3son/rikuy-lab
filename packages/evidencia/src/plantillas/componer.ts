@@ -7,10 +7,7 @@ import type { AvanceGrupo } from '../avance.ts';
 import type { CoberturaCapacidad } from '../cobertura.ts';
 import type { VistaEvidencias } from '../evidencias.ts';
 import type { ProyeccionClase } from '../proyeccion.ts';
-import { sha256 } from '../mensajeria/sha256.ts';
-import type { MensajeSaliente, Plantilla } from '../mensajeria/puertos.ts';
 import type { EntradaInforme, EntradaTutora } from './modelos.ts';
-import type { Renderizado } from './tipos.ts';
 
 const NOMBRE_COMPETENCIA = 'Indaga mediante métodos científicos para construir sus conocimientos';
 
@@ -85,34 +82,5 @@ export function componerDirector(d: DatosDirector): EntradaInforme {
     conceptos: [],
     continuidad: { diasCierre: 0, paquetesEnviados: 0, paquetesDevueltosQr: 0, porCanal: { qr: 0, whatsapp: 0, a4: 0 } },
     brechas: { sesionesSinRed: 0, horasAudioQuechua: 0 },
-  };
-}
-
-export interface DatosMensaje {
-  id: string;
-  plantilla: Plantilla;
-  /** e.g. "2026-W45" or "2026-10". */
-  periodo: string;
-  /** Opaque key of the recipient (never the address itself). */
-  destinatarioClave: string;
-  renderizado: Renderizado;
-  adjuntos?: MensajeSaliente['adjuntos'];
-  vigenteHasta: string;
-  consentimientoRef: string;
-  lengua?: 'es' | 'quy';
-  version?: number;
-}
-
-export function construirMensajeSaliente(d: DatosMensaje): MensajeSaliente {
-  return {
-    id: d.id,
-    claveIdempotencia: sha256(`${d.periodo}|${d.destinatarioClave}|${d.plantilla}`),
-    plantilla: d.plantilla,
-    version: d.version ?? 1,
-    lengua: d.lengua ?? 'es',
-    cuerpo: { asunto: d.renderizado.asunto, texto: d.renderizado.texto, html: d.renderizado.html },
-    adjuntos: d.adjuntos ?? [],
-    vigenteHasta: d.vigenteHasta,
-    consentimientoRef: d.consentimientoRef,
   };
 }

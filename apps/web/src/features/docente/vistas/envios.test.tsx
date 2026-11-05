@@ -1,4 +1,4 @@
-import type { ItemSalida } from '@rikuy/evidencia';
+import type { ItemSalida } from '../entrega/salida.ts';
 import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { Contactos } from '../entrega/borradores.ts';
