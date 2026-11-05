@@ -51,7 +51,7 @@ export class SceneManager {
   current: SceneModule | null = null;
   private root: THREE.Group | null = null;
   private readonly morph = new Morph();
-  readonly ctx: SceneContext = { running: true, time: 0, variables: {} };
+  readonly ctx: SceneContext = { running: true, time: 0, variables: {}, releases: 0 };
   private busy = Promise.resolve();
   onChange: (state: DisplayState) => void = () => {};
   onHint: (text: string, level: number) => void = () => {};
@@ -130,6 +130,7 @@ export class SceneManager {
           break;
         case 'correr':
           this.ctx.running = true;
+          this.ctx.releases = (this.ctx.releases ?? 0) + 1;
           break;
         case 'pausar':
           this.ctx.running = false;

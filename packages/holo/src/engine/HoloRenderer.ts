@@ -11,6 +11,7 @@
  * vista son transformaciones de un plano, sin tocar la escena 3D.
  */
 import * as THREE from 'three';
+import { createStage, type Stage } from './stage.ts';
 
 export type HoloMode = 'piramide' | 'cajita' | 'normal';
 
@@ -28,6 +29,8 @@ export interface HoloOptions {
   rotation: number;
   /** Encuadre: 9:16 (como los videos verticales) o toda la pantalla. */
   aspect: '9:16' | 'libre';
+  /** Alignment guides: a center cross and the outline of each view (calibration helper). */
+  guides: boolean;
 }
 
 export const DEFAULT_OPTIONS: HoloOptions = {
@@ -38,7 +41,11 @@ export const DEFAULT_OPTIONS: HoloOptions = {
   viewSize: 0.33,
   rotation: 0,
   aspect: '9:16',
+  guides: false,
 };
+
+/** Cap of the device pixel ratio: crisp enough, and keeps mid-range phones at 60 fps. */
+export const MAX_PIXEL_RATIO = 1.5;
 
 export class HoloRenderer {
   readonly renderer: THREE.WebGLRenderer;
@@ -54,17 +61,21 @@ export class HoloRenderer {
   private readonly composeRoot = new THREE.Group();
   private readonly quads: THREE.Mesh[] = [];
   private readonly directCamera = new THREE.PerspectiveCamera(40, 1, 0.01, 100);
+  private readonly stage: Stage = createStage();
+  private readonly guides = new THREE.Group();
+  private readonly startedAt = performance.now();
   private width = 1;
   private height = 1;
 
   constructor(canvas: HTMLCanvasElement, options: Partial<HoloOptions> = {}) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO));
     // Negro absoluto: en Pepper's ghost el negro se vuelve transparente.
     this.renderer.setClearColor(0x000000, 1);
     this.scene.background = null;
     this.scene.add(this.pivot);
+    this.scene.add(this.stage.group);
 
     this.scene.add(new THREE.AmbientLight(0xffffff, 0.55));
     const key = new THREE.DirectionalLight(0xffffff, 1.6);
@@ -78,23 +89,47 @@ export class HoloRenderer {
     for (let i = 0; i < 4; i++) {
       const cam = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
       const a = (i * Math.PI) / 2;
-      cam.position.set(Math.sin(a) * 4, 0.4, Math.cos(a) * 4);
-      cam.lookAt(0, 0, 0);
+      cam.position.set(Math.sin(a) * 4.45, 0.5, Math.cos(a) * 4.45);
+      cam.lookAt(0, -0.12, 0);
       this.cameras.push(cam);
       const rt = new THREE.WebGLRenderTarget(512, 512, { samples: 4 });
       rt.texture.colorSpace = THREE.SRGBColorSpace;
       this.targets.push(rt);
       const quad = new THREE.Mesh(
         new THREE.PlaneGeometry(1, 1),
-        new THREE.MeshBasicMaterial({ map: rt.texture, toneMapped: false, alphaTest: 0.5 }),
+        // Each view fades to black at its border: nothing is ever cut by a hard edge on the acetate.
+        new THREE.ShaderMaterial({
+          uniforms: { map: { value: rt.texture } },
+          vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+          fragmentShader: `uniform sampler2D map; varying vec2 vUv;
+            void main() {
+              vec4 c = texture2D(map, vUv);
+              vec2 e = smoothstep(vec2(0.0), vec2(0.08), vUv) * smoothstep(vec2(0.0), vec2(0.08), 1.0 - vUv);
+              gl_FragColor = vec4(c.rgb * e.x * e.y, 1.0);
+              #include <colorspace_fragment>
+            }`,
+        }),
       );
       this.quads.push(quad);
       this.composeRoot.add(quad);
+      const outline = new THREE.LineLoop(
+        new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-0.5, -0.5, 0), new THREE.Vector3(0.5, -0.5, 0), new THREE.Vector3(0.5, 0.5, 0), new THREE.Vector3(-0.5, 0.5, 0)]),
+        new THREE.LineBasicMaterial({ color: 0xf5b301 }),
+      );
+      outline.position.z = 0.1;
+      quad.add(outline);
     }
+    // Center cross of the guides (sized in layout()).
+    const cross = new THREE.LineSegments(
+      new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-1, 0, 0), new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1, 0)]),
+      new THREE.LineBasicMaterial({ color: 0x19cbee }),
+    );
+    this.guides.add(cross);
+    this.composeRoot.add(this.guides);
     this.composeScene.add(this.composeRoot);
     this.composeCamera.position.z = 5;
-    this.directCamera.position.set(0, 0.4, 4);
-    this.directCamera.lookAt(0, 0, 0);
+    this.directCamera.position.set(0, 0.45, 4.3);
+    this.directCamera.lookAt(0, -0.1, 0);
 
     this.resize();
     window.addEventListener('resize', this.onResize);
@@ -105,6 +140,7 @@ export class HoloRenderer {
   /** Frees GPU resources and listeners (the React viewer mounts and unmounts it). */
   dispose() {
     window.removeEventListener('resize', this.onResize);
+    this.stage.dispose();
     this.targets.forEach((t) => t.dispose());
     this.quads.forEach((q) => {
       q.geometry.dispose();
@@ -132,7 +168,8 @@ export class HoloRenderer {
   private frame() {
     const w = this.width;
     const h = this.height;
-    if (this.options.aspect === 'libre') return { w, h };
+    // The pyramid cross is square: it always uses the whole short side of the screen.
+    if (this.options.aspect === 'libre' || this.options.mode === 'piramide') return { w, h };
     const ratio = w >= h ? 16 / 9 : 9 / 16;
     return w / h > ratio ? { w: h * ratio, h } : { w, h: w / ratio };
   }
@@ -143,7 +180,7 @@ export class HoloRenderer {
    * tocan, así cada cara de la pirámide refleja solo la suya.
    */
   private layout() {
-    const { mode, mirror, flip, gap, viewSize, rotation } = this.options;
+    const { mode, mirror, flip, gap, viewSize, rotation, guides } = this.options;
     const w = this.width;
     const h = this.height;
     Object.assign(this.composeCamera, { left: -w / 2, right: w / 2, top: h / 2, bottom: -h / 2 });
@@ -170,6 +207,7 @@ export class HoloRenderer {
         { x: 0, y: offset, rot: 0 },
         { x: -offset, y: 0, rot: -Math.PI / 2 },
       ];
+      this.guides.scale.setScalar(size * 0.35);
       placements.forEach((p, i) => {
         const q = this.quads[i];
         q.visible = true;
@@ -177,7 +215,9 @@ export class HoloRenderer {
         q.rotation.z = p.rot;
         q.scale.set(size * sx, size * sy, 1);
       });
+      this.setGuides(guides);
     } else if (mode === 'cajita') {
+      this.setGuides(false);
       const size = short * 0.95;
       this.quads.forEach((q, i) => {
         q.visible = i === 0;
@@ -188,7 +228,13 @@ export class HoloRenderer {
     }
   }
 
+  private setGuides(on: boolean) {
+    this.guides.visible = on;
+    for (const q of this.quads) for (const c of q.children) c.visible = on;
+  }
+
   render() {
+    this.stage.update((performance.now() - this.startedAt) / 1000);
     const { mode, mirror, flip } = this.options;
     if (mode === 'normal') {
       this.renderer.setRenderTarget(null);

@@ -27,4 +27,6 @@ export interface SceneContext {
   running: boolean;
   time: number;
   variables: Record<string, number>;
+  /** Counts "soltar" orders: a scene with a starting pose (the pendulum) restarts from it. */
+  releases?: number;
 }
