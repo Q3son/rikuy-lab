@@ -47,7 +47,8 @@
         "¿Cambió el periodo cuando cambiaste la masa? ¿Y cuando cambiaste la longitud?",
         "Prueba con una longitud 4 veces mayor. ¿Cuántas veces cambió el periodo?"
       ],
-      "revisado": false
+      "revisado": true,
+      "revisor": "equipo Rikuy (demo)"
     }
   },
   "procedencia": {

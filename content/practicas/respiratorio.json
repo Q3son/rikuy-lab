@@ -41,7 +41,8 @@
         "¿Qué gas necesitan tus células y de dónde lo sacan?",
         "Si cada respiración trae menos oxígeno, ¿cómo podría el cuerpo compensarlo?"
       ],
-      "revisado": false
+      "revisado": true,
+      "revisor": "equipo Rikuy (demo)"
     }
   },
   "procedencia": {

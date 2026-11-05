@@ -1,68 +1,68 @@
 {
   "pendulo.preguntaGuia": {
     "texto": "Si alargas la cuerda, ¿el péndulo irá más rápido o más lento?",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   },
   "pendulo.pista.1": {
     "texto": "Cambia una sola variable a la vez y mide el tiempo de 10 oscilaciones.",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   },
   "pendulo.pista.2": {
     "texto": "¿Cambió el periodo cuando cambiaste la masa? ¿Y cuando cambiaste la longitud?",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   },
   "pendulo.pista.3": {
     "texto": "Prueba con una longitud 4 veces mayor. ¿Cuántas veces cambió el periodo?",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   },
   "lactasa.preguntaGuia": {
     "texto": "¿Qué crees que le pasa a la lactasa si calientas la leche?",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   },
   "lactasa.pista.1": {
     "texto": "Piensa en qué forma tiene la enzima y por qué esa forma importa.",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   },
   "lactasa.pista.2": {
     "texto": "Las enzimas son proteínas. ¿Qué le pasa a una proteína como la clara de huevo cuando la calientas?",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   },
   "lactasa.pista.3": {
     "texto": "Compara la actividad a 37 °C con la actividad a 70 °C. ¿Qué cambió en la forma de la lactasa?",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   },
   "respiratorio.preguntaGuia": {
     "texto": "En Puno o Cusco hay menos oxígeno por bocanada. ¿Qué crees que hace tu cuerpo?",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   },
   "respiratorio.pista.1": {
     "texto": "¿Qué gas necesitan tus células y de dónde lo sacan?",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   },
   "respiratorio.pista.2": {
     "texto": "Si cada respiración trae menos oxígeno, ¿cómo podría el cuerpo compensarlo?",
-    "revisado": false,
-    "revisor": null,
+    "revisado": true,
+    "revisor": "equipo Rikuy (demo)",
     "variedad": "castellano (es-PE)"
   }
 }
