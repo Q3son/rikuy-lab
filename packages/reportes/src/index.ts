@@ -1,5 +1,7 @@
 /**
- * @rikuy/reportes: Competency report models, small-cell suppression, printable HTML and CSV.
- * Sprint 0 skeleton. The owning front fills it in (docs/ecosistema/ARQUITECTURA_ECOSISTEMA.md, 5.4).
+ * @rikuy/reportes: competency report models, small-cell suppression, monthly director/UGEL model,
+ * Caja de dudas heatmap, printable HTML and CSV. Pure; renderers are separate. Never imports Guardián.
  */
 export const packageName = '@rikuy/reportes' as const;
+export * from './suprimir.ts';
+export * from './competencias.ts';
