@@ -11,6 +11,9 @@ const rutaSubconjunto = join(aqui, '..', 'data', 'cneb-cyt.json');
 const texto = readFileSync(rutaSubconjunto, 'utf8');
 const subconjunto = JSON.parse(texto) as SubconjuntoCyT;
 
+/** core.autocrlf may turn the committed LF file into CRLF on Windows checkouts. */
+const sinCrlf = (valor: string): string => valor.split('\r\n').join('\n');
+
 describe('CNEB science and technology subset (data/cneb-cyt.json)', () => {
   it('weighs at most 150 KB gzip (F9 gate)', () => {
     expect(gzipSync(Buffer.from(texto, 'utf8')).length).toBeLessThanOrEqual(150 * 1024);
@@ -36,8 +39,9 @@ describe('CNEB science and technology subset (data/cneb-cyt.json)', () => {
     if (!directorio) return;
     const entradas: EntradaFuente[] = ['primaria.json', 'secundaria.json'].map((archivo) => {
       const bytes = readFileSync(join(directorio, archivo));
-      return { archivo, sha256: createHash('sha256').update(bytes).digest('hex'), documento: JSON.parse(bytes.toString('utf8')) as DocumentoFuente };
+      const documento = JSON.parse(bytes.toString('utf8')) as DocumentoFuente;
+      return { archivo, sha256: createHash('sha256').update(bytes).digest('hex'), documento };
     });
-    expect(serializarSubconjunto(extraerCyT(entradas))).toBe(texto);
+    expect(serializarSubconjunto(extraerCyT(entradas))).toBe(sinCrlf(texto));
   });
 });
