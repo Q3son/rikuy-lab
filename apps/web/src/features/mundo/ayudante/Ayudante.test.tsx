@@ -42,9 +42,10 @@ describe('Ayudante del museo (student side)', () => {
     expect(registroMuseo.eventos.map((e) => e.tipo)).toContain('ayuda.cerrada');
   });
 
-  it('the rules judge needs a real phrase about the concept', () => {
+  it('the F4 rules judge needs a real phrase about the concept', () => {
     expect(juzgarFrase('sí')).toBe('no_evaluable');
-    expect(juzgarFrase('nos explicaron bien')).toBe('explorado');
+    expect(juzgarFrase('nos explicaron bien')).toBe('no_evaluable');
+    expect(juzgarFrase('la cuerda cambia algo')).toBe('explorado');
     expect(juzgarFrase('si la cuerda es más larga tarda más en volver')).toBe('razonado');
   });
 });

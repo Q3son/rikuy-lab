@@ -1,7 +1,7 @@
 /**
  * Ayudante del museo on this device. The pure state machine lives in `@rikuy/campus`; here it is wired to
- * mock ports until the hub (F8) relays actions between devices, the Cerebro (F10) gives node states and the
- * judge (F4) evaluates the restated phrase. Peer groups are simulated: they accept offers after a moment.
+ * the F4 rules judge for the restated phrase. Peer groups and their node states are still simulated until the
+ * hub (F8) relays the help actions between devices; they accept offers after a moment.
  */
 import {
   type AccionAyudante,
@@ -12,7 +12,11 @@ import {
   aplicar,
   estadoInicialAyudante,
 } from '@rikuy/campus';
+import { construirMapa, type EstadoNodo as EstadoCerebro, type MapaCerebro } from '@rikuy/cerebro';
+import { PRACTICAS } from '@rikuy/curriculum-cneb';
+import { juzgarConReglas, type ContextoJuez } from '@rikuy/tutor';
 import { create } from 'zustand';
+import { GRAFO_DEMO, memoriaDemo } from '../../cerebro/datosDemo.ts';
 import { registroMuseo } from '../eventos.ts';
 import { grupoActual } from '../grupo.ts';
 
@@ -42,24 +46,54 @@ export const GRUPOS_SIMULADOS: { id: string; apodo: string }[] = [
 export const apodoDe = (grupoId: string) =>
   grupoId === grupoActual().id ? grupoActual().apodo : (GRUPOS_SIMULADOS.find((g) => g.id === grupoId)?.apodo ?? 'Otro grupo');
 
-/** Mock of the Cerebro read port: simulated groups reasoned the pendulum length; this group explored it. */
-export function estadoNodoSimulado(grupoId: string, nodoId: string): EstadoNodo {
-  if (grupoId === grupoActual().id) return nodoId === 'medir-oscilaciones' ? 'razonado' : 'explorado';
+/** Museum help nodes -> nodes of the Cerebro map (F10) that carry the same idea. */
+const NODO_CEREBRO: Record<string, string[]> = {
+  'longitud-periodo': ['longitud', 'periodo'],
+  'medir-oscilaciones': ['periodo'],
+  'prediccion-dato': ['longitud'],
+};
+
+const CAMPUS_DE_CEREBRO: Record<EstadoCerebro, EstadoNodo> = { sin_explorar: 'sin_explorar', explorado: 'explorado', en_camino: 'en_camino', logrado: 'razonado' };
+
+let mapaPropio: MapaCerebro | null = null;
+/** This group's own Cerebro map (@rikuy/cerebro over the same memory as the Cerebro tab). */
+const mapaDelGrupo = () => (mapaPropio ??= construirMapa({ grafo: GRAFO_DEMO, ...memoriaDemo() }));
+
+/**
+ * Cerebro read port of the helper. Own group: the real @rikuy/cerebro states (`logrado` reads as
+ * `razonado`, an open question wins). Peer groups: simulated until the hub relays their maps.
+ */
+export function estadoNodoDeGrupo(grupoId: string, nodoId: string): EstadoNodo {
+  if (grupoId === grupoActual().id) {
+    const nodos = mapaDelGrupo().nodos.filter((n) => NODO_CEREBRO[nodoId]?.includes(n.id));
+    if (nodos.some((n) => n.preguntaAbierta)) return 'pregunta_abierta';
+    const orden: EstadoNodo[] = ['sin_explorar', 'explorado', 'en_camino', 'razonado'];
+    return nodos.map((n) => CAMPUS_DE_CEREBRO[n.estado]).reduce<EstadoNodo>((max, e) => (orden.indexOf(e) > orden.indexOf(max) ? e : max), 'sin_explorar');
+  }
   return nodoId === 'medir-oscilaciones' ? 'explorado' : 'razonado';
 }
 
-/** Mock of the judge (F4): rules only, honest label "evaluado por reglas". */
+const PENDULO = PRACTICAS.pendulo!;
+const CONTEXTO_JUEZ: ContextoJuez = {
+  variables: PENDULO.variables.map((v) => ({ id: v.id, etiqueta: v.etiqueta, ...(v.id === 'longitud' ? { sinonimos: ['largo', 'larga', 'cuerda', 'hilo', 'cordel'] } : {}) })),
+  variableProbada: 'longitud',
+  conceptos: ['tiempo', 'periodo', 'oscilacion', 'oscila', 'tarda', 'demora', 'recorre', 'camino'],
+};
+
+/**
+ * F4 rules judge (`@rikuy/tutor`) on the restated phrase, read as a prediction of the pendulum (variable
+ * and effect). "NO", level 0 or nothing observable is "no evaluable"; level 2-3 is "razonado"; level 1 "explorado".
+ */
 export function juzgarFrase(frase: string): NivelJuez {
-  const palabras = frase.trim().split(/\s+/).filter(Boolean);
-  if (palabras.length < 3) return 'no_evaluable';
-  const concepto = /\b(longitud|largo|larga|hilo|cuerda|cordel|tiempo|periodo|oscila\w*|tarda\w*|demora\w*|masa|peso|dato)\b/i.test(frase);
-  return palabras.length >= 6 && concepto ? 'razonado' : 'explorado';
+  const v = juzgarConReglas({ indicador: 'prediccion', respuesta: frase, contexto: CONTEXTO_JUEZ, datos: [] });
+  if (v.nivel === 'NO' || v.nivel === 0 || v.estado === 'no_observable') return 'no_evaluable';
+  return v.nivel >= 2 ? 'razonado' : 'explorado';
 }
 
 let contador = 0;
 const nuevoId = () => `AY${Date.now().toString(36)}${(contador++).toString(36)}`;
 
-function contexto(estadoNodo: ContextoAyudante['estadoNodo'] = estadoNodoSimulado): ContextoAyudante {
+function contexto(estadoNodo: ContextoAyudante['estadoNodo'] = estadoNodoDeGrupo): ContextoAyudante {
   return {
     ahora: Date.now(),
     azar: Math.random,

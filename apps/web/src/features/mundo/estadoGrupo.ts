@@ -1,14 +1,15 @@
 /**
  * Per-device group state of the museum: the customised stone and the halls whose curator question was
  * answered. Kept in memory with a best-effort localStorage copy (a convenience, not a record).
- * The class quipu balance comes from F10; until then a demo base plus the confirmed help knots.
+ * The class quipu balance comes from the F10 ledger (`saldoQuipuAula`).
  */
-import { type AparienciaPiedra, PIEDRA_INICIAL } from '@rikuy/campus';
+import { type AparienciaPiedra, type NudoAyuda, PIEDRA_INICIAL } from '@rikuy/campus';
+import { agregarAsiento, asientosDeAyuda, type AyudaCerrada, crearLibro, idDeterminista, saldoTotalAula } from '@rikuy/quipu';
 import { create } from 'zustand';
 import { useAyudante } from './ayudante/servicio.ts';
+import { grupoActual } from './grupo.ts';
 
 const CLAVE = 'rk-museo-grupo';
-const NUDOS_AULA_DEMO = 5;
 
 interface Guardado {
   piedra: AparienciaPiedra;
@@ -57,8 +58,26 @@ export const useEstadoGrupo = create<EstadoGrupo>((set, get) => ({
   reiniciar: () => set({ piedra: PIEDRA_INICIAL, rejas: [] }),
 }));
 
-/** Class quipu knots (mock port of `@rikuy/quipu`): demo base + confirmed help knots. */
+const AULA_DEMO = '01JC0000000000000000000A01';
+const CLASE_DEMO = '01JC0000000000000000000C01';
+
+/**
+ * Class quipu balance from the @rikuy/quipu ledger (F10): each help knot the teacher confirmed becomes
+ * the ledger entries of `asientosDeAyuda` (daily cap and weekly repeat rules included).
+ */
+export function saldoQuipuAula(nudos: NudoAyuda[], aulaId = grupoActual().claseId ?? AULA_DEMO): number {
+  let libro = crearLibro();
+  const historial: AyudaCerrada[] = [];
+  for (const n of nudos.filter((x) => x.estado === 'confirmado').sort((a, b) => a.ts - b.ts)) {
+    const ayuda: AyudaCerrada = { id: idDeterminista('ayuda', n.id), aulaId, claseId: grupoActual().claseId ?? CLASE_DEMO, ayudanteGrupoId: n.grupoAyudaId, pideGrupoId: n.grupoPideId, conceptoId: n.nodoId, resultado: 'nos_ayudo', juez: 'evaluable', confirmacion: 'docente', ts: n.ts };
+    const r = asientosDeAyuda(ayuda, historial, { requiereDocente: true });
+    if ('asientos' in r) for (const a of r.asientos) libro = agregarAsiento(libro, a);
+    historial.push(ayuda);
+  }
+  return saldoTotalAula(libro, aulaId);
+}
+
 export function useNudosAula(): number {
   const nudos = useAyudante((s) => s.estado.nudos);
-  return NUDOS_AULA_DEMO + nudos.filter((n) => n.estado === 'confirmado').length;
+  return saldoQuipuAula(nudos);
 }
