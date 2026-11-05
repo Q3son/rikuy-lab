@@ -3,7 +3,7 @@
  * The content lives in the fragment, so no server ever sees it; once the PWA is installed it opens offline.
  */
 import { deflateRaw, inflateRaw } from 'pako';
-import { crc32 } from '../docente/simulacion/rk1.ts';
+import { crc32 } from '@rikuy/sync';
 
 export type Resultado<T> = { ok: true; valor: T } | { ok: false; error: string };
 

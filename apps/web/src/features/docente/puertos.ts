@@ -1,5 +1,5 @@
 /**
- * Ports the teacher panel needs from other fronts. Each has a simulated adapter in ./simulacion
+ * Ports the teacher panel needs from other fronts. RK1 runs on F2 (./relevo); the signature is still simulated (./simulacion)
  * so F6 runs end to end before F2 (sync codec), F7 (delivery) and F8 (hub) land.
  */
 import type { Evento } from '@rikuy/contracts';
