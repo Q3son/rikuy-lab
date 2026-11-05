@@ -181,3 +181,21 @@
     background-repeat: repeat-x;
   }
 }
+
+/* Mascot: a gentle pendulum swing (+-3 degrees, 4.2 s), transform only, still under reduced motion */
+.rk-swing {
+  transform-origin: 120px 16px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .rk-swing {
+    animation: rk-swing var(--rk-dur-swing) ease-in-out infinite alternate;
+  }
+}
+@keyframes rk-swing {
+  from {
+    transform: rotate(-3deg);
+  }
+  to {
+    transform: rotate(3deg);
+  }
+}
