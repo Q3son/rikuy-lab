@@ -14,6 +14,7 @@ sin dar la respuesta. El docente ve en un panel qué está entendiendo cada grup
 
 | Pieza | Qué hace |
 |---|---|
+| **Museo Rikuy** (inicio) | Entrada para la docente y para los grupos con código de clase; salas por área del CNEB, exhibiciones con holograma, tutor, juez de razonamiento, memoria por alumno y panel "Mi clase". Ver [docs/ecosistema/ECOSISTEMA.md](docs/ecosistema/ECOSISTEMA.md). |
 | **Proyector** (`display.html`) | Holograma en 4 vistas (pirámide), 1 vista (cajita) o normal. Espejo, volteo, rotación y tamaño ajustables. Toque, voz y gestos de mano. |
 | **Control del grupo** (`control.html`) | Mantener para hablar, panel táctil para girar y hacer zoom, deslizadores de variables, botones de escena. |
 | **Panel docente** (`panel.html`) | Tipos de pregunta, razonamiento (variable · predicción · justificación), mapa de conceptos explorados, frases que sustentan cada indicador y una sugerencia por grupo. Orienta, no califica. |
@@ -21,8 +22,9 @@ sin dar la respuesta. El docente ve en un panel qué está entendiendo cada grup
 
 ## Probar solo con el celular
 
-Abrir **https://q3son.github.io/rikuy-lab/** en Chrome, elegir *Proyector*, poner el
-celular bajo la pirámide o la cajita y usar el micrófono 🎙 de la esquina.
+Abrir **https://q3son.github.io/rikuy-lab/** en Chrome y elegir *Laboratorio holográfico
+(versión clásica)* → *Proyector*; poner el celular bajo la pirámide o la cajita y usar el
+micrófono de la esquina. Las opciones *Soy docente* y *Somos un grupo* abren el Museo Rikuy.
 Esta versión no necesita laptop ni servidor: el tutor de reglas corre en el navegador.
 Para que otro celular sea el control remoto y para el panel docente con varios grupos,
 hace falta el servidor (sección siguiente).
@@ -79,16 +81,42 @@ Ver [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md) para el diseño y cómo agregar
 ## Pruebas
 
 ```bash
-npm test          # pruebas del núcleo (node:test)
+npm test          # más de 1 800 pruebas (vitest)
 npm run typecheck
 npm run build
 ```
 
-## Privacidad
+## Uso ético y responsable de la IA
 
-Los grupos usan seudónimos (G1…G8). La cámara de gestos procesa la mano en el
-dispositivo y no guarda imágenes. Los eventos se guardan en el servidor del aula
-(`data/<sala>.jsonl`).
+| Cuidado | Cómo se aplica en Rikuy |
+|---|---|
+| Privacidad | Grupos y alumnos con seudónimo; sin nombres reales, DNI ni fotos. No se guarda audio: solo el texto de la pregunta, la hipótesis y la conclusión. La cámara de gestos procesa la mano en el dispositivo y no guarda imágenes. Los datos se quedan en el servidor del aula; quien financia solo ve agregados. |
+| Datos de prueba | Toda la demo usa datos inventados (clase "2.º B", grupos G1 a G8). Ningún dato real de estudiantes se envió a una herramienta de IA. |
+| La IA no hace la tarea | El tutor no entrega la respuesta: pide una predicción, da pistas graduales y registra cuántas usó el grupo. |
+| Revisión de errores | La IA propone y el código valida: herramientas con esquema, escenas y rangos verificados; lo inválido se descarta. El juez exige una cita literal del alumno y marca "dudoso" para revisión docente. La docente aprueba cada práctica generada antes de que llegue al aula. |
+| Transparencia | El tutor dice cuándo la simulación simplifica la realidad. Cada indicador del panel muestra las frases que lo sustentan. |
+| Sesgos | Los indicadores orientan, no califican ni etiquetan; no hay rankings. Los textos en quechua llevan aviso de revisión pendiente hasta que un hablante los valide. |
+| Acceso con pocos recursos | Funciona con el celular que ya existe y una pirámide de menos de S/ 3, sin internet (tutor de reglas y app instalable). |
+
+## Uso de IA en el desarrollo
+
+| Herramienta | Para qué la usamos | En qué parte del proyecto | Cómo lo revisamos |
+|---|---|---|---|
+| Claude (Anthropic), asistente de código | Investigar el reto y las bases, proponer la arquitectura, generar primeras versiones de funciones y pruebas, depurar | Núcleo (`packages/core`), servidor, renderer holográfico, escenas, panel, ecosistema | Pruebas automáticas, ejecución en celulares reales, revisión y explicación del código en equipo |
+| Claude (Anthropic), redacción | Reporte, guía de trabajo de campo, guiones del pitch y del video, documentación | `docs/`, presentación | Contraste con las bases oficiales y fuentes citadas; edición del equipo |
+
+IA dentro del producto (opcional, siempre con respaldo sin IA):
+
+| Modelo | Uso | Respaldo |
+|---|---|---|
+| Claude, Gemini o Meta vía API | Tutor por voz, revisión de prácticas, lectura del plan docente | Agente y juez de reglas en el dispositivo |
+| Modelo local con Ollama | Tutor y revisión sin internet en la laptop del aula | Agente y juez de reglas |
+
+## Evidencia de desarrollo
+
+Todo el código se escribió entre el 3 y el 5 de noviembre de 2026. El historial del
+repositorio lo muestra: ramas por funcionalidad (`feature/*`, `fix/*`, `docs/*`) unidas
+a `develop` y `main` con merge, y la bitácora en [docs/BITACORA-HACKATHON.md](docs/BITACORA-HACKATHON.md).
 
 ## Licencia
 
