@@ -1,4 +1,4 @@
-import { test } from 'node:test';
+import { test } from 'vitest';
 import assert from 'node:assert/strict';
 import { classifyQuestion, extractConcepts, isRelational, scoreHypothesis, summarize } from './analytics.ts';
 import { lactaseActivity, pendulumPeriod } from './physics.ts';

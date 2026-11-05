@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 296 96" width="296" height="96" role="img" aria-labelledby="t">
+  <title id="t">Rikuy</title>
+  <!-- Simbolo: un ojo que cuelga de una cuerda con nudo (pendulo). Palabra: trazo monolinea de 9 px, terminales redondos, como un cordon. La i lleva el punto Foton. -->
+  <style>
+    :root { --rk-logo-ink: #0D2B33; --rk-logo-eye: #19CBEE; --rk-logo-knot: #F5B301; --rk-logo-lid: #FFFFFF; }
+    @media (prefers-color-scheme: dark) { :root { --rk-logo-ink: #EDF5F6; --rk-logo-lid: #0A1A1F; } }
+  </style>
+  <g fill="none" stroke="var(--rk-logo-ink)" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="26" y1="4" x2="26" y2="26" stroke-width="5"/>
+    <circle cx="26" cy="47" r="19" stroke-width="6" fill="var(--rk-logo-lid)"/>
+  </g>
+  <circle cx="26" cy="14" r="5.5" fill="var(--rk-logo-knot)" stroke="var(--rk-logo-ink)" stroke-width="2"/>
+  <circle cx="30" cy="46" r="12" fill="var(--rk-logo-eye)"/>
+  <circle cx="31" cy="45" r="5.5" fill="#0D2B33"/>
+  <circle cx="35" cy="40" r="2.4" fill="#FFFFFF"/>
+  <g transform="translate(76 0)" fill="none" stroke="var(--rk-logo-ink)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 26 V70 M5 46 C5 33 13 26 27 26"/>
+    <path d="M45 26 V70"/>
+    <path d="M69 8 V70 M97 26 L69 52 M81 44 L99 70"/>
+    <path d="M117 26 V52 C117 64 123 70 133 70 C143 70 149 64 149 52 V26 M149 44 V70"/>
+    <path d="M165 26 L181 62 M197 26 L175 80"/>
+  </g>
+  <circle cx="121" cy="10" r="6.5" fill="var(--rk-logo-eye)"/>
+</svg>

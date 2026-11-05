@@ -1,0 +1,29 @@
+{
+  "name": "@rikuy/store-dexie",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Repository adapter on top of Dexie (browser).",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./react": "./src/react.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@rikuy/contracts": "*",
+    "@rikuy/sync": "*",
+    "dexie": "^4.4.7"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.2.7"
+  },
+  "peerDependencies": {
+    "dexie-react-hooks": "^4.4.0",
+    "react": "^19.3.1"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "id": "8M4KN8AVQV2H34C78VJQ4CHYYK",
+  "version": 1,
+  "titulo": "¿Cómo digiere la leche nuestro cuerpo?",
+  "desempeno": {
+    "nivel": "secundaria",
+    "grado": 2,
+    "area": "ciencia-y-tecnologia",
+    "competencia": 1,
+    "desempeno": 2,
+    "cita": "Propone procedimientos para observar, manipular la variable independiente, medir la variable dependiente y controlar la variable interviniente."
+  },
+  "preguntaGuia": "¿Qué crees que le pasa a la lactasa si calientas la leche?",
+  "prediccionRequerida": true,
+  "materiales": [
+    { "nombre": "Leche", "casero": true },
+    { "nombre": "Agua tibia y agua caliente para baño María (sin fuego directo)", "casero": true },
+    { "nombre": "Termómetro de cocina", "casero": true },
+    { "nombre": "Tiras indicadoras de pH", "casero": false }
+  ],
+  "variables": [
+    { "id": "temperatura", "etiqueta": "Temperatura", "unidad": "°C", "min": 0, "max": 90, "paso": 1, "porDefecto": 37 },
+    { "id": "ph", "etiqueta": "pH", "unidad": "", "min": 2, "max": 10, "paso": 0.5, "porDefecto": 6.5 }
+  ],
+  "protocolo": {
+    "repeticiones": 3,
+    "valoresIndependiente": [4, 37, 50, 70, 90],
+    "magnitud": "lactosa digerida",
+    "unidad": "%"
+  },
+  "modelo": { "id": "lactasa", "version": 1 },
+  "pistas": [
+    "Piensa en qué forma tiene la enzima y por qué esa forma importa.",
+    "Las enzimas son proteínas. ¿Qué le pasa a una proteína como la clara de huevo cuando la calientas?",
+    "Compara la actividad a 37 °C con la actividad a 70 °C. ¿Qué cambió en la forma de la lactasa?"
+  ],
+  "limitaciones": [
+    "La ruptura del enlace y la desnaturalización son animaciones didácticas, no una simulación molecular real.",
+    "La curva de actividad es un modelo aproximado; la lactasa real varía según la fuente."
+  ],
+  "escenaHolo": "lactasa",
+  "textos": {
+    "es": {
+      "preguntaGuia": "¿Qué crees que le pasa a la lactasa si calientas la leche?",
+      "pistas": [
+        "Piensa en qué forma tiene la enzima y por qué esa forma importa.",
+        "Las enzimas son proteínas. ¿Qué le pasa a una proteína como la clara de huevo cuando la calientas?",
+        "Compara la actividad a 37 °C con la actividad a 70 °C. ¿Qué cambió en la forma de la lactasa?"
+      ],
+      "revisado": true,
+      "revisor": "equipo Rikuy (demo)"
+    }
+  },
+  "procedencia": {
+    "generadoPor": "catalogo",
+    "modelos": [],
+    "revisiones": []
+  },
+  "estado": "borrador"
+}

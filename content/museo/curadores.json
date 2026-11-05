@@ -1,0 +1,48 @@
+[
+  {
+    "salaId": "sala-fisica",
+    "pregunta": "¿Qué crees que hace que algo que cuelga vaya y vuelva más rápido o más lento?",
+    "opciones": [
+      { "texto": "Lo largo del hilo", "retro": "¿Cómo podrías medirlo con tu propio péndulo?" },
+      { "texto": "Lo pesado que es", "retro": "¿Qué pasaría si cambias solo el peso y nada más?" },
+      { "texto": "Desde qué tan alto lo sueltas", "retro": "¿Lo soltarías siempre desde la misma altura para comparar?" },
+      { "texto": "No sé todavía", "retro": "¡Buena honestidad! ¿Qué podrías cambiar primero para averiguarlo?" }
+    ]
+  },
+  {
+    "salaId": "sala-biologia",
+    "pregunta": "¿Por qué crees que tu cuerpo cambia cuando subes a la puna?",
+    "opciones": [
+      { "texto": "Hay menos aire en cada respiración", "retro": "¿Cómo lo notarías contando tus respiraciones?" },
+      { "texto": "Hace más frío", "retro": "¿Cómo separarías el frío de la altura en un experimento?" },
+      { "texto": "No sé todavía", "retro": "¿Qué podrías medir en tu propio cuerpo para empezar?" }
+    ]
+  },
+  {
+    "salaId": "sala-quimica",
+    "pregunta": "¿Qué crees que cambia cuando echas sal al agua?",
+    "opciones": [
+      { "texto": "Pesa más el mismo vaso", "retro": "¿Con qué balanza casera lo comprobarías?" },
+      { "texto": "Las cosas flotan distinto", "retro": "¿Qué objeto pondrías a flotar para comparar?" },
+      { "texto": "No sé todavía", "retro": "¿Qué podrías observar antes y después de echar la sal?" }
+    ]
+  },
+  {
+    "salaId": "sala-tierra",
+    "pregunta": "¿Qué crees que pasa con el agua del charco cuando sale el sol?",
+    "opciones": [
+      { "texto": "Se va al aire", "retro": "¿Cómo medirías cuánta agua se fue?" },
+      { "texto": "La absorbe la tierra", "retro": "¿Qué pasaría con un charco sobre una piedra?" },
+      { "texto": "No sé todavía", "retro": "¿Qué podrías comparar en sol y en sombra?" }
+    ]
+  },
+  {
+    "salaId": "sala-taller",
+    "pregunta": "¿Qué crees que hace que un puente aguante más peso?",
+    "opciones": [
+      { "texto": "Su forma", "retro": "¿Qué forma probarías primero con ichu o papel?" },
+      { "texto": "El material", "retro": "¿Cómo compararías dos materiales de forma justa?" },
+      { "texto": "No sé todavía", "retro": "¿Qué podrías construir para empezar a probar?" }
+    ]
+  }
+]

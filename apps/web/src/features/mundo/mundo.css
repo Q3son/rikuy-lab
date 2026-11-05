@@ -1,0 +1,147 @@
+/* Museo Rikuy feature styles. Tokens come from @rikuy/ui (Luz de Puna); fallbacks are the Luz values. */
+.rk-mundo {
+  --m-bg: var(--rk-bg, #f5f6f1);
+  --m-surface: var(--rk-surface, #ffffff);
+  --m-border: var(--rk-border-strong, #6a7568);
+  --m-ink: var(--rk-ink, #0d2b33);
+  --m-muted: var(--rk-muted, #4d6368);
+  --m-primary: var(--rk-primary, #075e6c);
+  --m-on-primary: var(--rk-on-primary, #ffffff);
+  --m-sol: var(--rk-sol, #f5b301);
+  --m-sol-tint: var(--rk-sol-tint, #fff1cc);
+  --m-ichu: var(--rk-ichu, #14592d);
+  --m-focus: var(--rk-focus, #0d2b33);
+  background: var(--m-bg);
+  color: var(--m-ink);
+  min-height: 100dvh;
+  font-size: 17px;
+  line-height: 26px;
+}
+.rk-mundo :focus-visible {
+  outline: 3px solid var(--m-focus);
+  outline-offset: 2px;
+}
+.rk-sign {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  padding: 8px 16px;
+  color: #fff;
+  border-bottom: 4px solid var(--m-sol);
+}
+.rk-sign :is(h1, h2) {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+}
+.rk-sign small {
+  display: block;
+  font-size: 14px;
+  font-style: italic;
+}
+.rk-glifo {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid currentColor;
+  border-radius: 12px;
+  flex: none;
+}
+.rk-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: 2px solid var(--m-border);
+  background: var(--m-surface);
+  color: var(--m-ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.rk-btn[data-primario] {
+  background: var(--m-primary);
+  border-color: var(--m-primary);
+  color: var(--m-on-primary);
+  box-shadow: 0 3px 0 0 var(--rk-primary-press, #04474f);
+}
+.rk-btn[aria-disabled='true'] {
+  opacity: 0.7;
+}
+.rk-burbuja {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 12px;
+}
+.rk-burbuja p {
+  margin: 0;
+  padding: 8px 12px;
+  background: var(--m-surface);
+  border: 2px solid var(--m-border);
+  border-radius: 16px;
+  max-width: 62ch;
+}
+.rk-lienzo {
+  display: block;
+  touch-action: none;
+  border-block: 2px solid var(--m-border);
+}
+.rk-destinos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px;
+  list-style: none;
+  margin: 0;
+}
+.rk-placa {
+  border: 2px solid var(--m-border);
+  border-left-width: 10px;
+  border-radius: 16px;
+  background: var(--m-surface);
+  padding: 12px 16px;
+  display: grid;
+  gap: 8px;
+}
+.rk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 2px solid var(--m-border);
+  background: var(--m-surface);
+  font-size: 15px;
+}
+.rk-panel {
+  margin: 12px 16px;
+  padding: 12px 16px;
+  border: 2px solid var(--m-border);
+  border-radius: 16px;
+  background: var(--m-surface);
+  display: grid;
+  gap: 8px;
+}
+.rk-panel h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+}
+.rk-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .rk-mundo * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -1,0 +1,43 @@
+# Public deployment (Dokploy): one origin.
+#   /            hub (web build, /api, /ws, hologram rooms)
+#   /nube/*      cloud AI gateway (path prefix stripped by the proxy)
+# Secrets come from the platform environment, never from this file.
+services:
+  hub:
+    build:
+      context: .
+      args:
+        VITE_CLOUD_URL: ${PUBLIC_URL:-http://localhost:8787}/nube
+    restart: unless-stopped
+    environment:
+      PORT: "8787"
+      HUB_DATA_DIR: /data
+      HUB_OPEN: ${HUB_OPEN:-1}
+      HUB_PUBLIC_URL: ${PUBLIC_URL:-}
+      HUB_TOKEN: ${HUB_TOKEN:-}
+    volumes:
+      - hub-data:/data
+    expose:
+      - "8787"
+
+  cloud:
+    build:
+      context: .
+      args:
+        VITE_CLOUD_URL: ${PUBLIC_URL:-http://localhost:8787}/nube
+    restart: unless-stopped
+    command: ["npm", "start", "-w", "@rikuy/cloud"]
+    environment:
+      PORT: "8788"
+      CORS_ORIGINS: ${PUBLIC_URL:-}
+      CONFIAR_PROXY: "1"
+      CATALOGO_DIR: /app/content/practicas
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      META_API_KEY: ${META_API_KEY:-}
+      META_API_BASE_URL: ${META_API_BASE_URL:-https://api.meta.ai/v1}
+    expose:
+      - "8788"
+
+volumes:
+  hub-data:

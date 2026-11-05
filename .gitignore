@@ -154,3 +154,7 @@ data/
 apps/server/data/
 # Modelos de MediaPipe descargados para uso sin internet
 apps/web/public/mediapipe/
+
+# Playwright
+playwright-report/
+test-results/

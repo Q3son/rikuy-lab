@@ -1,0 +1,20 @@
+{
+  "name": "@rikuy/senales",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Learning signals (feature flag): coarse support states only, group aggregates.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@rikuy/contracts": "*",
+    "@rikuy/core": "*"
+  }
+}

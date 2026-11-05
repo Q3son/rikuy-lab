@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`family weekly message, variant A (group, no child name) > matches the snapshot in the three shapes > asunto 1`] = `"Rikuy · semana del 2 al 6 de noviembre"`;
+
+exports[`family weekly message, variant A (group, no child name) > matches the snapshot in the three shapes > html 1`] = `
+"<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rikuy · semana del 2 al 6 de noviembre</title></head>
+<body style="margin:0;background:#F5F6F1;font-family:Arial,Helvetica,sans-serif;color:#0D2B33;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:16px;">
+<table role="presentation" width="480" cellpadding="0" cellspacing="0" style="max-width:480px;width:100%;background:#FFFFFF;border:2px solid #D3D9CC;border-radius:16px;">
+<tr><td style="padding:20px;font-size:18px;line-height:26px;">
+<p style="margin:0 0 12px;font-weight:bold;">Rikuy · semana del 2 al 6 de noviembre</p>
+<p style="margin:0 0 12px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#0D2B33" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Cuerda"><path d="M3 20c4-10 6 2 9-6s5-7 9-10"/><path d="M3 20h3"/><path d="M18 4h3"/></svg> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#0D2B33" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Piedra"><path d="M4 17l3-8 6-3 6 4 1 6-4 3H8z"/></svg> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#0D2B33" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Reloj"><path d="M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M12 9v4l3 2"/><path d="M10 2h4"/></svg></p>
+<p style="margin:0 0 12px;">Esta semana su hijo o hija y su grupo midieron un péndulo con una piedra y una cuerda.</p>
+<p style="margin:0 0 12px;">Pregúntenle: ¿de qué depende lo que tarda en ir y volver?</p>
+
+<p style="margin:0 0 12px;"><a href="https://rikuy.app/a/pendulo-quy.opus" style="display:inline-block;padding:12px 16px;background:#075E6C;color:#FFFFFF;text-decoration:none;border-radius:12px;font-weight:bold;">🔊 Escuchar</a></p>
+<p style="margin:0 0 12px;"><a href="https://rikuy.app/#/p/abc.1z" style="color:#075E6C;">Actividad para hacer juntos</a></p>
+<p style="margin:0;font-size:14px;color:#4D6368;">Para no recibir más mensajes, responda BAJA.</p>
+</td></tr></table></td></tr></table></body></html>"
+`;
+
+exports[`family weekly message, variant A (group, no child name) > matches the snapshot in the three shapes > texto 1`] = `
+"Rikuy · semana del 2 al 6 de noviembre
+Materiales: cuerda, piedra, reloj.
+Esta semana su hijo o hija y su grupo midieron un péndulo con una piedra y una cuerda.
+Pregúntenle: ¿de qué depende lo que tarda en ir y volver?
+Escuche esto en quechua: https://rikuy.app/a/pendulo-quy.opus
+Actividad para hacer juntos: https://rikuy.app/#/p/abc.1z
+Para no recibir más mensajes, responda BAJA."
+`;
+
+exports[`family weekly message, variant A (group, no child name) > matches the snapshot in the three shapes > whatsapp 1`] = `
+"Rikuy · semana del 2 al 6 de noviembre
+🧵 🪨 ⏱️
+Esta semana su hijo o hija y su grupo midieron un péndulo con una piedra y una cuerda.
+Pregúntenle: ¿de qué depende lo que tarda en ir y volver?
+🔊 Escuche esto en quechua: https://rikuy.app/a/pendulo-quy.opus
+Actividad para hacer juntos: https://rikuy.app/#/p/abc.1z
+Para no recibir más mensajes, responda BAJA."
+`;
+
+exports[`family weekly message, variant B (individual, opt-in) > matches the snapshot 1`] = `
+"Rikuy · semana del 2 al 6 de noviembre
+🧵 🪨 ⏱️
+Esta semana Yeni y su grupo midieron un péndulo con una piedra y una cuerda.
+Pregúntele: ¿de qué depende lo que tarda en ir y volver?
+Yeni ayudó a otro grupo a entender.
+🔊 Escuche esto en quechua: https://rikuy.app/a/pendulo-quy.opus
+Actividad para hacer juntos: https://rikuy.app/#/p/abc.1z
+Para no recibir más mensajes, responda BAJA."
+`;

@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "@rikuy/ui/theme.css";
+
+/* Tailwind scans the shared components too (the classes live in packages/ui). */
+@source "../../../packages/ui/src";
+
+/* Single-tap scanning: the control being scanned gets a thick Sol ring (shape + colour, not colour alone) */
+[data-barrido-actual] {
+  outline: 5px solid var(--rk-sol);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 8px var(--rk-ink);
+  position: relative;
+  z-index: 1;
+}
