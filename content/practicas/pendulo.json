@@ -1,0 +1,59 @@
+{
+  "id": "TKTQRM5ZA5335H979P5CPAJZ95",
+  "version": 1,
+  "titulo": "¿De qué depende el tiempo que tarda un péndulo?",
+  "desempeno": {
+    "nivel": "secundaria",
+    "grado": 1,
+    "area": "ciencia-y-tecnologia",
+    "competencia": 1,
+    "desempeno": 1,
+    "cita": "Formula preguntas acerca de las variables que influyen en un hecho, fenómeno u objeto natural o tecnológico, y selecciona aquella que puede ser indagada científicamente."
+  },
+  "preguntaGuia": "Si alargas la cuerda, ¿el péndulo irá más rápido o más lento?",
+  "prediccionRequerida": true,
+  "materiales": [
+    { "nombre": "Cuerda o hilo", "casero": true },
+    { "nombre": "Lastre (tuerca o llavero)", "casero": true },
+    { "nombre": "Cronómetro (celular)", "casero": true },
+    { "nombre": "Regla o cinta métrica", "casero": true }
+  ],
+  "variables": [
+    { "id": "longitud", "etiqueta": "Longitud", "unidad": "m", "min": 0.1, "max": 2, "paso": 0.05, "porDefecto": 0.5 },
+    { "id": "masa", "etiqueta": "Masa", "unidad": "kg", "min": 0.05, "max": 2, "paso": 0.05, "porDefecto": 0.2 },
+    { "id": "gravedad", "etiqueta": "Gravedad", "unidad": "m/s²", "min": 1.6, "max": 24.8, "paso": 0.1, "porDefecto": 9.8 }
+  ],
+  "protocolo": {
+    "repeticiones": 3,
+    "valoresIndependiente": [0.25, 0.5, 1, 2],
+    "magnitud": "periodo de oscilación",
+    "unidad": "s"
+  },
+  "modelo": { "id": "pendulo", "version": 1 },
+  "pistas": [
+    "Cambia una sola variable a la vez y mide el tiempo de 10 oscilaciones.",
+    "¿Cambió el periodo cuando cambiaste la masa? ¿Y cuando cambiaste la longitud?",
+    "Prueba con una longitud 4 veces mayor. ¿Cuántas veces cambió el periodo?"
+  ],
+  "limitaciones": [
+    "El modelo supone oscilaciones pequeñas y sin rozamiento del aire."
+  ],
+  "escenaHolo": "pendulo",
+  "textos": {
+    "es": {
+      "preguntaGuia": "Si alargas la cuerda, ¿el péndulo irá más rápido o más lento?",
+      "pistas": [
+        "Cambia una sola variable a la vez y mide el tiempo de 10 oscilaciones.",
+        "¿Cambió el periodo cuando cambiaste la masa? ¿Y cuando cambiaste la longitud?",
+        "Prueba con una longitud 4 veces mayor. ¿Cuántas veces cambió el periodo?"
+      ],
+      "revisado": false
+    }
+  },
+  "procedencia": {
+    "generadoPor": "catalogo",
+    "modelos": [],
+    "revisiones": []
+  },
+  "estado": "borrador"
+}
