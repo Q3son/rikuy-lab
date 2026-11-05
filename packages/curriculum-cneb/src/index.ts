@@ -11,3 +11,5 @@ export { citaLiteral, desempenoTexto, LONGITUD_MINIMA_CITA, ubicarCita } from '.
 export type { UbicacionCita } from './cita.ts';
 export { ARISTAS, CONCEPTOS, NIVELES_CONCEPTO, RELACIONES, SISTEMAS, conceptoPorId, conceptosMencionados, normalizarTexto, validarGrafo, vecinos } from './conceptos.ts';
 export type { ConceptoArista, ConceptoNodo, GrafoConceptos, NivelConcepto, Relacion, Sistema } from './conceptos.ts';
+export { corregirEnsayo, validarClaves, validarEnsayo } from './ensayo.ts';
+export type { ClavesEnsayo, Ensayo, PreguntaEnsayo, ResultadoEnsayo } from './ensayo.ts';
