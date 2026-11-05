@@ -8,6 +8,7 @@
 import type { BusMessage, Role } from '@rikuy/contracts';
 import { ReconnectingSocket, type SocketLike as SocketPresencia } from '@rikuy/presencia';
 import { hubDeEstaPagina } from '../../../platform/hub.ts';
+import { EchoFilter } from './room.ts';
 
 export interface SocketLike {
   readyState: number;
@@ -43,6 +44,7 @@ export class RoomChannel {
   private readonly handlers = new Set<(m: BusMessage) => void>();
   private relay: ReconnectingSocket | null = null;
   private closed = false;
+  private readonly echoes = new EchoFilter();
 
   constructor(
     readonly room: string,
@@ -50,7 +52,7 @@ export class RoomChannel {
     options: RoomChannelOptions = {},
   ) {
     this.bc = typeof BroadcastChannel === 'function' ? new BroadcastChannel(`rikuy-${room}`) : null;
-    if (this.bc) this.bc.onmessage = (e) => this.dispatch(e.data as BusMessage);
+    if (this.bc) this.bc.onmessage = (e) => this.dispatch(e.data as BusMessage, 'bc');
     if (options.socket) this.connect(options.socket);
     else if (options.socket === undefined && typeof WebSocket === 'function')
       void hubDeEstaPagina().then((hub) => {
@@ -88,7 +90,7 @@ export class RoomChannel {
       open: () => abrir() as unknown as SocketPresencia,
       // The hub keeps no client state across connections: hello again on every (re)connection.
       onOpen: (send) => void send({ type: 'hello', role: this.role, room: this.room, clientId: this.clientId } satisfies BusMessage),
-      onMessage: (m) => this.dispatch(m as BusMessage),
+      onMessage: (m) => this.dispatch(m as BusMessage, 'ws'),
       onStatus: (conectado) => this.setStatus(conectado ? 'online' : 'local'),
       minDelayMs: 1000,
       maxDelayMs: 15_000,
@@ -101,8 +103,10 @@ export class RoomChannel {
     this.onStatus(s);
   }
 
-  private dispatch(msg: BusMessage) {
+  private dispatch(msg: BusMessage, src: 'bc' | 'ws') {
     if (!msg || typeof msg !== 'object') return;
+    // Same device over both transports: deliver each message once.
+    if (!this.echoes.accept(msg, src, performance.now())) return;
     for (const h of this.handlers) h(msg);
   }
 }

@@ -81,3 +81,46 @@ export class ConfirmationTracker {
     return { label, latencyMs: Math.round(t - p.t) };
   }
 }
+
+/**
+ * Debounce of discrete orders on the control phone: a double tap, or a gesture and a button at the
+ * same time, sends the order once. Continuous gestures always pass (they are coalesced instead).
+ */
+export class DiscreteGate {
+  private last = new Map<string, number>();
+
+  constructor(private readonly windowMs = 600) {}
+
+  allow(action: ViewerAction, t: number): boolean {
+    if (action.type === 'rotate' || action.type === 'zoom') return true;
+    const key = actionLabel(action);
+    const prev = this.last.get(key);
+    if (prev !== undefined && t - prev < this.windowMs) return false;
+    this.last.set(key, t);
+    return true;
+  }
+}
+
+/**
+ * On a device that reaches the projector both over BroadcastChannel and over the hub relay, every
+ * message arrives twice. A copy from one transport cancels one equal message seen on the other
+ * transport within the window; equal messages on the same transport are all kept.
+ */
+export class EchoFilter {
+  private seen: Array<{ key: string; src: string; t: number }> = [];
+
+  constructor(private readonly windowMs = 500) {}
+
+  accept(msg: unknown, src: string, t: number): boolean {
+    this.seen = this.seen.filter((s) => t - s.t <= this.windowMs);
+    const key = JSON.stringify(msg);
+    const i = this.seen.findIndex((s) => s.key === key && s.src !== src);
+    if (i >= 0) {
+      this.seen.splice(i, 1);
+      return false;
+    }
+    this.seen.push({ key, src, t });
+    if (this.seen.length > 200) this.seen.shift();
+    return true;
+  }
+}

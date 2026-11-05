@@ -9,8 +9,8 @@ import { Link, useParams } from 'react-router';
 import { actionLabel, actionToMessage, type ViewerAction } from '@rikuy/holo';
 import { listenOnce, recognitionSupported } from '../../platform/voz/speech.ts';
 import { parseVoiceCommand } from '../../platform/voz/parse.ts';
-import { BotonesTactiles, CamaraActiva, EstadoCamara, GuiaGestos, PadTactil } from './componentes.tsx';
-import { ACK_PREFIX, ActionCoalescer, ConfirmationTracker, normalizeRoomCode, type Confirmation } from './sala/room.ts';
+import { BotonesTactiles, CamaraActiva, ControlesPendulo, EstadoCamara, GestoReconocido, GuiaGestos, PadTactil } from './componentes.tsx';
+import { ACK_PREFIX, ActionCoalescer, ConfirmationTracker, DiscreteGate, normalizeRoomCode, type Confirmation } from './sala/room.ts';
 import { RoomChannel } from './sala/RoomChannel.ts';
 import { useGestosMano, type GestosMano } from './useGestosMano.ts';
 
@@ -30,6 +30,10 @@ export function PaginaControl({ crearCanal = defaultCanal, usarGestos = useGesto
   const [voz, setVoz] = useState<string | null>(null);
   const tracker = useRef(new ConfirmationTracker());
   const coalescer = useRef<ActionCoalescer | null>(null);
+  const gate = useRef(new DiscreteGate());
+  const [disparo, setDisparo] = useState<{ texto: string; n: number } | null>(null);
+  const [longitud, setLongitud] = useState(0.5);
+  const [amortiguacion, setAmortiguacion] = useState(false);
 
   useEffect(() => {
     if (!sala) return;
@@ -66,13 +70,25 @@ export function PaginaControl({ crearCanal = defaultCanal, usarGestos = useGesto
 
   const enviar = useCallback(
     (a: ViewerAction) => {
+      if (!gate.current.allow(a, performance.now())) return;
       setUltimo(actionLabel(a));
+      if (a.type === 'variable' && a.variable === 'longitud') setLongitud(a.value);
+      if (a.type === 'variable' && a.variable === 'amortiguacion') setAmortiguacion(a.value >= 0.5);
       coalescer.current?.push(a);
     },
     [],
   );
 
-  const gestos = usarGestos(enviar);
+  // Orders fired by a hand gesture are also announced big on this phone.
+  const desdeGesto = useCallback(
+    (a: ViewerAction) => {
+      if (a.type !== 'rotate' && a.type !== 'zoom') setDisparo((d) => ({ texto: actionLabel(a), n: (d?.n ?? 0) + 1 }));
+      enviar(a);
+    },
+    [enviar],
+  );
+
+  const gestos = usarGestos(desdeGesto);
   const camaraEncendida = gestos.status === 'active' || gestos.status === 'slow' || gestos.status === 'loading';
 
   async function hablar() {
@@ -115,11 +131,13 @@ export function PaginaControl({ crearCanal = defaultCanal, usarGestos = useGesto
           ✋ Activar cámara de manos
         </button>
       )}
-      <EstadoCamara status={gestos.status} pose={gestos.pose} />
-      {gestos.status === 'active' && <GuiaGestos />}
+      {(gestos.status === 'active' || gestos.status === 'slow') && <GestoReconocido pose={gestos.pose} escena="pendulo" disparo={disparo} />}
+      <EstadoCamara status={gestos.status} pose={gestos.pose} escena="pendulo" />
+      {gestos.status === 'active' && <GuiaGestos escena="pendulo" />}
 
+      <BotonesTactiles enviar={enviar} escena="pendulo" />
+      <ControlesPendulo enviar={enviar} longitud={longitud} amortiguacion={amortiguacion} />
       <PadTactil enviar={enviar} />
-      <BotonesTactiles enviar={enviar} />
 
       {recognitionSupported() && (
         <div className="flex flex-col gap-1">
