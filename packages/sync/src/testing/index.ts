@@ -69,3 +69,5 @@ export function seededRandom(seed: number | string = 1): Aleatorio {
     },
   };
 }
+
+export { repositoryContract } from './contrato-repositorio.ts';
