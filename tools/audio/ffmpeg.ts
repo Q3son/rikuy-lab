@@ -3,7 +3,7 @@
  * No fallback is guessed: when nothing is found the caller gets null and reports it.
  */
 import { existsSync } from 'node:fs';
-import { delimiter, join } from 'node:path';
+import { posix, win32 } from 'node:path';
 
 export interface OpcionesResolver {
   env?: Record<string, string | undefined>;
@@ -22,8 +22,12 @@ export function resolverFfmpeg(opciones: OpcionesResolver = {}): string | null {
     return explicito;
   }
 
+  // El separador y la forma de unir rutas dependen de la plataforma pedida,
+  // no de la máquina que corre el código (así la prueba de Windows pasa en Linux).
+  const rutas = plataforma === 'win32' ? win32 : posix;
+  const join = rutas.join;
   const nombres = plataforma === 'win32' ? ['ffmpeg.exe', 'ffmpeg'] : ['ffmpeg'];
-  const directorios = (env['PATH'] ?? env['Path'] ?? '').split(delimiter).filter((d) => d.length > 0);
+  const directorios = (env['PATH'] ?? env['Path'] ?? '').split(rutas.delimiter).filter((d) => d.length > 0);
   for (const directorio of directorios) {
     for (const nombre of nombres) {
       const ruta = join(directorio, nombre);
