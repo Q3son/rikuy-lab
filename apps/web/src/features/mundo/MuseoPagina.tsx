@@ -2,7 +2,7 @@
  * E-01 Vestíbulo and E-02 Sala: the walkable museum. Container: builds the scene from content, runs the
  * director and wires presence. The canvas is optional; destinations are real buttons.
  */
-import { type Destino, type Escena, SALAS_CONTENIDO, dirigir, estiloSala } from '@rikuy/campus';
+import { CORDONES, type Destino, type Escena, MARCOS, type Punto, SALAS_CONTENIDO, colorDe, dirigir, estiloSala } from '@rikuy/campus';
 import { RUTAS } from '@rikuy/contracts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
@@ -13,6 +13,8 @@ import { GRUPO_DEMO } from './grupo.ts';
 import { Glifo, Rikuy } from './Iconos.tsx';
 import { PanelAyudante } from './ayudante/PanelAyudante.tsx';
 import { useAyudante } from './ayudante/servicio.ts';
+import { CuradorPanel } from './CuradorPanel.tsx';
+import { useEstadoGrupo } from './estadoGrupo.ts';
 import { colorDeSala } from './paleta.ts';
 import { Reacciones } from './presencia/Reacciones.tsx';
 import { usePresencia } from './presencia/usePresencia.ts';
@@ -28,11 +30,8 @@ function textoBloqueo(d: Destino): string | null {
   return null;
 }
 
-/** Opens a destination: records the exhibit visit (no positions) and goes to its route. */
-function abrirDestino(d: Destino, navegar: (ruta: string) => void) {
-  if (d.exhibicionId && d.salaId) registroMuseo.registrar(visita(d.salaId, GRUPO_DEMO.id, d.exhibicionId));
-  navegar(d.destino);
-}
+/** Last position per scene, so regenerating a hall (curator gate opened) keeps the group where it is. */
+const posiciones = new Map<string, Punto>();
 
 function primeraVisita(): boolean {
   try {
@@ -47,7 +46,11 @@ function primeraVisita(): boolean {
 export function MuseoPagina() {
   const { salaId } = useParams();
   const navegar = useNavigate();
-  const museo = useMemo(() => construirMuseo(), []);
+  const rejas = useEstadoGrupo((g) => g.rejas);
+  const piedra = useEstadoGrupo((g) => g.piedra);
+  const abrirReja = useEstadoGrupo((g) => g.abrirReja);
+  const museo = useMemo(() => construirMuseo({ rejasAbiertas: new Set(rejas) }), [rejas]);
+  const [curadorAbierto, setCuradorAbierto] = useState(false);
   const escena: Escena | undefined = salaId ? museo.salas[salaId] : museo.vestibulo;
   const [parametros] = useSearchParams();
   const sim = parametros.get('sim');
@@ -60,12 +63,23 @@ export function MuseoPagina() {
     animado.current = activo;
   }, []);
 
+  /** Opens a destination: records the exhibit visit (no positions) and goes to its route. */
+  const abrirDestino = useCallback(
+    (d: Destino) => {
+      if (d.tipo === 'curador') {
+        setCuradorAbierto(true);
+        return;
+      }
+      if (d.exhibicionId && d.salaId) registroMuseo.registrar(visita(d.salaId, GRUPO_DEMO.id, d.exhibicionId));
+      if (d.tipo === 'puerta' && d.salaId) posiciones.delete(d.salaId);
+      navegar(d.destino);
+    },
+    [navegar],
+  );
+
   const controlador = useMemo(
-    () =>
-      escena
-        ? new ControladorMundo(escena, (d) => abrirDestino(d, navegar))
-        : null,
-    [escena, navegar],
+    () => (escena ? new ControladorMundo(escena, abrirDestino, posiciones.get(escena.id)) : null),
+    [escena, abrirDestino],
   );
 
   useEffect(() => {
@@ -108,7 +122,7 @@ export function MuseoPagina() {
   const ir = (d: Destino) => {
     if (textoBloqueo(d)) return;
     // Without the animated world (no canvas) the door opens at once; otherwise the group walks there.
-    if (!animado.current || !controlador.irA(d.id)) abrirDestino(d, navegar);
+    if (!animado.current || !controlador.irA(d.id)) abrirDestino(d);
   };
 
   return (
@@ -139,13 +153,18 @@ export function MuseoPagina() {
             y: controlador.pos.y,
             dir: controlador.dir,
             color: GRUPO_DEMO.color,
-            etiqueta: GRUPO_DEMO.apodo,
+            etiqueta: piedra.nombre,
+            cordon: colorDe(CORDONES, piedra.cordon),
+            marco: colorDe(MARCOS, piedra.marco),
             integrantes: GRUPO_DEMO.integrantes,
             propio: true,
             pideAyuda: pidoAyuda,
           }),
           otros: presencia.otros,
-          alPaso: () => presencia.actualizar(controlador.pos.x, controlador.pos.y, controlador.dir),
+          alPaso: () => {
+            if (escena.id !== 'vestibulo') posiciones.set(escena.id, controlador.pos);
+            presencia.actualizar(controlador.pos.x, controlador.pos.y, controlador.dir);
+          },
           resaltado: () => direccion.senalar,
           sugerencia: () => sugerencia,
         }}
@@ -180,6 +199,11 @@ export function MuseoPagina() {
             );
           })}
           <li>
+            <Link className="rk-btn" to="/museo/piedra">
+              Nuestra piedra
+            </Link>
+          </li>
+          <li>
             <Link className="rk-btn" to="/museo/lista">
               Ver el museo como lista
             </Link>
@@ -187,6 +211,14 @@ export function MuseoPagina() {
         </ul>
       </nav>
 
+      {curadorAbierto && (
+        <CuradorPanel
+          salaId={escena.id}
+          abierta={escena.rejaAbierta}
+          alResponder={() => abrirReja(escena.id)}
+          alCerrar={() => setCuradorAbierto(false)}
+        />
+      )}
       {ayudante.config.activo && escena.id === 'vestibulo' && (
         <p className="rk-chip" style={{ margin: '0 16px' }}>
           El Ayudante del museo está encendido: pueden pedir y dar ayuda entre grupos.
