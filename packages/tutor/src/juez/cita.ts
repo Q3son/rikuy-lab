@@ -2,10 +2,8 @@
  * Literal quotes. Whatever the judge (rules or model) proposes, the stored quote is a SUBSTRING of
  * the student's answer; "no literal quote, the criterion does not count" (ECOSISTEMA 2.5).
  *
- * `sanitizarCita` ports `sanitizeQuote` from Educacion/web/src/lib/judge/rubric.ts (the team's own
- * project). Difference: Educacion returned the model's quote when it matched after normalization,
- * which may differ in case or accents from the answer; here the returned text is always the slice of
- * the student's own words.
+ * `sanitizarCita` never returns the model's version of the quote (which may differ in case or
+ * accents): the returned text is always the slice of the student's own words.
  */
 import { tokenizar } from '../texto.ts';
 

@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 const RAIZ = fileURLToPath(new URL('../../../', import.meta.url));
 const CARPETAS = ['content/museo', 'packages/campus/src', 'apps/web/src/features/mundo', 'apps/web/src/features/retos'];
 const LIMITE = 1.5 * 1024 * 1024;
-/** Habbo furni/avatar naming (Sulake): AulaQuipu's sprites used these ids; none may appear here. */
+/** Habbo furni/avatar naming (Sulake): third-party sprite ids; none may appear here. */
 const HABBO = /habbo|sulake|furni|nft_|xmas_c\d|school_c\d|hh_human|_c2\d_|fest_ltd/i;
 
 function archivos(dir: string): string[] {

@@ -1,7 +1,7 @@
 /**
  * "Llévame": Rikuy walks the group to what it wants to do and draws the path on the floor.
  *
- * Ported from AulaQuipu by paoloose (https://github.com/paoloose/aulaquipu), `apps/web-app/lib/campus/guides.ts`
+ * Adapted from AulaQuipu (team project) (https://github.com/paoloose/aulaquipu), `apps/web-app/lib/campus/guides.ts`
  * (Killa, the campus guide; hackathon MVP, reuse agreed with its team; credits in docs/ATRIBUCIONES.md).
  * Adapted: the guide is Rikuy (the stone-eye mascot), the topics point at museum destinations (exhibit of
  * the day, curator, hall door, back to the hall) instead of campus furniture, and the target is resolved

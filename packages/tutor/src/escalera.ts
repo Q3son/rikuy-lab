@@ -2,7 +2,7 @@
  * Hint ladder: 1 general .. 3 concrete. A hint never reveals the answer.
  *
  * Pattern from the team's Rikuy Lab agent (hints[] per practice, "una pista, no la respuesta"),
- * RoboLab (up to 3 hints) and Fixazo (anti-answer guard), see ECOSISTEMA 2.4. What is new here:
+ * and RoboLab (up to 3 hints), see ECOSISTEMA 2.4. What is new here:
  *  - the ladder is explicit state (`mostradas`) and can never jump (1 -> 3);
  *  - `pistaNoRevela` (ARQUITECTURA 4.4) rejects hints that contain the numeric result of the model,
  *    the expected conclusion or the inverted limitation, and a leaking hint is replaced by a generic

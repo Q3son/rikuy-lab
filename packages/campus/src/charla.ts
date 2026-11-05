@@ -2,7 +2,7 @@
  * Rules of the hall chat ("charla de cerca"): who reads a message and what can be sent. Pure, so the
  * sender and the receiver apply the same rules (nobody trusts the other side to have filtered).
  *
- * Ported from AulaQuipu by paoloose (https://github.com/paoloose/aulaquipu),
+ * Adapted from AulaQuipu (team project) (https://github.com/paoloose/aulaquipu),
  * `apps/web-app/lib/campus/chat-rules.ts` (hackathon MVP, reuse agreed with its team; credits in
  * docs/ATRIBUCIONES.md). Adapted: Rikuy scenes are one hall each, so "same room" is the scene id;
  * the radius is measured in tiles of our Tiled maps; copy in neutral Spanish; the word list is kept short
