@@ -57,6 +57,18 @@ describe('hologram rooms over the hub', () => {
     const { app } = createHub({ dbPath: ':memory:' });
     const viaLan = (await (await app.request('/api/holo/salas', { method: 'POST', headers: { host: '10.0.0.9:8787' } })).json()) as { control: string };
     expect(viaLan.control.startsWith('http://10.0.0.9:8787/control.html?sala=')).toBe(true);
+    // behind a TLS proxy (Traefik, Cloudflare) the links keep the scheme the phone used
+    const proxied = (await (
+      await app.request('/api/holo/salas', { method: 'POST', headers: { host: 'rikuy.example.org', 'x-forwarded-proto': 'https' } })
+    ).json()) as { control: string; proyector: string };
+    expect(proxied.control.startsWith('https://rikuy.example.org/control.html?sala=')).toBe(true);
+    expect(proxied.proyector.startsWith('https://rikuy.example.org/display.html?sala=')).toBe(true);
+    const odd = (await (await app.request('/api/holo/salas', { method: 'POST', headers: { host: '10.0.0.9:8787', 'x-forwarded-proto': 'javascript' } })).json()) as { control: string };
+    expect(odd.control.startsWith('http://10.0.0.9:8787/')).toBe(true);
+    // the configured public URL wins for its own host, even without the proxy header
+    const pub = createHub({ dbPath: ':memory:', publicUrl: 'https://rikuy.example.org/' }).app;
+    const viaPublic = (await (await pub.request('/api/holo/salas', { method: 'POST', headers: { host: 'rikuy.example.org' } })).json()) as { control: string };
+    expect(viaPublic.control.startsWith('https://rikuy.example.org/control.html?sala=')).toBe(true);
     expect(room.qr.control).toContain('<svg');
     const page = await fetch(`${base}/holo/${room.codigo}`);
     expect(await page.text()).toContain(room.codigo);

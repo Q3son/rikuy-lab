@@ -186,11 +186,23 @@ export function createHub(options: HubOptions) {
     const want = Buffer.from(adminToken);
     return given.length === want.length && timingSafeEqual(given, want);
   };
+  const publicOrigin = (): string | null => {
+    try {
+      return options.publicUrl ? new URL(options.publicUrl).origin : null;
+    } catch {
+      return null;
+    }
+  };
   /** Origin for links shown as QR: the request host, unless it is loopback (useless on a phone). */
   const origin = (c: Context) => {
     const host = c.req.header('host') ?? '';
     const loopback = /^(localhost|127\.|\[::1\])/i.test(host);
-    return !host || loopback ? urls()[0]!.replace(/\/$/, '') : `http://${host}`;
+    if (!host || loopback) return urls()[0]!.replace(/\/$/, '');
+    const publico = publicOrigin();
+    if (publico && new URL(publico).host === host) return publico;
+    // Behind a TLS proxy (Traefik, Cloudflare) keep the scheme the phone used; only http/https are accepted.
+    const proto = (c.req.header('x-forwarded-proto') ?? '').split(',')[0]!.trim().toLowerCase();
+    return `${proto === 'https' ? 'https' : 'http'}://${host}`;
   };
 
   app.get('/api/health', (c) => c.json({ ok: true, ia: tutor.modelAvailable ? 'ia-local' : 'reglas' }));
