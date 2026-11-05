@@ -22,9 +22,10 @@ sin dar la respuesta. El docente ve en un panel qué está entendiendo cada grup
 
 ## Probar solo con el celular
 
-Abrir **https://q3son.github.io/rikuy-lab/** en Chrome y elegir *Laboratorio holográfico
-(versión clásica)* → *Proyector*; poner el celular bajo la pirámide o la cajita y usar el
-micrófono de la esquina. Las opciones *Soy docente* y *Somos un grupo* abren el Museo Rikuy.
+Abrir **https://q3son.github.io/rikuy-lab/#/holo** en Chrome: un celular como proyector bajo la
+pirámide y otro como control, o un solo celular. En el control, **Habla con Rikuy** conversa por voz
+sobre el péndulo o la lactasa: evalúa cada respuesta, da pistas con "no sé" y mueve el holograma
+("pon la longitud en 2 metros", "suéltalo").
 Esta versión no necesita laptop ni servidor: el tutor de reglas corre en el navegador.
 Para que otro celular sea el control remoto y para el panel docente con varios grupos,
 hace falta el servidor (sección siguiente).
