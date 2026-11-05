@@ -3,15 +3,18 @@
  * 10 oscillations (stopwatch, typed time or the optional accelerometer) → table → comparison with
  * T = 2π√(L/g) → conclusion citing an own datum. Everything is saved in the device event log.
  */
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { VisorExhibicion } from '@rikuy/holo';
 import { comparisonTable, type MeasurementSource } from '@rikuy/lab-engine';
+import { speak, speechAvailable } from '../../platform/voz/speech.ts';
+import { leerComparacion, leerTabla } from './audio.ts';
 import { PRACTICAS, PRACTICA_PENDULO } from './catalogo.ts';
 import { RegistroLab } from './datos/registro.ts';
 import { crearSesion } from './datos/sesion.ts';
 import { cm, formatoNumero } from './formato.ts';
 import { Cronometro, GraficaComparacion, TablaComparacion, TablaMediciones, TarjetaHipotesis } from './instrumentos.tsx';
+import { DictaTuDato } from './DictaTuDato.tsx';
 import { MedicionSensor } from './MedicionSensor.tsx';
 import { ModeloTutorSimulado, type ModeloTutor } from './tutorMock.ts';
 import { usePractica } from './usePractica.ts';
@@ -24,6 +27,8 @@ export interface PaginaPracticaProps {
 const VARIABLES = ['Largo de la cuerda', 'Peso de la piedra', 'Cómo la sueltas'];
 const tarjeta = 'flex flex-col gap-3 rounded-2xl border-2 border-[#D3D9CC] bg-white p-4';
 const primario = 'h-14 rounded-xl border-2 border-[#04474F] bg-[#075E6C] text-lg font-bold text-white disabled:border-[#D3D9CC] disabled:bg-[#E9ECE4] disabled:text-[#4D6368]';
+const AUDIO_KEY = 'rikuy.lab.audioPrimero';
+const VELOCIDADES = [0.75, 1, 1.25];
 const campo = 'min-h-12 rounded-xl border-2 border-[#6A7568] px-3 py-2 text-[17px]';
 
 export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: PaginaPracticaProps) {
@@ -42,6 +47,19 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
   const [holo, setHolo] = useState(false);
   const [citado, setCitado] = useState<number | null>(null);
   const [conclusion, setConclusion] = useState('');
+  const [audio, setAudio] = useState(() => leerPreferencia());
+  const [velocidad, setVelocidad] = useState(1);
+  const [sinVoz, setSinVoz] = useState(false);
+
+  /** Rikuy reads aloud; the same text is always on screen (FUNCIONES_EXTRA 4.1). */
+  const decir = (texto: string) => {
+    if (!speak(texto, velocidad)) setSinVoz(true);
+  };
+
+  // Audio-first: the tutor's questions are read aloud as they arrive.
+  useEffect(() => {
+    if (audio && tutorMsg) speak(tutorMsg.texto, velocidad);
+  }, [tutorMsg, audio, velocidad]);
 
   if (!estado) return <p role="status" className="p-4">Cargando la práctica…</p>;
   const n = practica.protocolo.repeticiones;
@@ -55,12 +73,16 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
     if (await despachar({ type: 'measure', lengthM: largo, totalTimeS, oscillations: n, source })) {
       setTiempo('');
       preguntar({ momento: 'medicion', longitudM: largo });
+      if (audio) decir(`Medida guardada: ${cm(largo)}.`);
       const siguiente = practica.protocolo.valoresIndependiente.find((L) => !tabla.rows.find((r) => r.lengthM === L)?.measuredPeriodS && L !== largo);
       if (siguiente !== undefined) setLargo(siguiente);
     }
   }
   async function comparar() {
-    if (await despachar({ type: 'compare' })) preguntar({ momento: 'comparacion', errorMedio: comparisonTable(estado!).meanRelativeError });
+    if (await despachar({ type: 'compare' })) {
+      preguntar({ momento: 'comparacion', errorMedio: comparisonTable(estado!).meanRelativeError });
+      if (audio) decir(leerComparacion(comparisonTable(estado!)));
+    }
   }
   async function concluir() {
     if (citado === null) return;
@@ -73,6 +95,32 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
         <Link to="/" className="text-sm text-[#075E6C] underline">‹ Volver</Link>
         <h1 className="mt-1 text-2xl font-extrabold">{practica.titulo}</h1>
       </header>
+
+      <section aria-label="Audio" className="flex flex-wrap items-center gap-2 rounded-2xl border-2 border-[#D3D9CC] bg-white p-2">
+        <button
+          type="button"
+          role="switch"
+          aria-checked={audio}
+          onClick={() => {
+            const on = !audio;
+            setAudio(on);
+            guardarPreferencia(on);
+            if (on && estado.phase === 'prediction') decir(practica.preguntaGuia);
+          }}
+          className="flex min-h-12 items-center gap-2 rounded-xl px-2 font-semibold"
+        >
+          <span aria-hidden="true" className={`h-8 w-14 rounded-full border-2 ${audio ? 'border-[#04474F] bg-[#075E6C]' : 'border-[#6A7568] bg-[#E9ECE4]'}`} />
+          Modo audio: {audio ? 'activo' : 'apagado'}
+        </button>
+        <div role="radiogroup" aria-label="Velocidad de la voz" className="flex gap-1">
+          {VELOCIDADES.map((v) => (
+            <button key={v} type="button" role="radio" aria-checked={velocidad === v} onClick={() => setVelocidad(v)} className={`h-12 min-w-12 rounded-xl border-2 px-2 text-sm ${velocidad === v ? 'border-[#04474F] font-bold' : 'border-[#D3D9CC]'}`}>
+              {formatoVelocidad(v)}
+            </button>
+          ))}
+        </div>
+        {(sinVoz || (audio && !speechAvailable())) && <p className="w-full text-xs text-[#6B4300]">Este celular no tiene voz sin internet. Lee el texto en pantalla.</p>}
+      </section>
 
       {estado.prediction && <TarjetaHipotesis texto={estado.prediction.text} />}
 
@@ -88,6 +136,9 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
         <>
           <section className={tarjeta}>
             <h2 className="text-xl font-extrabold">{practica.preguntaGuia}</h2>
+            <button type="button" onClick={() => decir(practica.preguntaGuia)} className="h-12 self-start rounded-xl border-2 border-[#6A7568] px-3 font-semibold">
+              ▶ Escuchar la pregunta
+            </button>
             <p className="text-sm font-semibold">Necesitan</p>
             <ul className="list-disc pl-5">{practica.materiales.map((m) => <li key={m.nombre}>{m.nombre}</li>)}</ul>
             <p className="rounded-xl bg-[#FFF1CC] p-2 text-sm text-[#6B4300]">Cuidado: no gires la piedra cerca de la cara de otra persona.</p>
@@ -150,9 +201,13 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
             Tiempo de {n} oscilaciones (segundos)
             <input inputMode="decimal" value={tiempo} onChange={(e) => setTiempo(e.target.value)} placeholder="14,2" className={`${campo} text-2xl tabular-nums`} />
           </label>
+          <button type="button" disabled={!tiempo.trim()} onClick={() => decir(`${tiempo.trim()} segundos`)} className="h-12 rounded-xl border-2 border-[#6A7568] font-semibold disabled:opacity-50">
+            🔊 Escuchar lo que escribí
+          </button>
           <button type="button" disabled={!tiempo.trim()} onClick={() => void guardarMedida(Number(tiempo.replace(',', '.')), 'manual')} className={primario}>
             Guardar esta medida
           </button>
+          <DictaTuDato velocidad={velocidad} onConfirmado={(s) => void guardarMedida(s, 'manual')} />
         </section>
       )}
 
@@ -161,6 +216,9 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
           <h2 className="text-xl font-extrabold">Tabla</h2>
           <TablaMediciones filas={estado.measurements} onAnular={(id) => void despachar({ type: 'annul', measurementId: id, reason: 'dato raro' })} />
           <p className="text-xs text-[#4D6368]">Periodo = tiempo de {n} oscilaciones ÷ {n}. Un dato raro se marca, no se borra.</p>
+          <button type="button" onClick={() => decir(leerTabla(estado.measurements))} className="h-12 rounded-xl border-2 border-[#6A7568] font-semibold">
+            ▶ Escuchar la tabla
+          </button>
           {estado.phase === 'measurement' && (
             <button type="button" onClick={() => void comparar()} disabled={tabla.rows.some((r) => r.measuredPeriodS === null)} className={primario}>
               Comparar con el modelo
@@ -176,6 +234,9 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
           <TablaComparacion tabla={tabla} />
           <p className="text-sm">Modelo: T = 2π·√(L/g). Error promedio: <b>{formatoNumero(tabla.meanRelativeError * 100, 0)} %</b>.</p>
           <p className="text-xs text-[#4D6368]">{practica.limitaciones[0]}</p>
+          <button type="button" onClick={() => decir(leerComparacion(tabla))} className="h-12 rounded-xl border-2 border-[#6A7568] font-semibold">
+            ▶ Escuchar la comparación
+          </button>
         </section>
       )}
 
@@ -211,4 +272,24 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
       )}
     </main>
   );
+}
+
+function formatoVelocidad(v: number): string {
+  return `${new Intl.NumberFormat('es').format(v)}x`;
+}
+
+function leerPreferencia(): boolean {
+  try {
+    return localStorage.getItem(AUDIO_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function guardarPreferencia(on: boolean): void {
+  try {
+    localStorage.setItem(AUDIO_KEY, on ? '1' : '0');
+  } catch {
+    /* preference only lives in memory */
+  }
 }
