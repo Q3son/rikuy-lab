@@ -1,8 +1,7 @@
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RouterProvider, createMemoryRouter } from 'react-router';
 import { afterEach, describe, expect, it } from 'vitest';
-import { rutas as rutasApp } from '../../app/rutas.tsx';
+import { renderApp } from '../../test-utils.tsx';
 import { PRACTICA_DEMO, visorSimulado } from './demo.ts';
 import { rutas } from './rutas.ts';
 import { TutorPanel } from './TutorPanel.tsx';
@@ -21,7 +20,7 @@ async function decir(texto: string) {
 describe('tutor feature routes', () => {
   it('exposes the /tutor route and the app mounts it', async () => {
     expect(rutas.map((r) => r.path)).toEqual(['tutor']);
-    render(<RouterProvider router={createMemoryRouter(rutasApp, { initialEntries: ['/tutor'] })} />);
+    await renderApp('/tutor', { rol: 'grupo', codigo: 'K7M2QX', apodo: 'Puma' });
     expect(await screen.findByRole('heading', { name: /tutor rikuy/i })).toBeTruthy();
   });
 });
