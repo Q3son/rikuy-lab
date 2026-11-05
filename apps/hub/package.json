@@ -21,6 +21,10 @@
     "@rikuy/sync": "*",
     "@rikuy/tutor": "*",
     "hono": "^4.13.16",
+    "qrcode": "^1.5.4",
     "tsx": "^4.23.15"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.6"
   }
 }
