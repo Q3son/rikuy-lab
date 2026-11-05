@@ -8,7 +8,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ViewerAction } from '@rikuy/holo';
 import { iniciarConversacion, preguntaActual, responder, type EstadoConversacion, type TurnoConversacion } from '@rikuy/tutor';
-import { listenOnce, recognitionSupported } from '../../platform/voz/speech.ts';
+import { listenDetailed, recognitionSupported, type ErrorVoz } from '../../platform/voz/speech.ts';
 
 interface Mensaje {
   id: number;
@@ -60,12 +60,23 @@ function callar(): void {
   }
 }
 
+/** Qué hacer según por qué no se escuchó. */
+const AYUDA_MIC: Record<ErrorVoz, string> = {
+  'no-speech': 'No escuché nada. Toca el botón y habla apenas se ponga rojo, cerca del micrófono.',
+  'not-allowed': 'El navegador no tiene permiso para usar el micrófono. Toca el candado junto a la dirección, permite "Micrófono" y vuelve a intentar.',
+  'audio-capture': 'No encontré un micrófono. Revisa que esté conectado y que el sistema le dé permiso al navegador (en Windows: Configuración > Privacidad > Micrófono).',
+  network: 'El reconocimiento de voz necesita internet y solo funciona en Chrome o Edge (Brave, Opera y Firefox no lo traen). Revisa la conexión o escribe tu respuesta.',
+  'no-soportado': 'Este navegador no reconoce voz. Usa Chrome o Edge, o escribe tu respuesta.',
+  otro: 'El micrófono no respondió. Vuelve a intentar o escribe tu respuesta.',
+};
+
 export function ConversacionRikuy({ practica, enviar, onTurno }: Props) {
   // Primer turno: bienvenida y primera pregunta. Para otra práctica, el padre cambia la `key`.
   const [inicio] = useState(() => responder('', iniciarConversacion(practica)));
   const [estado, setEstado] = useState<EstadoConversacion>(inicio.estado);
   const [mensajes, setMensajes] = useState<Mensaje[]>([{ id: 0, autor: 'rikuy', texto: inicio.texto }]);
   const [escuchando, setEscuchando] = useState(false);
+  const [parcial, setParcial] = useState('');
   const [valor, setValor] = useState('');
   const [conVoz, setConVoz] = useState(true);
   const id = useRef(1);
@@ -103,15 +114,17 @@ export function ConversacionRikuy({ practica, enviar, onTurno }: Props) {
     if (escuchando) return;
     callar();
     setEscuchando(true);
-    let texto: string | null;
+    setParcial('');
+    let r: { text: string | null; error: ErrorVoz | null };
     try {
-      texto = await listenOnce('es-PE').result;
+      r = await listenDetailed('es-PE', setParcial).result;
     } catch {
-      texto = null;
+      r = { text: null, error: 'otro' };
     }
     setEscuchando(false);
-    if (texto) turno(texto);
-    else setMensajes((m) => [...m.slice(-10), { id: id.current++, autor: 'rikuy', texto: 'No te escuché bien. Toca el micrófono y habla cerca del celular, o escribe tu respuesta.' }]);
+    setParcial('');
+    if (r.text) turno(r.text);
+    else setMensajes((m) => [...m.slice(-10), { id: id.current++, autor: 'rikuy', texto: AYUDA_MIC[r.error ?? 'otro'] }]);
   }
 
   function reiniciar() {
@@ -163,7 +176,7 @@ export function ConversacionRikuy({ practica, enviar, onTurno }: Props) {
           onClick={() => void hablar()}
           className={`h-16 rounded-xl text-lg font-bold text-white ${escuchando ? 'bg-[#96102F]' : 'bg-[#075E6C]'}`}
         >
-          {escuchando ? '🔴 Te escucho… habla ahora' : '🎙 Tocar y hablar con Rikuy'}
+          {escuchando ? (parcial ? `🔴 “${parcial}”` : '🔴 Te escucho… habla ahora') : '🎙 Tocar y hablar con Rikuy'}
         </button>
       )}
       <form

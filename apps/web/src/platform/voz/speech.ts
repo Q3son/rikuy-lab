@@ -53,6 +53,45 @@ export function listenOnce(lang = 'es-PE'): { result: Promise<string | null>; ca
   return { result, cancel: () => rec.stop() };
 }
 
+export type ErrorVoz = 'no-speech' | 'not-allowed' | 'audio-capture' | 'network' | 'no-soportado' | 'otro';
+
+/**
+ * Like `listenOnce`, but tells WHY nothing was heard and reports partial text while the
+ * person speaks, so the UI can guide them (permission, no microphone, no internet).
+ */
+export function listenDetailed(
+  lang = 'es-PE',
+  onInterim?: (text: string) => void,
+): { result: Promise<{ text: string | null; error: ErrorVoz | null }>; cancel: () => void } {
+  const Ctor = recognitionCtor();
+  if (!Ctor) return { result: Promise.resolve({ text: null, error: 'no-soportado' }), cancel: () => {} };
+  const rec = new Ctor();
+  rec.lang = lang;
+  rec.interimResults = true;
+  rec.continuous = false;
+  const result = new Promise<{ text: string | null; error: ErrorVoz | null }>((resolve) => {
+    let text: string | null = null;
+    let error: ErrorVoz | null = null;
+    rec.onresult = (e) => {
+      const r = e.results[e.results.length - 1];
+      if (!r) return;
+      if (r.isFinal) text = r[0].transcript;
+      else onInterim?.(r[0].transcript);
+    };
+    rec.onerror = (e) => {
+      const known: ErrorVoz[] = ['no-speech', 'not-allowed', 'audio-capture', 'network'];
+      error = e.error === 'service-not-allowed' ? 'not-allowed' : known.includes(e.error as ErrorVoz) ? (e.error as ErrorVoz) : e.error === 'aborted' ? null : 'otro';
+    };
+    rec.onend = () => resolve({ text, error: text ? null : (error ?? 'no-speech') });
+  });
+  try {
+    rec.start();
+  } catch {
+    return { result: Promise.resolve({ text: null, error: 'otro' }), cancel: () => {} };
+  }
+  return { result, cancel: () => rec.stop() };
+}
+
 function localSpanishVoice(): SpeechSynthesisVoice | null {
   if (typeof speechSynthesis === 'undefined') return null;
   const voices = speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith('es') && v.localService);
