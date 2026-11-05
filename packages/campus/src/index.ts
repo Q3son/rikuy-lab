@@ -6,10 +6,12 @@
 export const packageName = '@rikuy/campus' as const;
 export * from './ayudante.ts';
 export * from './caminante.ts';
+export * from './curador.ts';
 export * from './contenido.ts';
 export * from './director.ts';
 export * from './generador.ts';
 export * from './grilla.ts';
+export * from './piedra.ts';
 export * from './presencia.ts';
 export * from './puertos.ts';
 export * from './salas.ts';

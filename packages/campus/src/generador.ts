@@ -9,7 +9,8 @@ import { type Grilla, type Punto, type Rect, crearGrilla } from './grilla.ts';
 import { estiloSala, rutaDeExhibicion, rutaDeReto, rutaDeSala } from './salas.ts';
 import type { MapaMundo, ObjetoMapa } from './tiled.ts';
 
-export type TipoDestino = 'puerta' | 'exhibicion' | 'reto' | 'interactivo';
+/** `curador`: the room curator NPC; arriving opens its question instead of a route. */
+export type TipoDestino = 'puerta' | 'exhibicion' | 'reto' | 'interactivo' | 'curador';
 
 /** Anything the group can walk to and open. Every destination is also a focusable DOM button. */
 export interface Destino {
@@ -142,6 +143,8 @@ function generarSala(sala: Sala, entrada: EntradaMuseo): Escena {
   for (const o of mapa.objetos) {
     if (o.tipo === 'puerta') {
       destinos.push({ id: `salida-${sala.id}`, tipo: 'puerta', etiqueta: 'Volver al vestíbulo', destino: RUTAS.museo, rect: rectDe(o), salaId: sala.id });
+    } else if (o.tipo === 'npc' && o.props.rol === 'curador') {
+      destinos.push({ id: `curador-${sala.id}`, tipo: 'curador', etiqueta: 'la curadora de la sala', destino: '', rect: rectDe(o), salaId: sala.id });
     } else if (o.tipo === 'interactivo' && typeof o.props.destino === 'string') {
       destinos.push({
         id: `${sala.id}-${o.nombre}`,

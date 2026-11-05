@@ -20,6 +20,7 @@ describe('curator gate', () => {
     const exhs = Array.from({ length: 3 }, (_, i) => exh(`f${i}`, 'sala-fisica', `p${i + 1}`));
     const cerrado = generarMuseo({ salas: SALAS_CONTENIDO, exhibiciones: exhs, plantillas: PLANTILLAS }).salas['sala-fisica']!;
     expect(cerrado.curador).not.toBeNull();
+    expect(cerrado.destinos.find((d) => d.tipo === 'curador')).toMatchObject({ id: 'curador-sala-fisica', destino: '' });
     expect(cerrado.rejaAbierta).toBe(false);
     expect(cerrado.destinos.filter((d) => d.trasReja).map((d) => d.exhibicionId)).toEqual(['f2']);
     const atras = cerrado.destinos.find((d) => d.exhibicionId === 'f2')!;
