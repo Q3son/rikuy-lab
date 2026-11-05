@@ -87,6 +87,7 @@ export interface NodoMapa {
   tipo: TipoNodo;
   etiqueta: string;
   sala?: string;
+  padre?: string;
   estado: EstadoNodo;
   /** A mark, not a color. */
   preguntaAbierta: boolean;
@@ -154,6 +155,7 @@ export function construirMapa(e: EntradaMapa): MapaCerebro {
       tipo: n.tipo,
       etiqueta: n.etiqueta,
       ...(n.sala ? { sala: n.sala } : {}),
+      ...(n.padre ? { padre: n.padre } : {}),
       estado,
       preguntaAbierta: pregunta,
       x: pos.x,
