@@ -39,6 +39,9 @@ export class PresenciaHub implements PuertoPresencia {
         if (m && typeof m === 'object' && String((m as { t?: unknown }).t).startsWith('rt.')) for (const o of this.oyentes) o(m as MensajeRtHub);
       },
       staleMs: 20_000,
+      // Presence is optional: with no hub behind /ws (static preview) it keeps trying, but rarely and quietly.
+      minDelayMs: 2000,
+      maxDelayMs: 120_000,
     });
   }
 
