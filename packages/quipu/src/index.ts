@@ -1,5 +1,9 @@
 /**
- * @rikuy/quipu: Cooperative append-only knot ledger: emission rules, balance, museum unlocks.
- * Sprint 0 skeleton. The owning front fills it in (docs/ecosistema/ARQUITECTURA_ECOSISTEMA.md, 5.4).
+ * @rikuy/quipu: cooperative append-only knot ledger (ARQUITECTURA 3.11).
+ * Emission rules, peer-help knots (Ayudante del museo), collective unlocks. No purchases, no ranking.
  */
 export const packageName = '@rikuy/quipu' as const;
+export * from './ids.ts';
+export * from './libro.ts';
+export * from './reglas.ts';
+export * from './ayuda.ts';
