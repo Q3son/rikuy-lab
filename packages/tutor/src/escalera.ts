@@ -49,7 +49,7 @@ export const PISTAS_GENERICAS: readonly [string, string, string] = [
 ];
 
 const PALABRAS_NUMERO: Readonly<Record<string, number>> = {
-  cero: 0, uno: 1, una: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10,
+  cero: 0, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10,
   once: 11, doce: 12, trece: 13, catorce: 14, quince: 15, veinte: 20, treinta: 30, cuarenta: 40, cincuenta: 50,
   cien: 100, doble: 2, duplica: 2, duplican: 2, duplico: 2, triple: 3, triplica: 3, cuadruple: 4, mitad: 0.5,
 };
