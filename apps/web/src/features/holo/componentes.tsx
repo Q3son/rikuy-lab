@@ -45,7 +45,7 @@ const BOTONES: Array<{ etiqueta: string; icono: string; accion: ViewerAction }> 
 ];
 
 /** Touch fallbacks: every gesture has a 48 px+ button (7.6, 15). "Soltar" is the big primary one. */
-export function BotonesTactiles({ enviar, oscuro = false }: { enviar: (a: ViewerAction) => void; oscuro?: boolean }) {
+export function BotonesTactiles({ enviar, oscuro = false, escena }: { enviar: (a: ViewerAction) => void; oscuro?: boolean; escena?: string }) {
   const base = oscuro ? 'border-[#5FE3FF] text-[#5FE3FF] bg-black' : 'border-[#6A7568] text-[#0D2B33] bg-white';
   return (
     <div className="flex flex-col gap-2">
@@ -54,7 +54,7 @@ export function BotonesTactiles({ enviar, oscuro = false }: { enviar: (a: Viewer
         onClick={() => enviar({ type: 'release' })}
         className={`h-14 rounded-xl border-2 text-lg font-bold ${oscuro ? 'border-[#FFC14D] text-[#FFC14D] bg-black' : 'border-[#04474F] bg-[#075E6C] text-white'}`}
       >
-        ▶ Soltar el péndulo
+        {escena === undefined || escena === 'pendulo' ? '▶ Soltar el péndulo' : '▶ Reanudar la animación'}
       </button>
       <div className="grid grid-cols-5 gap-2">
         {BOTONES.map((b) => (

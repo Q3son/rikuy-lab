@@ -1,3 +1,4 @@
+import 'fake-indexeddb/auto';
 import { expectSinViolacionesGraves } from '@rikuy/ui/testing';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

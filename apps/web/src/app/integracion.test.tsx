@@ -62,6 +62,9 @@ describe('museum exhibits open their F9 practice', () => {
     await waitFor(() => expect(router.state.location.pathname).toBe('/lab/pendulo'));
     await router.navigate('/exhibicion/exh-lactasa');
     await waitFor(() => expect(router.state.location.pathname).toBe('/holo/ver/lactasa'));
+    // opened from the museum: the way back is the museum, not the hologram hub; no pendulum wording on the lactase scene
+    expect(await screen.findByRole('link', { name: /Volver al museo/ })).toHaveAttribute('href', '/museo');
+    expect(screen.queryByText(/Soltar el péndulo/)).toBeNull();
   });
 });
 

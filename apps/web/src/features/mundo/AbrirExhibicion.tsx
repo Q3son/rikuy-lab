@@ -9,5 +9,5 @@ export function AbrirExhibicion() {
   const practica = slug ? PRACTICAS[slug] : undefined;
   if (!practica) return <Navigate to="/museo" replace />;
   if (practica.modelo?.id === 'pendulo') return <Navigate to={`/lab/${slug}`} replace />;
-  return <Navigate to={`/holo/ver/${escenaHoloDeExhibicion(exhibicionId) ?? slug}`} replace />;
+  return <Navigate to={`/holo/ver/${escenaHoloDeExhibicion(exhibicionId) ?? slug}`} replace state={{ volverA: '/museo' }} />;
 }
