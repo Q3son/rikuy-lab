@@ -17,3 +17,8 @@ export * from './protocolo.ts';
 export * from './transportes/memoria.ts';
 export { b64urlDecode, b64urlEncode } from './codec/base64url.ts';
 export { hlcNode } from './codec/hash.ts';
+export * from './codec/rk1.ts';
+export * from './codec/enlace.ts';
+export { base45Decode, base45Encode } from './codec/base45.ts';
+export { crc32 } from './codec/crc32.ts';
+export { fromPositional, toPositional } from './codec/posicional.ts';
