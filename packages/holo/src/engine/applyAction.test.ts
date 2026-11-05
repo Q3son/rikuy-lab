@@ -30,6 +30,19 @@ describe('applyViewerAction (engine side of the control protocol)', () => {
     expect(scenes.ctx.running).toBe(true);
   });
 
+  it('every release counts, so the pendulum is lifted and let go again', () => {
+    const { view, scenes } = rig();
+    applyViewerAction({ type: 'release' }, view, scenes);
+    applyViewerAction({ type: 'release' }, view, scenes);
+    expect(scenes.ctx.releases).toBe(2);
+  });
+
+  it('sets a scene variable (the pendulum length from the control phone)', () => {
+    const { view, scenes } = rig();
+    applyViewerAction({ type: 'variable', variable: 'longitud', value: 2 }, view, scenes);
+    expect(scenes.ctx.variables.longitud).toBe(2);
+  });
+
   it('centers the view', () => {
     const { pivot, view, scenes } = rig();
     applyViewerAction({ type: 'rotate', dx: 1, dy: 0 }, view, scenes);

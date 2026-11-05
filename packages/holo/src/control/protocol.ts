@@ -14,7 +14,19 @@ export type ViewerAction =
   | { type: 'pause' }
   | { type: 'release' } // let the pendulum go (run the simulation)
   | { type: 'center' }
-  | { type: 'scene'; scene: string };
+  | { type: 'scene'; scene: string }
+  | { type: 'variable'; variable: string; value: number }; // e.g. the pendulum length from the control
+
+/** Scene variables a peer may set, with their lab range (anything else from the network is dropped). */
+const VARIABLES: Record<string, [number, number]> = {
+  longitud: [0.1, 2.5],
+  amortiguacion: [0, 1],
+  masa: [0.05, 5],
+  gravedad: [1, 25],
+  temperatura: [0, 90],
+  ph: [1, 12],
+  altitud: [0, 6000],
+};
 
 const MAX_ROTATE = 1;
 const MIN_ZOOM = 0.5;
@@ -36,6 +48,8 @@ export function actionToMessage(action: ViewerAction, from: Role): BusMessage {
       return { type: 'command', commands: [{ tool: 'reiniciar_vista', args: {} }], from };
     case 'scene':
       return { type: 'command', commands: [{ tool: 'ir_a', args: { escena: action.scene } }], from };
+    case 'variable':
+      return { type: 'command', commands: [{ tool: 'fijar_variable', args: { variable: action.variable, valor: action.value } }], from };
   }
 }
 
@@ -69,6 +83,11 @@ function commandToAction(c: Comando): ViewerAction[] {
       return [{ type: 'rotate', dx: clamp(((c.args.yaw ?? 0) * Math.PI) / 180, -MAX_ROTATE, MAX_ROTATE), dy: clamp(((c.args.pitch ?? 0) * Math.PI) / 180, -MAX_ROTATE, MAX_ROTATE) }];
     case 'zoom':
       return [{ type: 'zoom', factor: clamp(c.args.factor, MIN_ZOOM, MAX_ZOOM) }];
+    case 'fijar_variable': {
+      const range = Object.hasOwn(VARIABLES, c.args.variable) ? VARIABLES[c.args.variable] : undefined;
+      if (!range || !Number.isFinite(c.args.valor)) return [];
+      return [{ type: 'variable', variable: c.args.variable, value: clamp(c.args.valor, range[0], range[1]) }];
+    }
     default:
       return [];
   }
@@ -89,5 +108,9 @@ export function actionLabel(action: ViewerAction): string {
       return 'Centrar';
     case 'scene':
       return 'Cambiar escena';
+    case 'variable':
+      if (action.variable === 'longitud') return `Longitud ${action.value.toFixed(2)} m`;
+      if (action.variable === 'amortiguacion') return action.value >= 0.5 ? 'Con rozamiento' : 'Sin rozamiento';
+      return `Cambiar ${action.variable}`;
   }
 }
