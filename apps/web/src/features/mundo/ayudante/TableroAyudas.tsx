@@ -18,14 +18,17 @@ const ESTADO: Record<PedidoAyuda['estado'], string> = {
   cancelado: 'Cancelado',
 };
 
-export function TableroAyudas() {
+/** `incrustado`: inside the teacher panel (F6), which owns the page heading and the navigation. */
+export function TableroAyudas({ incrustado = false }: { incrustado?: boolean }) {
+  const Raiz = incrustado ? 'section' : 'main';
+  const Titulo = incrustado ? 'h2' : 'h1';
   const { estado, despachar } = useAyudante();
   const t = tableroAyudas(estado);
   const filas = [...t.escalados, ...t.abiertos, ...t.enCurso, ...t.cerrados];
   return (
-    <main className="rk-mundo" aria-labelledby="titulo-tablero">
+    <Raiz className="rk-mundo" aria-labelledby="titulo-tablero">
       <header className="rk-sign" style={{ background: 'var(--m-primary)' }}>
-        <h1 id="titulo-tablero">Tablero de ayudas entre grupos</h1>
+        <Titulo id="titulo-tablero">Tablero de ayudas entre grupos</Titulo>
       </header>
       <section className="rk-panel" aria-label="Ajustes del Ayudante">
         <label className="rk-fila" style={{ alignItems: 'center' }}>
@@ -136,9 +139,11 @@ export function TableroAyudas() {
           </ul>
         </section>
       )}
-      <p style={{ padding: '0 16px' }}>
-        <Link to="/museo">Ir al museo</Link>
-      </p>
-    </main>
+      {incrustado ? null : (
+        <p style={{ padding: '0 16px' }}>
+          <Link to="/museo">Ir al museo</Link>
+        </p>
+      )}
+    </Raiz>
   );
 }

@@ -6,6 +6,7 @@ import { registroMuseo } from '../eventos.ts';
 import { GRUPO_DEMO } from '../grupo.ts';
 import { rutas } from '../rutas.ts';
 import { juzgarFrase, useAyudante } from './servicio.ts';
+import { TableroAyudas } from './TableroAyudas.tsx';
 
 const abrir = (ruta: string) =>
   render(<RouterProvider router={createMemoryRouter([...rutas, { path: '*', element: <p>Otra ruta</p> }], { initialEntries: [ruta] })} />);
@@ -52,7 +53,7 @@ describe('Ayudante del museo (student side)', () => {
 
 describe('Tablero de ayudas (teacher side)', () => {
   it('turns the Ayudante on, takes an escalated request, confirms and revokes a knot', async () => {
-    abrir('/museo/ayudas');
+    render(<RouterProvider router={createMemoryRouter([{ path: '/', element: <TableroAyudas /> }])} />);
     const interruptor = screen.getByRole('checkbox', { name: /Ayudante del museo apagado/ });
     await userEvent.click(interruptor);
     expect(useAyudante.getState().estado.config.activo).toBe(true);
