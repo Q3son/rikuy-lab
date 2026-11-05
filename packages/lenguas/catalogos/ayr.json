@@ -1,0 +1,68 @@
+{
+  "pendulo.preguntaGuia": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  },
+  "pendulo.pista.1": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  },
+  "pendulo.pista.2": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  },
+  "pendulo.pista.3": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  },
+  "lactasa.preguntaGuia": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  },
+  "lactasa.pista.1": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  },
+  "lactasa.pista.2": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  },
+  "lactasa.pista.3": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  },
+  "respiratorio.preguntaGuia": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  },
+  "respiratorio.pista.1": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  },
+  "respiratorio.pista.2": {
+    "texto": "",
+    "revisado": false,
+    "revisor": null,
+    "variedad": "Aimara central"
+  }
+}
