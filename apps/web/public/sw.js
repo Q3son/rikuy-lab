@@ -2,7 +2,7 @@
 // Las llamadas a /api y /ws siempre van a la red.
 const CACHE = 'rikuy-v2';
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['./', 'display.html', 'control.html', 'panel.html'])).catch(() => {}));
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(['./', 'clasico.html', 'display.html', 'control.html', 'panel.html'])).catch(() => {}));
   self.skipWaiting();
 });
 self.addEventListener('activate', (e) =>

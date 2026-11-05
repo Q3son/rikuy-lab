@@ -5,20 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
   <link rel="manifest" href="./manifest.webmanifest" />
-  <title>Rikuy Lab</title>
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <title>Rikuy</title>
 </head>
-<body class="home">
-  <div class="card">
-    <h1>Rikuy <span>Lab</span></h1>
-    <p class="muted">Laboratorio holográfico con tutor por voz. Elige qué hace este dispositivo.</p>
-    <label class="muted" for="sala">Sala</label>
-    <input type="text" id="sala" value="aula1" />
-    <div class="roles">
-      <a data-role="display.html"><b>Proyector (bajo la pirámide)</b>El celular que muestra el holograma.</a>
-      <a data-role="control.html"><b>Control del grupo</b>Hablar con el tutor, girar, cambiar variables.</a>
-      <a data-role="panel.html"><b>Panel docente</b>Qué está aprendiendo cada grupo.</a>
-    </div>
-  </div>
-  <script type="module" src="./src/pages/home.ts"></script>
+<body>
+  <div id="root"></div>
+  <script type="module" src="./src/main.tsx"></script>
 </body>
 </html>
