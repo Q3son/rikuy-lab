@@ -1,0 +1,11 @@
+{
+  "recursoId": "28HE76A0RKS1JYHH42W4K1MKFZ",
+  "correctas": [1, 2, 1, 0, 1],
+  "retro": [
+    "La longitud es lo que cambias a propósito; el periodo es lo que mides.",
+    "En el modelo ideal la masa no cambia el periodo. Pruébalo y observa dónde falla el modelo (rozamiento del aire).",
+    "El periodo depende de la raíz de la longitud: si la longitud es 4 veces mayor, el periodo es 2 veces mayor.",
+    "Promediar varias oscilaciones reduce el error al medir con el cronómetro.",
+    "Cambiar una sola variable y mantener las demás fijas permite atribuir el cambio a esa variable."
+  ]
+}

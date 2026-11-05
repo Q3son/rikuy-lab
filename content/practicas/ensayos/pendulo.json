@@ -1,0 +1,42 @@
+{
+  "id": "28HE76A0RKS1JYHH42W4K1MKFZ",
+  "practicaId": "TKTQRM5ZA5335H979P5CPAJZ95",
+  "titulo": "Ensayo de indagación: el péndulo",
+  "tiempoMinutos": 10,
+  "sinNota": true,
+  "preguntas": [
+    {
+      "enunciado": "En la práctica del péndulo, ¿cuál es la variable independiente si quieres estudiar cómo cambia el periodo?",
+      "opciones": ["El periodo de oscilación", "La longitud de la cuerda", "El número de oscilaciones que cuentas"],
+      "desempeno": { "competencia": 1, "desempeno": 1 }
+    },
+    {
+      "enunciado": "Cambias solo la masa del lastre. Según el modelo ideal, ¿qué pasa con el periodo?",
+      "opciones": ["Aumenta", "Disminuye", "Casi no cambia"],
+      "desempeno": { "competencia": 1, "desempeno": 4 }
+    },
+    {
+      "enunciado": "Cuadruplicas la longitud de la cuerda. ¿Cuántas veces cambia el periodo?",
+      "opciones": ["La mitad", "El doble", "Cuatro veces"],
+      "desempeno": { "competencia": 1, "desempeno": 4 }
+    },
+    {
+      "enunciado": "¿Por qué mides 10 oscilaciones y no una sola?",
+      "opciones": [
+        "Para reducir el error de medida al promediar",
+        "Porque una oscilación no se puede medir",
+        "Para que el péndulo se detenga más despacio"
+      ],
+      "desempeno": { "competencia": 1, "desempeno": 2 }
+    },
+    {
+      "enunciado": "Para comprobar una hipótesis, ¿qué debes hacer?",
+      "opciones": [
+        "Cambiar varias variables a la vez",
+        "Cambiar una sola variable y mantener las demás fijas",
+        "Medir solo una vez y concluir"
+      ],
+      "desempeno": { "competencia": 1, "desempeno": 2 }
+    }
+  ]
+}

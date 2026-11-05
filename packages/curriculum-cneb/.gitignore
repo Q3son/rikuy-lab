@@ -1,0 +1,2 @@
+# El raíz ignora data/ (datos de ejecución). Este subconjunto CNEB es un dato versionado.
+!/data/
