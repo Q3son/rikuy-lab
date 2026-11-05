@@ -7,7 +7,8 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run --passWithNoTests",
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.18",
@@ -15,9 +16,11 @@
     "@rikuy/contracts": "*",
     "@rikuy/core": "*",
     "@rikuy/curriculum-cneb": "*",
+    "@rikuy/mensajeria": "*",
     "@rikuy/reportes": "*",
     "@rikuy/sync": "*",
     "hono": "^4.13.16",
-    "tsx": "^4.23.15"
+    "tsx": "^4.23.15",
+    "zod": "^4.6.7"
   }
 }

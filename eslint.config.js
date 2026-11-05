@@ -8,7 +8,7 @@ import tseslint from 'typescript-eslint';
 
 const DOMAIN = [
   'contracts', 'core', 'curriculum-cneb', 'lab-engine', 'tutor', 'sync', 'evidencia', 'memoria',
-  'reportes', 'quipu', 'presencia', 'senales', 'cerebro', 'retos', 'lenguas',
+  'reportes', 'quipu', 'presencia', 'senales', 'cerebro', 'retos', 'lenguas', 'mensajeria',
 ];
 
 /** No network, storage or media capture where frames, audio or signals could leak (4.6, 4.9). */

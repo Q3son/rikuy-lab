@@ -24,6 +24,7 @@ const ALLOWED = {
   retos: ['core'],
   lenguas: ['core'],
   ai: ['core', 'tutor', 'curriculum-cneb'],
+  mensajeria: ['core', 'reportes', 'lenguas'], // never senales (FUNCIONES_EXTRA 1.5)
   holo: [],
   ui: [],
 };
@@ -41,8 +42,8 @@ const perPackage = Object.entries(ALLOWED).map(([pkg, allowed]) => {
 });
 
 const APP_ALLOWED = {
-  hub: ['contracts', 'core', 'sync', 'presencia', 'tutor', 'evidencia', 'memoria', 'ai'],
-  cloud: ['contracts', 'core', 'ai', 'curriculum-cneb', 'reportes', 'sync'],
+  hub: ['contracts', 'core', 'sync', 'presencia', 'tutor', 'evidencia', 'memoria', 'ai', 'mensajeria'],
+  cloud: ['contracts', 'core', 'ai', 'curriculum-cneb', 'reportes', 'sync', 'mensajeria'],
   android: [],
   server: ['core'], // legacy, removed by F8
 };
@@ -54,7 +55,7 @@ const perApp = Object.entries(APP_ALLOWED).map(([app, allowed]) => ({
 }));
 
 /** Domain packages: no React, Dexie, Three.js or MediaPipe (rule 2; fetch is checked by ESLint). */
-const DOMAIN = ['contracts', 'core', 'curriculum-cneb', 'lab-engine', 'tutor', 'sync', 'evidencia', 'memoria', 'reportes', 'quipu', 'presencia', 'senales', 'cerebro', 'retos', 'lenguas'];
+const DOMAIN = ['contracts', 'core', 'curriculum-cneb', 'lab-engine', 'tutor', 'sync', 'evidencia', 'memoria', 'reportes', 'quipu', 'presencia', 'senales', 'cerebro', 'retos', 'lenguas', 'mensajeria'];
 
 module.exports = {
   forbidden: [
@@ -90,7 +91,14 @@ module.exports = {
       name: 'signals-never-reach-records',
       comment: 'Hard rule: signals never reach a log, record or individual report (2.3)',
       severity: 'error',
-      from: { path: '^packages/(memoria|evidencia|reportes|cerebro|quipu)/' },
+      from: { path: '^packages/(memoria|evidencia|reportes|cerebro|quipu|mensajeria)/' },
+      to: { path: '^packages/senales/' },
+    },
+    {
+      name: 'mensajeria-never-senales',
+      comment: 'Hard rule: outgoing messages never import signals / Guardián code (FUNCIONES_EXTRA 1.5)',
+      severity: 'error',
+      from: { path: '^packages/mensajeria/' },
       to: { path: '^packages/senales/' },
     },
     ...perPackage,
