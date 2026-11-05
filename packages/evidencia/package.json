@@ -17,6 +17,7 @@
     "@rikuy/contracts": "*",
     "@rikuy/core": "*",
     "@rikuy/curriculum-cneb": "*",
-    "@rikuy/tutor": "*"
+    "@rikuy/tutor": "*",
+    "zod": "^4.6.7"
   }
 }

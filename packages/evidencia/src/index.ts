@@ -12,3 +12,8 @@ export * from './avance.ts';
 export * from './cobertura.ts';
 export * from './resumen.ts';
 export * from './demo/escenario.ts';
+export * from './pictogramas.ts';
+export * from './plantillas/familia.ts';
+export * from './plantillas/modelos.ts';
+export * from './plantillas/texto.ts';
+export type { Renderizado } from './plantillas/tipos.ts';

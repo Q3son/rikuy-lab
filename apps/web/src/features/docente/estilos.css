@@ -89,3 +89,6 @@ textarea.dc-input { padding: 10px 12px; min-height: 80px; }
   .a4-hoja { border: 0; width: 210mm; height: 297mm; min-height: 0; overflow: hidden; break-inside: avoid; page-break-after: avoid; }
   .dc-main { padding: 0; max-width: none; }
 }
+
+.a4-escala { zoom: 0.42; }
+@media print { .a4-escala { zoom: 1; } }
