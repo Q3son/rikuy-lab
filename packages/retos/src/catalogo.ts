@@ -1,0 +1,117 @@
+/**
+ * Contextual challenges of the Patio de juegos (ECOSISTEMA 2.9). 2-4 minutes, local context, no scores,
+ * no speed, no ranking. Pattern credit: Amautai (turistivo, regional context) and Supermentes (Hecze,
+ * visible curriculum reference). Competency names are to be verified letter by letter against the CNEB.
+ */
+import type { Reto } from './tipos.ts';
+
+export const RETOS: Reto[] = [
+  {
+    id: 'feria',
+    titulo: 'Feria de Chivay',
+    contexto: 'Es domingo de feria en Chivay. Doña Rosa vende choclos y habas en su puesto, al lado de la plaza.',
+    area: 'matematica',
+    competencia: 'Resuelve problemas de cantidad (por verificar en el CNEB)',
+    pasos: [
+      {
+        id: 'feria-1',
+        tipo: 'numero',
+        enunciado: 'Doña Rosa vende 3 choclos por 2 soles. ¿Cuántos soles cuestan 9 choclos?',
+        valor: 6,
+        tolerancia: 0,
+        unidad: 'soles',
+        retro: '¿Cuántos grupos de 3 choclos hay en 9 choclos?',
+        pista: '9 choclos son 3 veces 3 choclos. Cada grupo de 3 cuesta 2 soles.',
+      },
+      {
+        id: 'feria-2',
+        tipo: 'numero',
+        enunciado: 'Con 10 soles, ¿cuántos choclos puedes comprar al mismo precio?',
+        valor: 15,
+        tolerancia: 0,
+        unidad: 'choclos',
+        retro: '¿Cuántas veces entran 2 soles en 10 soles?',
+        pista: 'Por cada 2 soles recibes 3 choclos.',
+      },
+      {
+        id: 'feria-3',
+        tipo: 'opcion',
+        enunciado: 'Don Julio ofrece 4 choclos por 3 soles. ¿Dónde conviene comprar 12 choclos?',
+        opciones: ['Con doña Rosa', 'Con don Julio', 'Cuesta igual'],
+        correcta: 0,
+        retro: '¿Cuánto pagarías por 12 choclos en cada puesto?',
+        pista: 'Doña Rosa: 12 choclos son 4 grupos de 3. Don Julio: 12 choclos son 3 grupos de 4.',
+      },
+    ],
+  },
+  {
+    id: 'chacra',
+    titulo: 'Riego en la chacra',
+    contexto: 'En la chacra de la familia Quispe se riega por surcos con agua del canal, y el agua no sobra en setiembre.',
+    area: 'ciencia-y-tecnologia',
+    competencia: 'Indaga mediante métodos científicos para construir sus conocimientos',
+    pasos: [
+      {
+        id: 'chacra-1',
+        tipo: 'numero',
+        enunciado: 'Un surco de 12 metros necesita 30 litros de agua. ¿Cuántos litros necesita un surco de 20 metros?',
+        valor: 50,
+        tolerancia: 0,
+        unidad: 'litros',
+        retro: '¿Cuántos litros necesita cada metro de surco?',
+        pista: '30 litros entre 12 metros da 2,5 litros por metro.',
+      },
+      {
+        id: 'chacra-2',
+        tipo: 'opcion',
+        enunciado: 'Riegan un surco al mediodía y otro al atardecer, con la misma agua. ¿Cuál crees que pierde más agua por evaporación?',
+        opciones: ['El del mediodía', 'El del atardecer', 'Pierden igual'],
+        correcta: 0,
+        retro: '¿A qué hora calienta más el sol en la chacra?',
+        pista: 'Con más calor y más sol, el agua se evapora más rápido.',
+      },
+      {
+        id: 'chacra-3',
+        tipo: 'opcion',
+        enunciado: '¿Cómo podrías comprobarlo en tu casa?',
+        opciones: [
+          'Dos vasos con la misma agua, uno al sol y otro a la sombra, y medir cuánto queda',
+          'Preguntar a un vecino',
+          'Mirar el cielo',
+        ],
+        correcta: 0,
+        retro: '¿Qué tendrías que medir para saberlo con un dato?',
+        pista: 'Cambia solo una cosa (sol o sombra) y mide lo mismo en los dos vasos.',
+      },
+    ],
+  },
+  {
+    id: 'llamas',
+    titulo: 'Cuenta llamas',
+    contexto: 'Una tropa de llamas baja desde la puna hacia el pueblo, cargando papa y chuño para la feria.',
+    area: 'matematica',
+    competencia: 'Resuelve problemas de cantidad (por verificar en el CNEB)',
+    pasos: [
+      {
+        id: 'llamas-1',
+        tipo: 'numero',
+        enunciado: 'La tropa tiene 24 llamas y la tercera parte son crías que no cargan. ¿Cuántas crías hay?',
+        valor: 8,
+        tolerancia: 0,
+        unidad: 'crías',
+        retro: '¿En cuántos grupos iguales partirías las 24 llamas?',
+        pista: 'La tercera parte es dividir entre 3.',
+      },
+      {
+        id: 'llamas-2',
+        tipo: 'numero',
+        enunciado: 'Cada llama adulta carga 25 kilos. ¿Cuántos kilos cargan entre todas las adultas?',
+        valor: 400,
+        tolerancia: 0,
+        unidad: 'kilos',
+        retro: '¿Cuántas llamas adultas hay, si 8 son crías?',
+        pista: 'Hay 24 menos 8 llamas adultas; cada una carga 25 kilos.',
+      },
+    ],
+  },
+];

@@ -1,5 +1,8 @@
 /**
- * @rikuy/retos: Contextual challenges engine (no per-person scores).
- * Sprint 0 skeleton. The owning front fills it in (docs/ecosistema/ARQUITECTURA_ECOSISTEMA.md, 5.4).
+ * @rikuy/retos: contextual challenges engine (feria, chacra, llamas). Progress is per group and has no
+ * per-person scores, no speed and no ranking.
  */
 export const packageName = '@rikuy/retos' as const;
+export * from './catalogo.ts';
+export * from './motor.ts';
+export * from './tipos.ts';
