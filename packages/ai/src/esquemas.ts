@@ -17,6 +17,8 @@ export const SolicitudPractica = z.object({
       pictogramas: z.boolean().default(false),
     })
     .default({ quiz: true, diagrama: true, guionVideo: false, pictogramas: false }),
+  /** Verifier findings fed back to the generator on the single retry (4.4). */
+  correcciones: z.array(z.string().max(300)).max(20).optional(),
 });
 export type SolicitudPractica = z.infer<typeof SolicitudPractica>;
 

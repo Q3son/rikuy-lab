@@ -105,7 +105,7 @@ describe('verificarBorrador (gates 5.4)', () => {
     expect(reglas(c)).toContain('quiz_invalido');
   });
 
-  it('rejects affective vocabulary about the student', () => {
+  it('rejects emotional vocabulary about the student', () => {
     for (const texto of ['Si te sientes frustrado, respira.', 'No te preocupes si estás aburrido.', 'Un alumno ansioso puede pedir ayuda.']) {
       const b = borradorValido();
       b.pistas[0] = texto;
@@ -113,7 +113,7 @@ describe('verificarBorrador (gates 5.4)', () => {
     }
   });
 
-  it('scans affective vocabulary in the video script too', () => {
+  it('scans emotional vocabulary in the video script too', () => {
     const b = borradorValido();
     b.guionVideo = ['Un estudiante triste mira el péndulo.'];
     expect(reglas(b)).toContain('vocabulario_afectivo');
