@@ -1,5 +1,8 @@
 /**
- * @rikuy/store-dexie: Repository adapter on top of Dexie (browser).
- * Sprint 0 skeleton. The owning front fills it in (docs/ecosistema/ARQUITECTURA_ECOSISTEMA.md, 5.4).
+ * @rikuy/store-dexie: Dexie (IndexedDB) adapter of the sync ports (3.4).
+ * React live hooks live in the `@rikuy/store-dexie/react` entry.
  */
 export const packageName = '@rikuy/store-dexie' as const;
+
+export * from './db.ts';
+export * from './store.ts';
