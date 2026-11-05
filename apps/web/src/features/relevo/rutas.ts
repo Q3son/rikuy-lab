@@ -1,4 +1,9 @@
 import type { RouteObject } from 'react-router';
 
 /** Routes of the "relevo" feature. Only its owning front edits this file (5.5). */
-export const rutas: RouteObject[] = [];
+export const rutas: RouteObject[] = [
+  {
+    path: 'relevo',
+    lazy: async () => ({ Component: (await import('./Relevo.tsx')).Relevo }),
+  },
+];
