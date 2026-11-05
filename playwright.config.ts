@@ -6,12 +6,8 @@ import { defineConfig, devices } from '@playwright/test';
  *  - movil: the star journey on a Pixel 5 profile, specs in e2e/<front>/*.spec.ts
  *  - avion: the offline promise (load online, wait for the SW, go offline, reload), e2e/**\/*.avion.spec.ts
  */
-<<<<<<< HEAD
-const PORT = Number(process.env.E2E_PORT ?? 4173);
-=======
-// RIKUY_E2E_PORT lets parallel checkouts run their own preview without colliding.
-const PORT = Number(process.env.RIKUY_E2E_PORT ?? 4173);
->>>>>>> ws/plan
+// E2E_PORT (or RIKUY_E2E_PORT) lets parallel checkouts run their own preview without colliding.
+const PORT = Number(process.env.E2E_PORT ?? process.env.RIKUY_E2E_PORT ?? 4173);
 
 export default defineConfig({
   testDir: './e2e',
