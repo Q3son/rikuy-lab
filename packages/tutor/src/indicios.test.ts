@@ -13,8 +13,7 @@ describe('labelled corpus gate (5.4 F4)', () => {
   it.each(INDICADORES)('agrees with the labels on %s in at least 80% of the sentences', (indicador) => {
     const fallos = CORPUS.filter((c) => analizarRazonamiento(c.texto)[indicador] !== c[indicador]);
     const acuerdo = 1 - fallos.length / CORPUS.length;
-    if (acuerdo < 0.8) console.log(indicador, fallos.map((x) => x.texto));
-    expect(acuerdo).toBeGreaterThanOrEqual(0.8);
+    expect(acuerdo, `${indicador} misses: ${fallos.map((x) => x.texto).join(' | ')}`).toBeGreaterThanOrEqual(0.8);
   });
 
   it('never reads "masa" as "más" (0 false positives)', () => {
