@@ -17,3 +17,4 @@ export * from './creador.ts';
 export * from './adaptadores/simulado.ts';
 export * from './adaptadores/reglas.ts';
 export * from './adaptadores/webllm.ts';
+export * from './adaptadores/openai-compat.ts';
