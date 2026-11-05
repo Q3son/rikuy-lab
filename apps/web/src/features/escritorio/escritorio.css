@@ -614,12 +614,13 @@
   color: #fff;
 }
 .ek-museo.ek-docente {
+  align-items: start;
   height: auto;
   padding: 0;
   background: transparent;
 }
 .ek-escenario--docente {
-  flex: 1;
+  flex: none;
   height: clamp(420px, calc(100dvh - 330px), 720px);
 }
 .ek-docente .dc-card {
