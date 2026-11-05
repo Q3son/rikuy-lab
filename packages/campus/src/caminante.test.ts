@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { avanzar, chunksVisibles, encuadrar } from './caminante.ts';
+import { avanzar, chunksVisibles, encuadrar, zoomQueEncuadra } from './caminante.ts';
 
 describe('path walker', () => {
   it('walks along the path at the given speed and consumes reached waypoints', () => {
@@ -37,5 +37,16 @@ describe('camera and chunks', () => {
       [0, 1],
       [1, 1],
     ]);
+  });
+});
+
+describe('zoomQueEncuadra (desktop stage)', () => {
+  it('frames the whole map in the viewport, within the limits', () => {
+    expect(zoomQueEncuadra({ ancho: 18, alto: 13 }, { ancho: 720, alto: 800 }, 32)).toBe(1.25);
+    expect(zoomQueEncuadra({ ancho: 10, alto: 8 }, { ancho: 2000, alto: 2000 }, 32)).toBe(2.5);
+    expect(zoomQueEncuadra({ ancho: 60, alto: 40 }, { ancho: 800, alto: 600 }, 32)).toBe(1);
+    expect(zoomQueEncuadra({ ancho: 60, alto: 40 }, { ancho: 800, alto: 600 }, 32, 0.5)).toBe(0.5);
+    expect(zoomQueEncuadra({ ancho: 60, alto: 40 }, { ancho: 800, alto: 600 }, 32, 0.3)).toBe(0.42);
+    expect(zoomQueEncuadra({ ancho: 0, alto: 0 }, { ancho: 800, alto: 600 }, 32)).toBe(1);
   });
 });

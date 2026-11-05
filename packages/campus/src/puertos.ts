@@ -39,8 +39,11 @@ export interface EstadoRender {
 
 export interface RenderizadorMundo {
   dibujar(estado: EstadoRender): void;
-  /** CSS size of the viewport; returns the view size in tiles. */
-  redimensionar(anchoCss: number, altoCss: number): { ancho: number; alto: number };
+  /**
+   * CSS size of the viewport; returns the view size in tiles. `zoom` (default 1) scales the tiles, so a
+   * desktop stage can frame a whole hall (crisp: the chunks are redrawn at the new size).
+   */
+  redimensionar(anchoCss: number, altoCss: number, zoom?: number): { ancho: number; alto: number };
   destruir(): void;
 }
 
