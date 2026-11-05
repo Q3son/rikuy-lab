@@ -4,6 +4,7 @@ import { cn } from '../lib/cn.ts';
 import { Card } from './ui/card.tsx';
 import { Chip } from './ui/chip.tsx';
 import type { Narracion } from './speak-button.tsx';
+import { TextoResaltado } from './texto-resaltado.tsx';
 
 /** Left rail shared by the inquiry cards: 10 px, role colour (DESIGN.md 11). */
 const rail = 'relative overflow-hidden pl-7 before:absolute before:inset-y-0 before:left-0 before:w-2.5';
@@ -21,7 +22,9 @@ export function HypothesisCard({ title, lockLabel, texto, className, narracion }
           </Chip>
         ) : null}
       </div>
-      <p className="mt-2 text-body text-ink">{texto}</p>
+      <p className="mt-2 text-body text-ink">
+        <TextoResaltado texto={texto} resaltado={narracion?.resaltado} />
+      </p>
     </Card>
   );
 }
@@ -62,7 +65,11 @@ export function EvidenceQuoteCard({ grupo, chip, quote, indicador, noEvaluable, 
         {chip ? <Chip variant="sync">{chip}</Chip> : null}
       </div>
       <blockquote className="m-0 mt-2">
-        <p data-testid="evidence-quote" className="text-body-lg font-semibold text-ink">{`«${quote ?? ''}»`}</p>
+        <p data-testid="evidence-quote" className="text-body-lg font-semibold text-ink">
+          {'«'}
+          <TextoResaltado texto={quote ?? ''} resaltado={narracion?.resaltado} />
+          {'»'}
+        </p>
       </blockquote>
       {indicador ? <p className="mt-1 text-small text-ink-2">{indicador}</p> : null}
     </Card>
@@ -77,7 +84,9 @@ export function ConclusionCard({ title, texto, className, children, narracion }:
         <Check className="size-6 text-ichu-ink" aria-hidden="true" />
         <h3 className="text-title-sm font-bold text-ichu-ink">{title}</h3>
       </div>
-      <p className="mt-2 text-body text-ink">{texto}</p>
+      <p className="mt-2 text-body text-ink">
+        <TextoResaltado texto={texto} resaltado={narracion?.resaltado} />
+      </p>
       {children}
     </Card>
   );

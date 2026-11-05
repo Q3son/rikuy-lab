@@ -13,6 +13,8 @@ export interface Narracion {
   disabled?: boolean;
   /** Why narration is not possible ("Sin audio revisado"); read as the button description. */
   motivo?: string;
+  /** Range being read right now (highlighted reading); cards mark it in their main text. */
+  resaltado?: { inicio: number; fin: number } | null;
 }
 
 /**

@@ -30,3 +30,5 @@ export { AudioWithTranscript } from './components/audio-with-transcript.tsx';
 export { auditarContraste, contrastRatio, relativeLuminance, type InformeContraste, type ParContraste } from './a11y/contraste.ts';
 export { ESCALAS_TEXTO, escalaSiguiente, normalizarEscala, porcentajeEscala, type EscalaTexto } from './a11y/escala.ts';
 export { crearHaptica, PATRONES_HAPTICOS, type Haptica, type PatronHaptico } from './a11y/haptica.ts';
+export { TextoResaltado, type RangoResaltado } from './components/texto-resaltado.tsx';
+export { OpcionesRadio, type OpcionRadio } from './components/ui/opciones-radio.tsx';

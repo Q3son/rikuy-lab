@@ -4,6 +4,7 @@ import { Button } from './ui/button.tsx';
 import { Chip } from './ui/chip.tsx';
 import { HallGlyph, KnotIcon, type KnotTipo, type SalaId } from './icons.tsx';
 import { SpeakButton, type Narracion } from './speak-button.tsx';
+import { TextoResaltado } from './texto-resaltado.tsx';
 
 /**
  * Hall sign: full-width block in the hall colour, 48 px glyph tile, hall name (20 px / 800),
@@ -63,7 +64,9 @@ export function Plaque({ sala, salaNombre, titulo, pregunta, chips = [], nudos =
         </div>
         {narracion ? <SpeakButton {...narracion} /> : null}
       </div>
-      <p className="mt-1 text-[1rem] leading-6 text-ink-2">{pregunta}</p>
+      <p className="mt-1 text-[1rem] leading-6 text-ink-2">
+        <TextoResaltado texto={pregunta} resaltado={narracion?.resaltado} />
+      </p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {chips.map((c) => (
           <Chip key={c}>{c}</Chip>
