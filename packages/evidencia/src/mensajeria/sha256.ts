@@ -7,10 +7,23 @@ const K = Uint32Array.from([
   0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
 ]);
 
+/** UTF-8 bytes without TextEncoder (this package targets plain ES2022, no DOM lib). */
+function utf8(texto: string): Uint8Array {
+  const bytes: number[] = [];
+  for (const ch of texto) {
+    const c = ch.codePointAt(0) as number;
+    if (c < 0x80) bytes.push(c);
+    else if (c < 0x800) bytes.push(0xc0 | (c >> 6), 0x80 | (c & 63));
+    else if (c < 0x10000) bytes.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+    else bytes.push(0xf0 | (c >> 18), 0x80 | ((c >> 12) & 63), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+  }
+  return Uint8Array.from(bytes);
+}
+
 const rotr = (x: number, n: number) => (x >>> n) | (x << (32 - n));
 
 export function sha256(texto: string): string {
-  const datos = new TextEncoder().encode(texto);
+  const datos = utf8(texto);
   const largo = datos.length;
   const total = (((largo + 9 + 63) >> 6) << 6) >>> 0;
   const m = new Uint8Array(total);

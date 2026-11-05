@@ -7,6 +7,9 @@ describe('sha256', () => {
     expect(sha256('abc')).toBe('ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
     expect(sha256('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq')).toBe('248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1');
   });
+  it('matches Node on accents and 4-byte characters', () => {
+    expect(sha256('péndulo🧵')).toBe('0a586730e6002e2391aa3add3282588aaf58155eb21c7f60412b7617b4580fae');
+  });
   it('hashes UTF-8 text', () => {
     expect(sha256('péndulo')).toMatch(/^[0-9a-f]{64}$/);
     expect(sha256('péndulo')).not.toBe(sha256('pendulo'));
