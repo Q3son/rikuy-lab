@@ -1,0 +1,994 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Luz de Puna, dirección visual de Rikuy</title>
+<meta name="description" content="Moodboard autocontenido del sistema de diseño de Rikuy y el Museo Rikuy: paleta, tipografía, mascota, componentes y pantallas.">
+<style>
+/* Hallmark · custom: Luz de Puna · genre: modern-minimal · surface: absolute (solo modo holograma) · job: usar el museo en el aula */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: S, el mapa 2D podia parecer un juego generico; se le dio rotulos de sala, trama de rombos y exposiciones como pedestales */
+/* Hallmark · waive 7b · fondo negro absoluto en data-theme holo · la piramide holografica solo refleja pixeles encendidos, el negro puro es el requisito del museo */
+/* Hallmark · waive 24b · padding de 10 y 14 px en chips y tarjetas del telefono · el museo usa pasos de 2 px solo en componentes compactos de 360 px */
+/* rikuy-ui tokens v0.2.0, direccion "Luz de Puna" para el Museo Rikuy. Fuente de verdad: docs/ecosistema/DESIGN.md. Generado desde un solo origen; edita DESIGN.md primero. */
+/* critique: sin CDN, sin fuentes remotas, sin blur ni backdrop-filter; solo transform y opacity se animan. */
+
+/* Fuente: "Rikuy Sans" apunta a Atkinson Hyperlegible Next si esta instalada o autoalojada. */
+@font-face {
+  font-family: 'Rikuy Sans';
+  src: local('Atkinson Hyperlegible Next'), local('AtkinsonHyperlegibleNext-Regular'), local('Atkinson Hyperlegible');
+  font-weight: 400 800;
+  font-display: swap;
+}
+/* Al autoalojar (unos 30 KB en woff2, latin + latin-ext con apostrofes de quechua), agrega:
+   src: url('./fonts/AtkinsonHyperlegibleNext-var.woff2') format('woff2-variations'), local(...);  */
+
+:root {
+  /* Familias */
+  --rk-font-sans: 'Rikuy Sans', 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  --rk-font-mono: ui-monospace, 'Cascadia Mono', 'Roboto Mono', Menlo, monospace;
+
+  /* Escala tipografica (base 16; el cuerpo es 17 para pantallas de 360 a pleno sol) */
+  --rk-fs-caption: 14px;
+  --rk-lh-caption: 20px;
+  --rk-fw-caption: 400;
+  --rk-ls-caption: 0;
+  --rk-fs-small: 15px;
+  --rk-lh-small: 22px;
+  --rk-fw-small: 400;
+  --rk-ls-small: 0;
+  --rk-fs-body: 17px;
+  --rk-lh-body: 26px;
+  --rk-fw-body: 400;
+  --rk-ls-body: 0;
+  --rk-fs-body-lg: 19px;
+  --rk-lh-body-lg: 28px;
+  --rk-fw-body-lg: 400;
+  --rk-ls-body-lg: 0;
+  --rk-fs-title-sm: 20px;
+  --rk-lh-title-sm: 26px;
+  --rk-fw-title-sm: 700;
+  --rk-ls-title-sm: 0;
+  --rk-fs-title: 24px;
+  --rk-lh-title: 30px;
+  --rk-fw-title: 800;
+  --rk-ls-title: -0.005em;
+  --rk-fs-headline: 30px;
+  --rk-lh-headline: 36px;
+  --rk-fw-headline: 800;
+  --rk-ls-headline: -0.01em;
+  --rk-fs-display: 40px;
+  --rk-lh-display: 44px;
+  --rk-fw-display: 800;
+  --rk-ls-display: -0.02em;
+  --rk-fs-numeral: 56px;
+  --rk-lh-numeral: 56px;
+  --rk-fw-numeral: 800;
+  --rk-ls-numeral: 0;
+  --rk-fs-numeral-xl: 72px;
+  --rk-lh-numeral-xl: 72px;
+  --rk-fw-numeral-xl: 800;
+  --rk-ls-numeral-xl: -0.01em;
+
+  /* Espaciado, rejilla de 4 */
+  --rk-space-0: 0;
+  --rk-space-1: 4px;
+  --rk-space-2: 8px;
+  --rk-space-3: 12px;
+  --rk-space-4: 16px;
+  --rk-space-5: 20px;
+  --rk-space-6: 24px;
+  --rk-space-8: 32px;
+  --rk-space-10: 40px;
+  --rk-space-12: 48px;
+  --rk-space-16: 64px;
+
+  /* Radios: uno por nivel de anidacion */
+  --rk-r-ctl: 12px;
+  --rk-r-card: 16px;
+  --rk-r-sheet: 24px;
+  --rk-r-chip: 999px;
+
+  /* Tamanos tactiles */
+  --rk-hit: 48px;
+  --rk-hit-primary: 56px;
+  --rk-icon: 24px;
+  --rk-tabbar: 64px;
+
+  /* Colores fijos, iguales en todos los modos: QR (siempre tinta sobre papel) y etiquetas de muestras */
+  --rk-qr-paper: #FCFDFB;
+  --rk-qr-ink: #0D2B33;
+  --rk-static-ink: #0D2B33;
+  --rk-static-paper: #FFFFFF;
+
+  /* Mundo 2D: baldosa logica de 32 px CSS (16 px de arte a 2x) */
+  --rk-tile: 32px;
+
+  /* Movimiento: barato y callado */
+  --rk-dur-fast: 120ms;
+  --rk-dur: 200ms;
+  --rk-dur-slow: 320ms;
+  --rk-dur-swing: 4200ms;
+  --rk-ease: cubic-bezier(0.2, 0, 0, 1);
+  --rk-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --rk-ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Contenedores */
+  --rk-w-phone: 480px;
+  --rk-w-tablet: 720px;
+  --rk-w-panel: 1120px;
+}
+
+/* Tema Luz (por defecto): aula a pleno sol */
+:root,
+[data-theme="light"] {
+  --rk-bg: #F5F6F1;
+  --rk-surface: #FFFFFF;
+  --rk-surface-2: #E9ECE4;
+  --rk-border: #D3D9CC;
+  --rk-border-strong: #6A7568;
+  --rk-ink: #0D2B33;
+  --rk-ink-2: #33494F;
+  --rk-muted: #4D6368;
+  --rk-primary: #075E6C;
+  --rk-primary-press: #04474F;
+  --rk-on-primary: #FFFFFF;
+  --rk-primary-tint: #DCEBEC;
+  --rk-foton: #19CBEE;
+  --rk-on-foton: #0D2B33;
+  --rk-foton-ink: #00566A;
+  --rk-foton-tint: #D9F4FA;
+  --rk-sol: #F5B301;
+  --rk-on-sol: #0D2B33;
+  --rk-sol-ink: #6B4300;
+  --rk-sol-tint: #FFF1CC;
+  --rk-grana: #A8123B;
+  --rk-on-grana: #FFFFFF;
+  --rk-grana-ink: #96102F;
+  --rk-grana-tint: #FBE6EA;
+  --rk-ichu: #14592D;
+  --rk-on-ichu: #FFFFFF;
+  --rk-ichu-ink: #14592D;
+  --rk-ichu-tint: #E3F2E6;
+  --rk-hall-fisica: #075E6C;
+  --rk-on-hall-fisica: #FFFFFF;
+  --rk-hall-fisica-tint: #DCEBEC;
+  --rk-hall-fisica-ink: #04474F;
+  --rk-hall-bio: #435F0F;
+  --rk-on-hall-bio: #FFFFFF;
+  --rk-hall-bio-tint: #E9F1D3;
+  --rk-hall-bio-ink: #3A5209;
+  --rk-hall-quim: #9E3206;
+  --rk-on-hall-quim: #FFFFFF;
+  --rk-hall-quim-tint: #FBE4D8;
+  --rk-hall-quim-ink: #8A2C05;
+  --rk-hall-tierra: #6E4A2F;
+  --rk-on-hall-tierra: #FFFFFF;
+  --rk-hall-tierra-tint: #F1E6D8;
+  --rk-hall-tierra-ink: #5A3A20;
+  --rk-focus: #0D2B33;
+  --rk-overlay: rgba(13, 43, 51, 0.58);
+  --rk-shadow-card: 0 1px 0 0 #D3D9CC;
+  --rk-shadow-press: 0 3px 0 0 #04474F;
+  --rk-shadow-sheet: 0 -8px 24px rgba(13, 43, 51, 0.22);
+}
+
+/* Tema Noche: aula en penumbra */
+[data-theme="dark"] {
+  --rk-bg: #0A1A1F;
+  --rk-surface: #112429;
+  --rk-surface-2: #183139;
+  --rk-border: #254049;
+  --rk-border-strong: #7B979E;
+  --rk-ink: #EDF5F6;
+  --rk-ink-2: #C3D6D9;
+  --rk-muted: #9FB8BC;
+  --rk-primary: #3FD8F2;
+  --rk-primary-press: #2BB8D1;
+  --rk-on-primary: #03222A;
+  --rk-primary-tint: #123A44;
+  --rk-foton: #3FD8F2;
+  --rk-on-foton: #03222A;
+  --rk-foton-ink: #3FD8F2;
+  --rk-foton-tint: #0F3A44;
+  --rk-sol: #FFC83D;
+  --rk-on-sol: #03222A;
+  --rk-sol-ink: #FFC83D;
+  --rk-sol-tint: #3A2E0B;
+  --rk-grana: #FF6B87;
+  --rk-on-grana: #03222A;
+  --rk-grana-ink: #FF93A6;
+  --rk-grana-tint: #3A1520;
+  --rk-ichu: #5BC47E;
+  --rk-on-ichu: #04222A;
+  --rk-ichu-ink: #86DCA0;
+  --rk-ichu-tint: #12301E;
+  --rk-hall-fisica: #4FC3D9;
+  --rk-on-hall-fisica: #03222A;
+  --rk-hall-fisica-tint: #0A2A33;
+  --rk-hall-fisica-ink: #4FC3D9;
+  --rk-hall-bio: #B7D95C;
+  --rk-on-hall-bio: #03222A;
+  --rk-hall-bio-tint: #26310C;
+  --rk-hall-bio-ink: #B7D95C;
+  --rk-hall-quim: #FF9266;
+  --rk-on-hall-quim: #03222A;
+  --rk-hall-quim-tint: #3A1D10;
+  --rk-hall-quim-ink: #FF9266;
+  --rk-hall-tierra: #D9A877;
+  --rk-on-hall-tierra: #03222A;
+  --rk-hall-tierra-tint: #2A1F14;
+  --rk-hall-tierra-ink: #D9A877;
+  --rk-focus: #FFC83D;
+  --rk-overlay: rgba(0, 0, 0, 0.66);
+  --rk-shadow-card: 0 1px 0 0 #254049;
+  --rk-shadow-press: 0 3px 0 0 #2BB8D1;
+  --rk-shadow-sheet: 0 -8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Sin eleccion explicita, respeta el sistema */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --rk-bg: #0A1A1F;
+    --rk-surface: #112429;
+    --rk-surface-2: #183139;
+    --rk-border: #254049;
+    --rk-border-strong: #7B979E;
+    --rk-ink: #EDF5F6;
+    --rk-ink-2: #C3D6D9;
+    --rk-muted: #9FB8BC;
+    --rk-primary: #3FD8F2;
+    --rk-primary-press: #2BB8D1;
+    --rk-on-primary: #03222A;
+    --rk-primary-tint: #123A44;
+    --rk-foton: #3FD8F2;
+    --rk-on-foton: #03222A;
+    --rk-foton-ink: #3FD8F2;
+    --rk-foton-tint: #0F3A44;
+    --rk-sol: #FFC83D;
+    --rk-on-sol: #03222A;
+    --rk-sol-ink: #FFC83D;
+    --rk-sol-tint: #3A2E0B;
+    --rk-grana: #FF6B87;
+    --rk-on-grana: #03222A;
+    --rk-grana-ink: #FF93A6;
+    --rk-grana-tint: #3A1520;
+    --rk-ichu: #5BC47E;
+    --rk-on-ichu: #04222A;
+    --rk-ichu-ink: #86DCA0;
+    --rk-ichu-tint: #12301E;
+    --rk-hall-fisica: #4FC3D9;
+    --rk-on-hall-fisica: #03222A;
+    --rk-hall-fisica-tint: #0A2A33;
+    --rk-hall-fisica-ink: #4FC3D9;
+    --rk-hall-bio: #B7D95C;
+    --rk-on-hall-bio: #03222A;
+    --rk-hall-bio-tint: #26310C;
+    --rk-hall-bio-ink: #B7D95C;
+    --rk-hall-quim: #FF9266;
+    --rk-on-hall-quim: #03222A;
+    --rk-hall-quim-tint: #3A1D10;
+    --rk-hall-quim-ink: #FF9266;
+    --rk-hall-tierra: #D9A877;
+    --rk-on-hall-tierra: #03222A;
+    --rk-hall-tierra-tint: #2A1F14;
+    --rk-hall-tierra-ink: #D9A877;
+    --rk-focus: #FFC83D;
+    --rk-overlay: rgba(0, 0, 0, 0.66);
+    --rk-shadow-card: 0 1px 0 0 #254049;
+    --rk-shadow-press: 0 3px 0 0 #2BB8D1;
+    --rk-shadow-sheet: 0 -8px 24px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Tema Holograma: fondo negro absoluto (el negro no se refleja en la piramide); solo trazos, sin rellenos grandes */
+[data-theme="holo"] {
+  --rk-bg: #000000;
+  --rk-surface: #000000;
+  --rk-surface-2: #04141A;
+  --rk-border: #2A7587;
+  --rk-border-strong: #5FE3FF;
+  --rk-ink: #F2FBFF;
+  --rk-ink-2: #BFE9F5;
+  --rk-muted: #8FB5BF;
+  --rk-primary: #5FE3FF;
+  --rk-primary-press: #A8F1FF;
+  --rk-on-primary: #000000;
+  --rk-primary-tint: #031E25;
+  --rk-foton: #5FE3FF;
+  --rk-on-foton: #000000;
+  --rk-foton-ink: #5FE3FF;
+  --rk-foton-tint: #031E25;
+  --rk-sol: #FFC14D;
+  --rk-on-sol: #000000;
+  --rk-sol-ink: #FFC14D;
+  --rk-sol-tint: #241A04;
+  --rk-grana: #FF7A6B;
+  --rk-on-grana: #000000;
+  --rk-grana-ink: #FF7A6B;
+  --rk-grana-tint: #260C08;
+  --rk-ichu: #3DFFC5;
+  --rk-on-ichu: #000000;
+  --rk-ichu-ink: #3DFFC5;
+  --rk-ichu-tint: #03261D;
+  --rk-hall-fisica: #5FE3FF;
+  --rk-on-hall-fisica: #000000;
+  --rk-hall-fisica-tint: #031E25;
+  --rk-hall-fisica-ink: #5FE3FF;
+  --rk-hall-bio: #B7F25A;
+  --rk-on-hall-bio: #000000;
+  --rk-hall-bio-tint: #141E04;
+  --rk-hall-bio-ink: #B7F25A;
+  --rk-hall-quim: #FF9D5C;
+  --rk-on-hall-quim: #000000;
+  --rk-hall-quim-tint: #261204;
+  --rk-hall-quim-ink: #FF9D5C;
+  --rk-hall-tierra: #E0B48A;
+  --rk-on-hall-tierra: #000000;
+  --rk-hall-tierra-tint: #211708;
+  --rk-hall-tierra-ink: #E0B48A;
+  --rk-focus: #FFC14D;
+  --rk-overlay: rgba(0, 0, 0, 0.8);
+  --rk-shadow-card: none;
+  --rk-shadow-press: none;
+  --rk-shadow-sheet: none;
+}
+
+/* Roles de la indagacion: un color, un significado, siempre con icono y palabra */
+:root,
+[data-theme] {
+  --rk-role-hypothesis: var(--rk-sol);
+  --rk-role-evidence: var(--rk-foton);
+  --rk-role-data: var(--rk-primary);
+  --rk-role-conclusion: var(--rk-ichu);
+  --rk-role-alert: var(--rk-grana);
+}
+
+/* Salas del museo: el color solo orienta (rotulos, suelos, cordones); nunca lleva significado cientifico.
+   Uso: <section data-hall="fisica"> y luego var(--hall), var(--on-hall), var(--hall-tint), var(--hall-ink). */
+[data-hall="fisica"] {
+  --hall: var(--rk-hall-fisica);
+  --on-hall: var(--rk-on-hall-fisica);
+  --hall-tint: var(--rk-hall-fisica-tint);
+  --hall-ink: var(--rk-hall-fisica-ink);
+}
+[data-hall="bio"] {
+  --hall: var(--rk-hall-bio);
+  --on-hall: var(--rk-on-hall-bio);
+  --hall-tint: var(--rk-hall-bio-tint);
+  --hall-ink: var(--rk-hall-bio-ink);
+}
+[data-hall="quim"] {
+  --hall: var(--rk-hall-quim);
+  --on-hall: var(--rk-on-hall-quim);
+  --hall-tint: var(--rk-hall-quim-tint);
+  --hall-ink: var(--rk-hall-quim-ink);
+}
+[data-hall="tierra"] {
+  --hall: var(--rk-hall-tierra);
+  --on-hall: var(--rk-on-hall-tierra);
+  --hall-tint: var(--rk-hall-tierra-tint);
+  --hall-ink: var(--rk-hall-tierra-ink);
+}
+
+/* Base minima segura */
+:where(:root) { color-scheme: light; }
+:where([data-theme="dark"], [data-theme="holo"]) { color-scheme: dark; }
+:where(:focus-visible) {
+  outline: 3px solid var(--rk-focus);
+  outline-offset: 2px;
+  transition: none;
+}
+.rk-hit { min-width: var(--rk-hit); min-height: var(--rk-hit); }
+.rk-num { font-variant-numeric: tabular-nums lining-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --rk-dur-fast: 0.01ms;
+    --rk-dur: 0.01ms;
+    --rk-dur-slow: 0.01ms;
+    --rk-dur-swing: 0.01ms;
+  }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}
+@media (forced-colors: active) {
+  :where(button, input, select, textarea, [role="tab"]) { border: 2px solid ButtonText; }
+}
+
+
+/* moodboard: componentes de referencia sobre tokens.css; nada de color literal salvo arte de marca */
+*,*::before,*::after{box-sizing:border-box}
+html,body{overflow-x:clip}
+html{background:var(--rk-bg)}
+body{margin:0;background:var(--rk-bg);color:var(--rk-ink);font:400 var(--rk-fs-body)/var(--rk-lh-body) var(--rk-font-sans);-webkit-text-size-adjust:100%}
+[hidden]{display:none!important}
+h1,h2,h3,h4,p,ul,ol,figure,dl,dd{margin:0}
+ul,ol{padding:0;list-style:none}
+h1,h2,h3{text-wrap:balance;overflow-wrap:break-word;min-width:0}
+p{max-width:62ch;text-wrap:pretty}
+a{color:var(--rk-primary);text-underline-offset:3px}
+button,input{font:inherit;color:inherit}
+.wrap{width:min(1120px,100% - 32px);margin-inline:auto}
+.ic{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.sm{width:20px;height:20px}.ic.lg{width:32px;height:32px}
+.muted{color:var(--rk-muted)}.ink2{color:var(--rk-ink-2)}
+.num{font-variant-numeric:tabular-nums lining-nums}
+.qu{display:block;font:400 14px/18px var(--rk-font-sans);color:var(--rk-muted);font-style:italic}
+.btn .qu{color:inherit;opacity:.9}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* page */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:12px}
+.logo{height:44px;width:auto;display:block}
+.ctrl{display:flex;gap:12px;flex-wrap:wrap}
+.seg{display:inline-flex;border:2px solid var(--rk-border-strong);border-radius:var(--rk-r-ctl);overflow:hidden;background:var(--rk-surface)}
+.seg button{min-height:48px;min-width:48px;padding:0 14px;background:var(--rk-surface);color:var(--rk-ink);border:0;font-weight:600;font-size:15px;cursor:pointer}
+.seg button+button{border-left:2px solid var(--rk-border-strong)}
+.seg button[aria-pressed="true"]{background:var(--rk-primary);color:var(--rk-on-primary)}
+section.m{padding-block:72px}
+section.m+section.m{border-top:2px solid var(--rk-border)}
+section.m>.wrap>h2{font:800 30px/36px var(--rk-font-sans);letter-spacing:-.01em;margin-bottom:8px}
+section.m>.wrap>.lead{color:var(--rk-ink-2);margin-bottom:32px}
+h3{font:700 20px/26px var(--rk-font-sans)}
+h4{font:700 17px/24px var(--rk-font-sans)}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:32px;align-items:center;padding-block:32px 48px;min-height:min(680px,calc(100svh - 70px))}
+.hero h1{font:800 clamp(48px,8vw,92px)/.98 var(--rk-font-sans);letter-spacing:-.025em}
+.hero p{font-size:var(--rk-fs-body-lg);line-height:var(--rk-lh-body-lg);color:var(--rk-ink-2);margin-top:20px}
+.hero .acts{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero-art{position:relative;aspect-ratio:1/1.02;max-height:620px;width:100%}
+.hero-art .ridge{position:absolute;inset:0;width:100%;height:100%;border-radius:var(--rk-r-sheet)}
+.hero-art .mascot{position:absolute;left:50%;top:0;width:56%;transform:translateX(-50%)}
+.mascot svg,.mascot-s svg{display:block;width:100%;height:auto;overflow:visible}
+.rk-swing{transform-origin:120px 16px}
+@media (prefers-reduced-motion:no-preference){.rk-swing{animation:rk-sw var(--rk-dur-swing) ease-in-out infinite alternate}@keyframes rk-sw{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}}
+.rows>div{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:24px;padding-block:20px;border-top:2px solid var(--rk-border)}
+.rows h3{font-size:24px;line-height:30px;font-weight:800}
+.rows p{color:var(--rk-ink-2)}
+.trama{height:12px;background:var(--rk-sol);-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='12'><path d='M8 1 L14 6 L8 11 L2 6Z' fill='black'/></svg>") repeat-x left center/16px 12px;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='12'><path d='M8 1 L14 6 L8 11 L2 6Z' fill='black'/></svg>") repeat-x left center/16px 12px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
+.stack{display:grid;gap:16px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.sub{margin:40px 0 16px}
+
+/* swatches */
+.pt{padding:16px;border-radius:var(--rk-r-card);background:var(--rk-bg);color:var(--rk-ink);border:2px solid var(--rk-border);margin-top:16px}
+.pt>h3{margin-bottom:12px}
+.sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px}
+.sw{min-height:88px;padding:10px 12px;border-radius:var(--rk-r-ctl);border:2px solid var(--rk-border);font:700 14px/18px var(--rk-font-sans);display:flex;flex-direction:column;justify-content:space-between}
+.sw small{font:400 13px/16px var(--rk-font-sans)}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:8px;margin-top:12px}
+.role{display:flex;align-items:center;gap:10px;min-height:56px;padding:8px 12px;border-radius:var(--rk-r-ctl);font-weight:700}
+.role small{display:block;font-weight:400;font-size:13px;line-height:16px}
+
+/* type */
+.tscale>div{display:grid;grid-template-columns:132px minmax(0,1fr);gap:16px;align-items:baseline;padding-block:10px;border-top:2px solid var(--rk-border)}
+.tscale small{color:var(--rk-muted);font-size:14px}
+.num-demo{font:800 72px/72px var(--rk-font-sans);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:var(--rk-hit);padding:6px 20px;border-radius:var(--rk-r-ctl);border:2px solid var(--rk-border-strong);background:var(--rk-surface);color:var(--rk-ink);font:600 17px/22px var(--rk-font-sans);text-align:center;cursor:pointer;text-decoration:none;transition:transform var(--rk-dur-fast) var(--rk-ease)}
+.btn:active{transform:translateY(2px)}
+.btn-lg{min-height:var(--rk-hit-primary);font-size:18px}
+.btn-block{display:flex;width:100%}
+.btn-primary{background:var(--rk-primary);border-color:var(--rk-primary);color:var(--rk-on-primary);box-shadow:var(--rk-shadow-press)}
+.btn-primary:active{box-shadow:0 1px 0 0 var(--rk-primary-press)}
+.btn-tonal{background:var(--rk-primary-tint);border-color:var(--rk-primary);color:var(--rk-ink)}
+.btn-danger{background:var(--rk-grana-tint);border-color:var(--rk-grana);color:var(--rk-grana-ink)}
+.btn[disabled]{background:var(--rk-surface-2);border-color:var(--rk-border);color:var(--rk-muted);box-shadow:none;cursor:not-allowed}
+.btn-ic{padding-inline:0;min-width:var(--rk-hit)}
+.btn-stack{flex-direction:column;gap:2px}
+[data-theme="holo"] .btn-primary{background:transparent;color:var(--rk-primary);box-shadow:none}
+[data-theme="holo"] .btn-tonal,[data-theme="holo"] .btn-danger{background:transparent}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:2px 12px 2px 8px;border-radius:var(--rk-r-chip);border:2px solid var(--rk-border-strong);background:var(--rk-surface);color:var(--rk-ink);font:600 14px/18px var(--rk-font-sans);white-space:nowrap}
+.chip .ic{width:18px;height:18px}
+.chip-btn{min-height:48px;padding-inline:12px 16px;cursor:pointer}
+.chip-ok{background:var(--rk-ichu-tint);border-color:var(--rk-ichu);color:var(--rk-ichu-ink)}
+.chip-off{background:var(--rk-grana-tint);border-color:var(--rk-grana);color:var(--rk-grana-ink)}
+.chip-sync{background:var(--rk-foton-tint);border-color:var(--rk-foton-ink);color:var(--rk-foton-ink)}
+.chip-warn{background:var(--rk-sol-tint);border-color:var(--rk-sol);color:var(--rk-sol-ink)}
+.chip-hall{background:var(--hall-tint);border-color:var(--hall);color:var(--hall-ink)}
+@media (prefers-reduced-motion:no-preference){.spin{animation:rk-spin 1.6s linear infinite}@keyframes rk-spin{to{transform:rotate(360deg)}}}
+
+/* cards */
+.card{background:var(--rk-surface);border:2px solid var(--rk-border);border-radius:var(--rk-r-card);padding:16px;box-shadow:var(--rk-shadow-card)}
+.card h3{margin-bottom:6px}
+.card>p{color:var(--rk-ink-2)}
+.hyp{background:var(--rk-sol-tint);border:2px solid var(--rk-sol);border-left-width:10px;border-radius:var(--rk-r-card);padding:12px 14px}
+.hyp .hd{flex-wrap:wrap;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--rk-sol-ink);font-weight:700;font-size:15px}
+.hyp p{margin-top:4px;color:var(--rk-ink)}
+.evi{background:var(--rk-foton-tint);border:2px solid var(--rk-foton-ink);border-left-width:10px;border-radius:var(--rk-r-card);padding:12px 14px}
+.evi .hd{flex-wrap:wrap;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--rk-foton-ink);font-weight:700;font-size:15px}
+.evi blockquote{margin:6px 0 4px;font-size:19px;line-height:28px;color:var(--rk-ink)}
+.evi small{color:var(--rk-ink-2);font-size:14px}
+.evi.none{background:var(--rk-surface);border-style:dashed;border-color:var(--rk-border-strong);border-left-style:solid}
+.evi.none .hd{color:var(--rk-ink-2)}
+.concl{background:var(--rk-ichu-tint);border:2px solid var(--rk-ichu);border-left-width:10px;border-radius:var(--rk-r-card);padding:12px 14px;color:var(--rk-ichu-ink)}
+
+/* tabs */
+.tabs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--rk-surface);border-top:2px solid var(--rk-border-strong);min-height:var(--rk-tabbar)}
+.tab{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:var(--rk-tabbar);padding:6px 2px;background:transparent;border:0;color:var(--rk-ink-2);font:600 13px/16px var(--rk-font-sans);cursor:pointer;min-width:0}
+.tab span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--rk-ink);font-weight:800}
+.tab[aria-selected="true"]::before{content:"";position:absolute;top:-2px;left:50%;width:36px;height:5px;margin-left:-18px;border-radius:0 0 4px 4px;background:var(--rk-primary)}
+.tab[aria-selected="true"] .ic{color:var(--rk-primary)}
+
+/* phone */
+.wide{width:min(1560px,100% - 32px);margin-inline:auto}
+.phones{display:flex;flex-wrap:wrap;gap:28px;justify-content:center}
+.phone{position:relative;width:min(360px,100%);height:640px;background:var(--rk-bg);color:var(--rk-ink);border:2px solid var(--rk-border-strong);border-radius:28px;overflow:hidden;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:64px;padding:8px 12px;background:var(--rk-surface);border-bottom:2px solid var(--rk-border)}
+.topbar h3{font-size:19px;line-height:24px;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pb{flex:1;min-height:0;overflow:auto;padding:12px;display:grid;gap:12px;align-content:start}
+.pb.flush{padding:0;position:relative}
+.world{display:block;width:100%;height:100%}
+.say{display:flex;gap:10px;align-items:flex-start}
+.say .mascot-s{width:64px;flex:none}
+.bubble{position:relative;flex:1;background:var(--rk-surface);border:2px solid var(--rk-border-strong);border-radius:var(--rk-r-card);padding:10px 14px;font-size:17px;line-height:24px}
+.bubble::before{content:"";position:absolute;left:-9px;top:20px;width:14px;height:14px;background:var(--rk-surface);border-left:2px solid var(--rk-border-strong);border-bottom:2px solid var(--rk-border-strong);transform:rotate(45deg)}
+
+/* instruments */
+.sw-time{display:flex;align-items:baseline;justify-content:center;gap:8px;font:800 56px/56px var(--rk-font-sans);font-variant-numeric:tabular-nums;letter-spacing:-.01em;margin:4px 0 10px}
+.sw-time small{font-size:22px;font-weight:700;color:var(--rk-ink-2)}
+.cord{position:relative;display:flex;justify-content:space-between;align-items:center;padding:0 4px;margin-bottom:12px}
+.cord::before{content:"";position:absolute;left:4px;right:4px;top:50%;height:3px;margin-top:-1.5px;background:var(--rk-border-strong)}
+.kn{position:relative;width:20px;height:20px;border-radius:50%;background:var(--rk-surface);border:3px solid var(--rk-ink-2)}
+.kn.on{background:var(--rk-primary);border-color:var(--rk-primary)}
+.kn.now{width:26px;height:26px;background:var(--rk-sol);border-color:var(--rk-ink)}
+.tbl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums lining-nums;font-size:16px}
+.tbl th{padding:6px 6px;text-align:right;font-weight:600;font-size:14px;line-height:18px;color:var(--rk-ink-2);border-bottom:2px solid var(--rk-border-strong);vertical-align:bottom}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl td{padding:10px 6px;text-align:right;border-bottom:2px solid var(--rk-border)}
+.tbl td:first-child{font-weight:700}
+.tbl tr:last-child td{border-bottom:0}
+.tbl .err{color:var(--rk-ichu-ink);font-weight:700}
+.chart{display:block;width:100%;height:auto}
+.chart text{font:600 12.5px var(--rk-font-sans);fill:var(--rk-ink-2)}
+
+/* QR sheet */
+.sheet{background:var(--rk-surface);border:2px solid var(--rk-border-strong);border-bottom:0;border-radius:var(--rk-r-sheet) var(--rk-r-sheet) 0 0;box-shadow:var(--rk-shadow-sheet);padding:10px 20px 20px;text-align:center}
+.handle{width:44px;height:5px;border-radius:3px;background:var(--rk-border-strong);margin:0 auto 12px}
+.qr{width:208px;margin:12px auto;border:3px solid var(--rk-ink);border-radius:var(--rk-r-ctl);overflow:hidden;background:var(--rk-qr-paper)}
+.qr svg{display:block;width:100%;height:auto}
+
+/* wayfinding */
+.sign{position:relative;display:flex;align-items:center;gap:12px;min-height:72px;padding:12px 16px 18px;border-radius:var(--rk-r-ctl);background:var(--hall);color:var(--on-hall);overflow:hidden}
+.sign .g{width:48px;height:48px;border:2px solid var(--on-hall);border-radius:var(--rk-r-ctl);display:grid;place-items:center;flex:none}
+.sign .t{flex:1;min-width:0}
+.sign b{display:block;font:800 20px/24px var(--rk-font-sans)}
+.sign small{display:block;font:400 14px/18px var(--rk-font-sans);font-style:italic}
+.sign .n{font:600 14px/18px var(--rk-font-sans);text-align:right}
+.sign::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:var(--on-hall);opacity:.9;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='8'><path d='M8 0.5 L13.5 4 L8 7.5 L2.5 4Z' fill='black'/></svg>") repeat-x left center/16px 8px;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='8'><path d='M8 0.5 L13.5 4 L8 7.5 L2.5 4Z' fill='black'/></svg>") repeat-x left center/16px 8px}
+[data-theme="holo"] .sign{background:transparent;border:2px solid var(--hall);color:var(--hall)}
+[data-theme="holo"] .sign .g,[data-theme="holo"] .sign::after{border-color:var(--hall);background-color:var(--hall)}
+[data-theme="holo"] .sign::after{background:var(--hall)}
+.plaque{background:var(--rk-surface);border:2px solid var(--rk-border);border-left:10px solid var(--hall);border-radius:var(--rk-r-card);padding:14px 14px 14px 16px;display:grid;gap:8px}
+.plaque .hd{display:flex;align-items:center;gap:8px;color:var(--hall-ink);font-weight:700;font-size:15px}
+.plaque h3{font-size:20px;line-height:26px;font-weight:800}
+.plaque p{color:var(--rk-ink-2);font-size:16px;line-height:23px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mini-k{display:inline-flex;gap:4px;color:var(--hall-ink)}
+.mini-k .ic{width:22px;height:22px}.mini-k .off{opacity:.35}
+.fmts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.xcard{background:var(--rk-surface);border:2px solid var(--rk-border);border-radius:var(--rk-r-card);overflow:hidden;display:grid;grid-template-rows:auto 1fr}
+.xart{height:132px;background:var(--hall-tint);position:relative;display:grid;place-items:center;border-bottom:2px solid var(--rk-border)}
+.xbody{padding:12px 16px 16px;display:grid;gap:8px;align-content:start}
+.xbody h3{font-size:18px;line-height:24px}
+.xbody p{font-size:15px;line-height:22px;color:var(--rk-ink-2)}
+.fmt-badge{position:absolute;left:10px;top:10px;display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 12px 0 8px;border-radius:var(--rk-r-chip);background:var(--rk-surface);border:2px solid var(--hall);font-weight:700;font-size:14px;color:var(--hall-ink)}
+.fmt-chip{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;color:var(--hall-ink)}
+.opt{display:flex;align-items:center;gap:10px;min-height:36px;padding:0 12px;border:2px solid var(--rk-border-strong);border-radius:var(--rk-r-ctl);background:var(--rk-surface);font-weight:600;font-size:14px;width:84%}
+.opt.sel{background:var(--rk-primary-tint);border-color:var(--rk-primary)}
+.wave{display:flex;align-items:center;gap:4px;height:64px}
+.wave i{display:block;width:6px;border-radius:3px;background:var(--hall)}
+.wave i.d{background:var(--rk-border-strong)}
+
+/* holo */
+.holo{position:relative;background:var(--rk-bg);border:2px solid var(--rk-border);border-radius:var(--rk-r-ctl);overflow:hidden;color:var(--rk-ink)}
+.holo>svg.art{display:block;width:100%;height:100%}
+.holo .plate{position:absolute;left:12px;top:12px;display:flex;align-items:center;gap:8px;border:2px solid var(--rk-sol);color:var(--rk-sol);padding:4px 10px;border-radius:8px;font-weight:700;font-size:15px;background:var(--rk-bg)}
+.holo .read{position:absolute;left:12px;right:12px;bottom:12px;display:flex;gap:8px;flex-wrap:wrap}
+.gest{position:absolute;inset:0;background:var(--rk-overlay);display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.gest-card{width:100%;background:var(--rk-surface);border:2px solid var(--rk-border-strong);border-radius:var(--rk-r-card);padding:12px;display:grid;gap:8px;color:var(--rk-ink)}
+.gest-card li{display:flex;align-items:center;gap:12px;min-height:52px}
+.gest-card .gi{width:48px;height:48px;border-radius:50%;border:2px solid var(--rk-primary);display:grid;place-items:center;color:var(--rk-primary);flex:none}
+.gest-card li b{display:block;font-size:17px;line-height:22px}
+
+/* signals */
+.cam{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 6px 0 12px;border-radius:var(--rk-r-chip);background:var(--rk-grana-tint);border:2px solid var(--rk-grana);color:var(--rk-grana-ink);font:700 15px/18px var(--rk-font-sans);white-space:nowrap}
+.cam .off{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--rk-grana);color:var(--rk-on-grana);border:0;cursor:pointer}
+.cam .off .ic{width:20px;height:20px}
+.promises{display:grid;gap:10px}
+.promises li{display:flex;gap:12px;align-items:flex-start;font-size:16px;line-height:23px}
+.promises .ic{color:var(--rk-primary);margin-top:1px}
+.field{display:grid;gap:6px}
+.field label{font-weight:600;font-size:15px}
+.field input{min-height:var(--rk-hit);border:2px solid var(--rk-border-strong);border-radius:var(--rk-r-ctl);background:var(--rk-surface);padding:0 12px;color:var(--rk-ink)}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;padding:8px 12px;border:2px solid var(--rk-border-strong);border-radius:var(--rk-r-ctl);background:var(--rk-surface)}
+.switch{width:64px;height:36px;border-radius:18px;border:2px solid var(--rk-ink);background:var(--rk-ichu);position:relative;flex:none}
+.switch::after{content:"";position:absolute;top:3px;right:3px;width:26px;height:26px;border-radius:50%;background:var(--rk-surface);border:2px solid var(--rk-ink)}
+.switch.offs{background:var(--rk-surface-2)}.switch.offs::after{right:auto;left:3px}
+.bins{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;align-items:end;height:120px;margin:8px 0 4px}
+.bins i{display:block;background:var(--rk-border-strong);border-radius:4px 4px 0 0}
+.bins i.hot{background:var(--rk-sol);border:2px solid var(--rk-ink)}
+.binsx{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;font-size:13px;color:var(--rk-ink-2);text-align:center}
+
+/* quipu */
+.quipu{display:block;width:100%;height:auto}
+.quipu text{font:600 13px var(--rk-font-sans);fill:var(--rk-ink)}
+.legend li{display:flex;gap:12px;align-items:center;min-height:48px;border-top:2px solid var(--rk-border)}
+.legend .ic{width:32px;height:32px;color:var(--rk-ink)}
+.toast{display:flex;gap:12px;align-items:center;background:var(--rk-ink);color:var(--rk-bg);border-radius:var(--rk-r-ctl);padding:12px 14px;font-weight:600}
+[data-theme="holo"] .toast{background:transparent;border:2px solid var(--rk-sol);color:var(--rk-sol)}
+
+/* brain */
+.brain{display:block;width:100%;height:auto}
+.key{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;line-height:20px;color:var(--rk-ink-2)}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.key svg{width:20px;height:20px}
+
+/* report */
+.paper{background:var(--rk-surface);color:var(--rk-ink);border:2px solid var(--rk-border-strong);border-radius:8px;padding:28px;max-width:860px}
+.paper header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start;border-bottom:3px solid var(--rk-ink);padding-bottom:12px}
+.paper h3{font-size:24px;line-height:30px;font-weight:800}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:20px 0;border-block:2px solid var(--rk-border-strong)}
+.kpis>div{padding:14px 12px;border-right:2px solid var(--rk-border)}
+.kpis>div:last-child{border-right:0}
+.kpis b{display:block;font:800 40px/44px var(--rk-font-sans);font-variant-numeric:tabular-nums}
+.kpis span{display:block;font-size:15px;line-height:20px;color:var(--rk-ink-2)}
+.hb{display:grid;grid-template-columns:140px minmax(0,1fr) 44px;gap:10px;align-items:center;min-height:36px;font-size:15px}
+.hb .tr{height:20px;border:2px solid var(--rk-ink);border-radius:3px;background:var(--rk-surface);overflow:hidden}
+.hb .fi{height:100%;background:var(--hall)}
+.hb .fi.p1{background:repeating-linear-gradient(45deg,var(--hall) 0 5px,var(--rk-surface) 5px 8px)}
+.hb .fi.p2{background:repeating-linear-gradient(90deg,var(--hall) 0 5px,var(--rk-surface) 5px 9px)}
+.hb .fi.p3{background:repeating-linear-gradient(-45deg,var(--hall) 0 5px,var(--rk-surface) 5px 8px)}
+.hb b{text-align:right;font-variant-numeric:tabular-nums}
+.foot{margin-top:18px;padding-top:12px;border-top:2px solid var(--rk-border);font-size:14px;line-height:20px;color:var(--rk-ink-2)}
+
+/* voice table */
+.vt{width:100%;border-collapse:collapse;font-size:16px}
+.vt th{text-align:left;font-weight:700;padding:8px 12px 8px 0;border-bottom:2px solid var(--rk-border-strong);color:var(--rk-ink-2);font-size:14px}
+.vt td{padding:12px 12px 12px 0;border-bottom:2px solid var(--rk-border);vertical-align:top}
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.dd ul{display:grid;gap:10px}
+.dd li{display:flex;gap:10px;line-height:24px}
+.dd li .ic{margin-top:0}
+.do .ic{color:var(--rk-ichu-ink)}.dont .ic{color:var(--rk-grana-ink)}
+.sp{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.mini{display:grid;gap:8px;justify-items:center;text-align:center}
+.mini .mascot-s{width:128px}
+.mini b{font-size:17px}
+.mini small{font-size:14px;line-height:18px;color:var(--rk-ink-2)}
+.specs{display:grid;gap:0}
+.specs>div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:10px 0;border-top:2px solid var(--rk-border)}
+.specs dt{font-weight:700}.specs dd{color:var(--rk-ink-2)}
+footer.m{padding-block:48px;border-top:2px solid var(--rk-border);color:var(--rk-ink-2);font-size:15px}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:minmax(0,1fr);min-height:0}
+  .hero-art{max-height:420px;aspect-ratio:1/.8}.hero-art .mascot{width:38%}
+  .grid2,.grid3,.dd{grid-template-columns:minmax(0,1fr)}
+  .rows>div{grid-template-columns:minmax(0,1fr);gap:6px}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpis>div:nth-child(2){border-right:0}.kpis>div:nth-child(-n+2){border-bottom:2px solid var(--rk-border)}
+  .specs>div{grid-template-columns:minmax(0,1fr);gap:2px}
+  .tscale>div{grid-template-columns:minmax(0,1fr);gap:2px}
+  section.m{padding-block:48px}
+  .paper{padding:16px}
+  .hb{grid-template-columns:100px minmax(0,1fr) 40px}
+}
+
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs><symbol id="ic-museo" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6"/><path d="M5.5 10v8M10 10v8M14 10v8M18.5 10v8"/><path d="M3 20.5h18"/></symbol><symbol id="ic-preparar" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9.5 4V3h5v1"/><path d="M9.5 13.5l2 2 3.5-4"/></symbol><symbol id="ic-lab" viewBox="0 0 24 24"><path d="M12 3v9"/><circle cx="12" cy="16.5" r="4"/><path d="M5.5 12.5a7.5 7.5 0 0 1 2-5M18.5 12.5a7.5 7.5 0 0 0-2-5"/></symbol><symbol id="ic-cierre" viewBox="0 0 24 24"><path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 3h6l1-3h5"/></symbol><symbol id="ic-bolsa" viewBox="0 0 24 24"><path d="M8 7V5a4 4 0 0 1 8 0v2"/><path d="M6 7h12a2 2 0 0 1 2 2v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a2 2 0 0 1 2-2z"/><path d="M9 14h6"/></symbol><symbol id="ic-wifioff" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M2.5 9a15 15 0 0 1 4.5-2.8M21.5 9a15 15 0 0 0-8-3.9"/><path d="M5.8 13a10 10 0 0 1 3.6-2.2M18.2 13a10 10 0 0 0-2.8-1.9"/><path d="M9 16.6a5 5 0 0 1 6 0"/><path d="M12 20h.01"/></symbol><symbol id="ic-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol><symbol id="ic-subir" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></symbol><symbol id="ic-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20h1"/></symbol><symbol id="ic-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol><symbol id="ic-timer" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9M9.5 2.5h5"/></symbol><symbol id="ic-chart" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="M8 15l3-4 3 2 5-6"/></symbol><symbol id="ic-play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></symbol><symbol id="ic-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol><symbol id="ic-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol><symbol id="ic-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="ic-atras" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol><symbol id="ic-cerrar" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol><symbol id="ic-imprimir" viewBox="0 0 24 24"><path d="M7 9V3h10v6"/><rect x="4" y="9" width="16" height="8" rx="2"/><path d="M7 14h10v7H7z"/></symbol><symbol id="ic-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></symbol><symbol id="ic-camara" viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.5"/></symbol><symbol id="ic-escudo" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></symbol><symbol id="ic-pista" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></symbol><symbol id="ic-video" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4.5-2.5z"/></symbol><symbol id="ic-audio" viewBox="0 0 24 24"><path d="M4 14v-4M8 17V7M12 20V4M16 17V7M20 14v-4"/></symbol><symbol id="ic-diagrama" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M11 7.3L6 16.7M13 7.3l5 9.4M7.5 19h9"/></symbol><symbol id="ic-holograma" viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12L4 7.5M12 12v9"/></symbol><symbol id="ic-quiz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/></symbol><symbol id="ic-usuarios" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.4"/><path d="M17 14c2.5 0 4.5 1.9 4.5 4.5"/></symbol><symbol id="ic-apagar" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></symbol><symbol id="ic-cerebro" viewBox="0 0 24 24"><path d="M12 5v15M12 5c-2-2-6-1.5-6.5 2C3.5 8 3 11 5 12.5 3.8 14 4.5 17 7.5 17.5 9 19 11 19 12 18M12 5c2-2 6-1.5 6.5 2 2 1 2.5 4 .5 5.5 1.2 1.5.5 4.5-2.5 5-1.5 1.5-3.5 1.5-4.5.5"/></symbol><symbol id="ic-orbita" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(45 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-45 12 12)"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/></symbol><symbol id="ic-hoja" viewBox="0 0 24 24"><path d="M5 19C5 10.5 10 5 20 4c0 10-4.5 15-13 15"/><path d="M5 19c3-5.5 6-8.5 10-10.5"/></symbol><symbol id="ic-matraz" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9.2A2 2 0 0 0 6.8 21h10.4a2 2 0 0 0 1.8-2.8L14 9V3"/><path d="M7.8 15h8.4"/><circle cx="11" cy="18" r=".6" fill="currentColor"/><circle cx="14" cy="17" r=".6" fill="currentColor"/></symbol><symbol id="ic-monte" viewBox="0 0 24 24"><path d="M2 20l7-12 4.5 7 2.5-3.5L22 20z"/><circle cx="18" cy="6" r="2"/></symbol><symbol id="ic-g-girar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4" fill="currentColor"/><path d="M5 12a7 7 0 0 1 11.5-5.4"/><path d="M16.8 3.6v3.2h-3.2"/><path d="M19 12a7 7 0 0 1-11.5 5.4"/><path d="M7.2 20.4v-3.2h3.2"/></symbol><symbol id="ic-g-pellizcar" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.4" fill="currentColor"/><circle cx="18" cy="6" r="2.4" fill="currentColor"/><path d="M9 15l3-3M15 9l-3 3"/><path d="M4 12V8h4M20 12v4h-4"/></symbol><symbol id="ic-g-palma" viewBox="0 0 24 24"><circle cx="12" cy="16" r="4"/><circle cx="4.5" cy="10" r="1.7" fill="currentColor"/><circle cx="8" cy="5" r="1.7" fill="currentColor"/><circle cx="12" cy="3.5" r="1.7" fill="currentColor"/><circle cx="16" cy="5" r="1.7" fill="currentColor"/><circle cx="19.5" cy="10" r="1.7" fill="currentColor"/></symbol><symbol id="ic-g-tocar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.4" fill="currentColor"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="9.5" stroke-dasharray="2 3.2"/></symbol><symbol id="ic-k-simple" viewBox="0 0 24 24"><path d="M12 2v5.5M12 16.5V22"/><circle cx="12" cy="12" r="4.5"/><path d="M8.6 10l6.8 4"/></symbol><symbol id="ic-k-largo" viewBox="0 0 24 24"><path d="M12 2v2.5M12 19.5V22"/><rect x="8.5" y="4.5" width="7" height="15" rx="3.5"/><path d="M8.5 9l7 2.4M8.5 13l7 2.4"/></symbol><symbol id="ic-k-ocho" viewBox="0 0 24 24"><path d="M12 2v3.5M12 18.5V22"/><path d="M12 12c-3.5-1-4.2-6.5 0-6.5s3.5 5.5 0 6.5zM12 12c3.5 1 4.2 6.5 0 6.5S8.5 13 12 12z"/></symbol></defs></svg><svg style="position:absolute;width:0;height:0" aria-hidden="true" focusable="false"><defs><symbol id="wf-pendulo" viewBox="0 0 120 150"><g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M60 12v74"/><circle cx="60" cy="9" r="4"/><circle cx="60" cy="108" r="22"/><ellipse cx="60" cy="108" rx="22" ry="8"/><ellipse cx="60" cy="108" rx="8" ry="22"/><path d="M17 98.6A100 100 0 0 0 103 98.6" stroke-dasharray="3 6"/></g></symbol></defs></svg>
+<div class="wrap"><div class="bar"><svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 296 96" role="img" aria-labelledby="t">
+  <title id="t">Rikuy</title>
+  <!-- Simbolo: un ojo que cuelga de una cuerda con nudo (pendulo). Palabra: trazo monolinea de 9 px, terminales redondos, como un cordon. La i lleva el punto Foton. -->
+  
+  <g fill="none" stroke="var(--rk-ink)" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="26" y1="4" x2="26" y2="26" stroke-width="5"/>
+    <circle cx="26" cy="47" r="19" stroke-width="6" fill="var(--rk-surface)"/>
+  </g>
+  <circle cx="26" cy="14" r="5.5" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width="2"/>
+  <circle cx="30" cy="46" r="12" fill="var(--rk-foton)"/>
+  <circle cx="31" cy="45" r="5.5" fill="#0D2B33"/>
+  <circle cx="35" cy="40" r="2.4" fill="#FFFFFF"/>
+  <g transform="translate(76 0)" fill="none" stroke="var(--rk-ink)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 26 V70 M5 46 C5 33 13 26 27 26"/>
+    <path d="M45 26 V70"/>
+    <path d="M69 8 V70 M97 26 L69 52 M81 44 L99 70"/>
+    <path d="M117 26 V52 C117 64 123 70 133 70 C143 70 149 64 149 52 V26 M149 44 V70"/>
+    <path d="M165 26 L181 62 M197 26 L175 80"/>
+  </g>
+  <circle cx="121" cy="10" r="6.5" fill="var(--rk-foton)"/>
+</svg>
+<div class="ctrl"><div class="seg" id="theme" role="group" aria-label="Modo de color"><button type="button" data-v="light" aria-pressed="true">Luz</button><button type="button" data-v="dark" aria-pressed="false">Noche</button><button type="button" data-v="holo" aria-pressed="false">Holograma</button></div><div class="seg" id="lang" role="group" aria-label="Idioma de las etiquetas"><button type="button" data-v="es" aria-pressed="true">Castellano</button><button type="button" data-v="qu" aria-pressed="false">Quechua</button><button type="button" data-v="ay" aria-pressed="false">Aymara</button></div></div></div></div>
+
+<main>
+<div class="wrap hero">
+  <div><h1>Luz de Puna</h1><p>Un museo de ciencias legible a pleno sol, que funciona sin red y habla en tres lenguas.</p><div class="acts"><a class="btn btn-primary btn-lg" href="#pantallas">Ver las pantallas</a><a class="btn btn-lg" href="#paleta">Ver la paleta</a></div></div>
+  <div class="hero-art"><svg class="ridge" viewBox="0 0 400 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false"><rect width="400" height="400" fill="var(--rk-sol-tint)"/><polygon points="0,400 0,250 70,170 130,230 210,120 290,230 350,180 400,240 400,400" fill="var(--rk-surface-2)"/><polygon points="0,400 0,320 90,250 160,310 240,230 330,300 400,270 400,400" fill="var(--rk-primary-tint)"/><polygon points="210,120 290,230 240,230" fill="var(--rk-sol-tint)"/><polygon points="0,400 0,360 120,320 220,370 320,330 400,360 400,400" fill="var(--rk-foton-tint)"/></svg><div class="mascot"><svg viewBox="0 0 240 300" role="img" aria-label="Rikuy, la piedra que mira" focusable="false"><defs><clipPath id="hero-clip"><path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z"/></clipPath></defs>
+<g class="rk-swing" style="transform-origin:120px 16px">
+  <line x1="120" y1="22" x2="120" y2="104" stroke="#F5B301" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="120" cy="66" r="7" fill="#F5B301" stroke="#8A5E00" stroke-width="2.5"/>
+  <path d="M114 63 l12 6 M114 69 l12 -6" stroke="#8A5E00" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="120" cy="16" r="8" fill="#F5F6F1" stroke="#0D2B33" stroke-width="3.5"/>
+  <path id="rikuy-body" d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="#0B6574"/>
+  <g clip-path="url(#hero-clip)">
+    <path d="M30 98 L120 78 L152 132 L62 236 L28 204Z" fill="#12879A"/>
+    <path d="M210 146 L210 290 L88 290 L172 192Z" fill="#064550"/>
+    <rect x="30" y="244" width="180" height="18" fill="#064550"/><path d="M34 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M50 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M66 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M82 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M98 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M114 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M130 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M146 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M162 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M178 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M194 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/>
+  </g>
+  <path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="none" stroke="#052A31" stroke-width="4" stroke-linejoin="round"/>
+  <g id="rikuy-eye"><circle cx="120" cy="176" r="42" fill="#FFFFFF" stroke="#052A31" stroke-width="5"/><circle cx="128" cy="170" r="24" fill="#19CBEE"/><circle cx="129" cy="169" r="11" fill="#0D2B33"/><circle cx="136" cy="161" r="5" fill="#FFFFFF"/><circle cx="123" cy="177" r="2.5" fill="#FFFFFF"/></g><path d="M76 128 Q104 108 144 124" fill="none" stroke="#052A31" stroke-width="8" stroke-linecap="round"/><path d="M106 229 Q120 237 134 229" fill="none" stroke="#052A31" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g></svg></div></div>
+</div>
+
+<section class="m" id="principios"><div class="wrap"><h2>Tres ideas que mandan</h2><p class="lead">Todo componente de esta página sale de ellas.</p>
+<div class="rows"><div><h3>A pleno sol</h3><p>El texto de cuerpo supera 7 a 1, los bordes de control 3 a 1 y ninguna información depende solo del color. Se prueba afuera, con el brillo al máximo.</p></div><div><h3>Sin red, a la vista</h3><p>Cada pantalla dice si hay conexión y qué quedó guardado. Lo que se mide se guarda primero en el celular; la nube llega después.</p></div><div><h3>Un cordón, muchos nudos</h3><p>El quipu une el museo: las salas son cordones, los logros son nudos y ayudar suma nudos para todo el grupo.</p></div></div></div></section>
+
+<section class="m" id="paleta"><div class="wrap"><h2>Paleta</h2><p class="lead">Luz de mineral con un acento vivo de ciencia. Cada color cumple un papel y lo comunica con icono y palabra.</p>
+<h3 class="sub">Los cinco papeles de la indagación</h3><div class="roles">
+  <div class="role" style="background:var(--rk-sol-tint);border:2px solid var(--rk-sol);color:var(--rk-sol-ink)"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-pista"/></svg><span>Hipótesis<small>Sol, antes de medir</small></span></div>
+  <div class="role" style="background:var(--rk-foton-tint);border:2px solid var(--rk-foton-ink);color:var(--rk-foton-ink)"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-eye"/></svg><span>Evidencia<small>Fotón, lo que dijeron</small></span></div>
+  <div class="role" style="background:var(--rk-primary-tint);border:2px solid var(--rk-primary);color:var(--rk-ink)"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-chart"/></svg><span>Dato medido<small>Laguna, números y acción</small></span></div>
+  <div class="role" style="background:var(--rk-ichu-tint);border:2px solid var(--rk-ichu);color:var(--rk-ichu-ink)"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-check"/></svg><span>Conclusión<small>Ichu, lo que concluyen</small></span></div>
+  <div class="role" style="background:var(--rk-grana-tint);border:2px solid var(--rk-grana);color:var(--rk-grana-ink)"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-wifioff"/></svg><span>Alerta y sin red<small>Grana, atención</small></span></div>
+</div>
+<h3 class="sub">Tres modos, mismos nombres</h3><div class="pt" data-theme="light"><h3>Luz (aula a pleno sol)</h3><div class="sw-grid"><div class="sw" style="background:var(--rk-bg);color:var(--rk-static-ink)"><span>Sal de Maras</span><small>#f5f6f1</small></div><div class="sw" style="background:var(--rk-surface);color:var(--rk-static-ink)"><span>Hoja</span><small>#ffffff</small></div><div class="sw" style="background:var(--rk-surface-2);color:var(--rk-static-ink)"><span>Piedra</span><small>#e9ece4</small></div><div class="sw" style="background:var(--rk-ink);color:var(--rk-static-paper)"><span>Tinta de lago</span><small>#0d2b33</small></div><div class="sw" style="background:var(--rk-ink-2);color:var(--rk-static-paper)"><span>Tinta suave</span><small>#33494f</small></div><div class="sw" style="background:var(--rk-muted);color:var(--rk-static-paper)"><span>Niebla honda</span><small>#4d6368</small></div><div class="sw" style="background:var(--rk-primary);color:var(--rk-static-paper)"><span>Laguna</span><small>#075e6c</small></div><div class="sw" style="background:var(--rk-foton);color:var(--rk-static-ink)"><span>Fotón</span><small>#19cbee</small></div><div class="sw" style="background:var(--rk-sol);color:var(--rk-static-ink)"><span>Sol de puna</span><small>#f5b301</small></div><div class="sw" style="background:var(--rk-grana);color:var(--rk-static-paper)"><span>Grana</span><small>#a8123b</small></div><div class="sw" style="background:var(--rk-ichu);color:var(--rk-static-paper)"><span>Ichu</span><small>#14592d</small></div><div class="sw" style="background:var(--rk-border-strong);color:var(--rk-static-paper)"><span>Veta firme</span><small>#6a7568</small></div><div class="sw" style="background:var(--rk-hall-fisica);color:var(--rk-static-paper)"><span>Sala Laguna</span><small>#075e6c</small></div><div class="sw" style="background:var(--rk-hall-bio);color:var(--rk-static-paper)"><span>Sala Qura</span><small>#435f0f</small></div><div class="sw" style="background:var(--rk-hall-quim);color:var(--rk-static-paper)"><span>Sala Cinabrio</span><small>#9e3206</small></div><div class="sw" style="background:var(--rk-hall-tierra);color:var(--rk-static-paper)"><span>Sala Barro</span><small>#6e4a2f</small></div></div></div><div class="pt" data-theme="dark"><h3>Noche (aula en penumbra)</h3><div class="sw-grid"><div class="sw" style="background:var(--rk-bg);color:var(--rk-static-paper)"><span>Sal de Maras</span><small>#0a1a1f</small></div><div class="sw" style="background:var(--rk-surface);color:var(--rk-static-paper)"><span>Hoja</span><small>#112429</small></div><div class="sw" style="background:var(--rk-surface-2);color:var(--rk-static-paper)"><span>Piedra</span><small>#183139</small></div><div class="sw" style="background:var(--rk-ink);color:var(--rk-static-ink)"><span>Tinta de lago</span><small>#edf5f6</small></div><div class="sw" style="background:var(--rk-primary);color:var(--rk-static-ink)"><span>Laguna</span><small>#3fd8f2</small></div><div class="sw" style="background:var(--rk-foton);color:var(--rk-static-ink)"><span>Fotón</span><small>#3fd8f2</small></div><div class="sw" style="background:var(--rk-sol);color:var(--rk-static-ink)"><span>Sol de puna</span><small>#ffc83d</small></div><div class="sw" style="background:var(--rk-grana);color:var(--rk-static-ink)"><span>Grana</span><small>#ff6b87</small></div><div class="sw" style="background:var(--rk-ichu);color:var(--rk-static-ink)"><span>Ichu</span><small>#5bc47e</small></div><div class="sw" style="background:var(--rk-hall-fisica);color:var(--rk-static-ink)"><span>Sala Laguna</span><small>#4fc3d9</small></div><div class="sw" style="background:var(--rk-hall-bio);color:var(--rk-static-ink)"><span>Sala Qura</span><small>#b7d95c</small></div><div class="sw" style="background:var(--rk-hall-quim);color:var(--rk-static-ink)"><span>Sala Cinabrio</span><small>#ff9266</small></div><div class="sw" style="background:var(--rk-hall-tierra);color:var(--rk-static-ink)"><span>Sala Barro</span><small>#d9a877</small></div></div></div><div class="pt" data-theme="holo"><h3>Holograma (negro absoluto, solo trazos)</h3><div class="sw-grid"><div class="sw" style="background:var(--rk-bg);color:var(--rk-static-paper)"><span>Sal de Maras</span><small>#000000</small></div><div class="sw" style="background:var(--rk-surface);color:var(--rk-static-paper)"><span>Hoja</span><small>#000000</small></div><div class="sw" style="background:var(--rk-surface-2);color:var(--rk-static-paper)"><span>Piedra</span><small>#04141a</small></div><div class="sw" style="background:var(--rk-ink);color:var(--rk-static-ink)"><span>Tinta de lago</span><small>#f2fbff</small></div><div class="sw" style="background:var(--rk-primary);color:var(--rk-static-ink)"><span>Laguna</span><small>#5fe3ff</small></div><div class="sw" style="background:var(--rk-foton);color:var(--rk-static-ink)"><span>Fotón</span><small>#5fe3ff</small></div><div class="sw" style="background:var(--rk-sol);color:var(--rk-static-ink)"><span>Sol de puna</span><small>#ffc14d</small></div><div class="sw" style="background:var(--rk-grana);color:var(--rk-static-ink)"><span>Grana</span><small>#ff7a6b</small></div><div class="sw" style="background:var(--rk-ichu);color:var(--rk-static-ink)"><span>Ichu</span><small>#3dffc5</small></div><div class="sw" style="background:var(--rk-hall-fisica);color:var(--rk-static-ink)"><span>Sala Laguna</span><small>#5fe3ff</small></div><div class="sw" style="background:var(--rk-hall-bio);color:var(--rk-static-ink)"><span>Sala Qura</span><small>#b7f25a</small></div><div class="sw" style="background:var(--rk-hall-quim);color:var(--rk-static-ink)"><span>Sala Cinabrio</span><small>#ff9d5c</small></div><div class="sw" style="background:var(--rk-hall-tierra);color:var(--rk-static-ink)"><span>Sala Barro</span><small>#e0b48a</small></div></div></div></div></section>
+
+<section class="m" id="tipografia"><div class="wrap"><h2>Tipografía</h2><p class="lead">Una sola familia legible, Atkinson Hyperlegible Next, autoalojada (30 KB). Aquí se ve con la fuente del sistema porque la página no descarga nada.</p>
+<div class="grid2"><div class="tscale"><div><small>display, 40 px</small><div style="font:800 40px/52px var(--rk-font-sans);letter-spacing:-.02em">Luz de puna</div></div><div><small>headline, 30 px</small><div style="font:800 30px/39px var(--rk-font-sans);letter-spacing:-.01em">Un cordón, cuatro nudos</div></div><div><small>title, 24 px</small><div style="font:800 24px/31px var(--rk-font-sans);letter-spacing:0">Mide con cuerda y piedra</div></div><div><small>title-sm, 20 px</small><div style="font:700 20px/26px var(--rk-font-sans);letter-spacing:0">Péndulo: ¿de qué depende su ritmo?</div></div><div><small>body-lg, 19 px</small><div style="font:400 19px/25px var(--rk-font-sans);letter-spacing:0">Escribe tu hipótesis antes de medir.</div></div><div><small>body, 17 px</small><div style="font:400 17px/22px var(--rk-font-sans);letter-spacing:0">Cuenta diez oscilaciones y anota el tiempo total.</div></div><div><small>small, 15 px</small><div style="font:400 15px/20px var(--rk-font-sans);letter-spacing:0">Guardado en este celular hace 2 minutos</div></div><div><small>caption, 14 px</small><div style="font:400 14px/18px var(--rk-font-sans);letter-spacing:0">Kallpa, k'anchay, ñawi, q'ipi, t'anta, ch'ullu</div></div></div><div class="stack"><div class="num-demo">00:14.82</div><p class="ink2">Los números usan cifras tabulares para que el cronómetro no baile. El separador decimal se toma de la configuración regional, nunca se escribe a mano.</p><div class="card"><h3>Quechua y aymara sin recortes</h3><p>Ñawi, k'anchay, q'ipi, t'anta, ch'ullu, p'unchay. Uñjaña, yatiqaña, jiskt'aña, amuyt'aña. Los apóstrofos y las tildes se ven completos; las etiquetas pueden crecer hasta 40 % y pasan a dos líneas.</p></div></div></div></div></section>
+
+<section class="m" id="museo"><div class="wrap"><h2>El museo: señalización y mundo 2D</h2><p class="lead">Cuatro salas, cada una con color, glifo y nombre en quechua. El color orienta; nunca significa ciencia: eso lo hacen los cinco papeles.</p>
+<div class="grid2"><div class="stack"><div class="sign" data-hall="fisica"><div class="g"><svg class="ic lg" aria-hidden="true" focusable="false"><use href="#ic-orbita"/></svg></div><div class="t"><b>Física</b><small>Kallpa</small></div><div class="n">6 exposiciones</div></div><div class="sign" data-hall="bio"><div class="g"><svg class="ic lg" aria-hidden="true" focusable="false"><use href="#ic-hoja"/></svg></div><div class="t"><b>Biología</b><small>Kawsay</small></div><div class="n">5 exposiciones</div></div><div class="sign" data-hall="quim"><div class="g"><svg class="ic lg" aria-hidden="true" focusable="false"><use href="#ic-matraz"/></svg></div><div class="t"><b>Química</b><small>Tikray</small></div><div class="n">4 exposiciones</div></div><div class="sign" data-hall="tierra"><div class="g"><svg class="ic lg" aria-hidden="true" focusable="false"><use href="#ic-monte"/></svg></div><div class="t"><b>Tierra y ambiente</b><small>Pacha</small></div><div class="n">4 exposiciones</div></div><div class="trama" aria-hidden="true"></div>
+<div class="grid2" style="gap:16px"><article class="plaque" data-hall="fisica"><div class="hd"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-orbita"/></svg>Física</div><h3>Péndulo</h3><p>¿De qué depende su ritmo?</p><div class="meta"><span class="chip chip-ok"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Guardado, 0.4 MB</span><span class="chip"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-g-tocar"/></svg>Gestos o toque</span><span class="mini-k" aria-label="2 de 3 nudos"><span class=""><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-simple"/></svg></span><span class=""><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-largo"/></svg></span><span class="off"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-ocho"/></svg></span></span></div></article><article class="plaque" data-hall="quim"><div class="hd"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-matraz"/></svg>Química</div><h3>Ácido o base</h3><p>¿Cómo cambia el color de la col morada?</p><div class="meta"><span class="chip chip-ok"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Guardado, 0.4 MB</span><span class="chip"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-g-tocar"/></svg>Gestos o toque</span><span class="mini-k" aria-label="0 de 3 nudos"><span class="off"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-simple"/></svg></span><span class="off"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-largo"/></svg></span><span class="off"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-ocho"/></svg></span></span></div></article></div></div>
+<div class="stack"><div style="border:2px solid var(--rk-border-strong);border-radius:16px;overflow:hidden;aspect-ratio:20/14"><svg class="wfull" viewBox="0 0 20 14" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mapa del museo visto desde arriba: cuatro salas alrededor de una plaza" focusable="false"><defs><pattern id="wp-fisica-wfull" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="var(--rk-hall-fisica-tint)"/><rect width="1" height="1" fill="var(--rk-hall-fisica)" opacity=".13"/><rect x="1" y="1" width="1" height="1" fill="var(--rk-hall-fisica)" opacity=".13"/></pattern><pattern id="wp-bio-wfull" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="var(--rk-hall-bio-tint)"/><rect width="1" height="1" fill="var(--rk-hall-bio)" opacity=".13"/><rect x="1" y="1" width="1" height="1" fill="var(--rk-hall-bio)" opacity=".13"/></pattern><pattern id="wp-quim-wfull" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="var(--rk-hall-quim-tint)"/><rect width="1" height="1" fill="var(--rk-hall-quim)" opacity=".13"/><rect x="1" y="1" width="1" height="1" fill="var(--rk-hall-quim)" opacity=".13"/></pattern><pattern id="wp-tierra-wfull" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="var(--rk-hall-tierra-tint)"/><rect width="1" height="1" fill="var(--rk-hall-tierra)" opacity=".13"/><rect x="1" y="1" width="1" height="1" fill="var(--rk-hall-tierra)" opacity=".13"/></pattern></defs><rect x="0" y="0" width="20" height="14" fill="var(--rk-surface-2)"/><rect x="9" y="0" width="2" height="14" fill="var(--rk-surface)"/><rect x="0" y="6" width="20" height="2" fill="var(--rk-surface)"/><path d="M0.5 6.28 L0.76 6.5 L0.5 6.72 L0.24 6.5Z" fill="var(--rk-sol)"/><path d="M0.5 7.28 L0.76 7.5 L0.5 7.72 L0.24 7.5Z" fill="var(--rk-sol)"/><path d="M1.5 6.28 L1.76 6.5 L1.5 6.72 L1.24 6.5Z" fill="var(--rk-sol)"/><path d="M1.5 7.28 L1.76 7.5 L1.5 7.72 L1.24 7.5Z" fill="var(--rk-sol)"/><path d="M2.5 6.28 L2.76 6.5 L2.5 6.72 L2.24 6.5Z" fill="var(--rk-sol)"/><path d="M2.5 7.28 L2.76 7.5 L2.5 7.72 L2.24 7.5Z" fill="var(--rk-sol)"/><path d="M3.5 6.28 L3.76 6.5 L3.5 6.72 L3.24 6.5Z" fill="var(--rk-sol)"/><path d="M3.5 7.28 L3.76 7.5 L3.5 7.72 L3.24 7.5Z" fill="var(--rk-sol)"/><path d="M4.5 6.28 L4.76 6.5 L4.5 6.72 L4.24 6.5Z" fill="var(--rk-sol)"/><path d="M4.5 7.28 L4.76 7.5 L4.5 7.72 L4.24 7.5Z" fill="var(--rk-sol)"/><path d="M5.5 6.28 L5.76 6.5 L5.5 6.72 L5.24 6.5Z" fill="var(--rk-sol)"/><path d="M5.5 7.28 L5.76 7.5 L5.5 7.72 L5.24 7.5Z" fill="var(--rk-sol)"/><path d="M6.5 6.28 L6.76 6.5 L6.5 6.72 L6.24 6.5Z" fill="var(--rk-sol)"/><path d="M6.5 7.28 L6.76 7.5 L6.5 7.72 L6.24 7.5Z" fill="var(--rk-sol)"/><path d="M7.5 6.28 L7.76 6.5 L7.5 6.72 L7.24 6.5Z" fill="var(--rk-sol)"/><path d="M7.5 7.28 L7.76 7.5 L7.5 7.72 L7.24 7.5Z" fill="var(--rk-sol)"/><path d="M8.5 6.28 L8.76 6.5 L8.5 6.72 L8.24 6.5Z" fill="var(--rk-sol)"/><path d="M8.5 7.28 L8.76 7.5 L8.5 7.72 L8.24 7.5Z" fill="var(--rk-sol)"/><path d="M9.5 6.28 L9.76 6.5 L9.5 6.72 L9.24 6.5Z" fill="var(--rk-sol)"/><path d="M9.5 7.28 L9.76 7.5 L9.5 7.72 L9.24 7.5Z" fill="var(--rk-sol)"/><path d="M10.5 6.28 L10.76 6.5 L10.5 6.72 L10.24 6.5Z" fill="var(--rk-sol)"/><path d="M10.5 7.28 L10.76 7.5 L10.5 7.72 L10.24 7.5Z" fill="var(--rk-sol)"/><path d="M11.5 6.28 L11.76 6.5 L11.5 6.72 L11.24 6.5Z" fill="var(--rk-sol)"/><path d="M11.5 7.28 L11.76 7.5 L11.5 7.72 L11.24 7.5Z" fill="var(--rk-sol)"/><path d="M12.5 6.28 L12.76 6.5 L12.5 6.72 L12.24 6.5Z" fill="var(--rk-sol)"/><path d="M12.5 7.28 L12.76 7.5 L12.5 7.72 L12.24 7.5Z" fill="var(--rk-sol)"/><path d="M13.5 6.28 L13.76 6.5 L13.5 6.72 L13.24 6.5Z" fill="var(--rk-sol)"/><path d="M13.5 7.28 L13.76 7.5 L13.5 7.72 L13.24 7.5Z" fill="var(--rk-sol)"/><path d="M14.5 6.28 L14.76 6.5 L14.5 6.72 L14.24 6.5Z" fill="var(--rk-sol)"/><path d="M14.5 7.28 L14.76 7.5 L14.5 7.72 L14.24 7.5Z" fill="var(--rk-sol)"/><path d="M15.5 6.28 L15.76 6.5 L15.5 6.72 L15.24 6.5Z" fill="var(--rk-sol)"/><path d="M15.5 7.28 L15.76 7.5 L15.5 7.72 L15.24 7.5Z" fill="var(--rk-sol)"/><path d="M16.5 6.28 L16.76 6.5 L16.5 6.72 L16.24 6.5Z" fill="var(--rk-sol)"/><path d="M16.5 7.28 L16.76 7.5 L16.5 7.72 L16.24 7.5Z" fill="var(--rk-sol)"/><path d="M17.5 6.28 L17.76 6.5 L17.5 6.72 L17.24 6.5Z" fill="var(--rk-sol)"/><path d="M17.5 7.28 L17.76 7.5 L17.5 7.72 L17.24 7.5Z" fill="var(--rk-sol)"/><path d="M18.5 6.28 L18.76 6.5 L18.5 6.72 L18.24 6.5Z" fill="var(--rk-sol)"/><path d="M18.5 7.28 L18.76 7.5 L18.5 7.72 L18.24 7.5Z" fill="var(--rk-sol)"/><path d="M19.5 6.28 L19.76 6.5 L19.5 6.72 L19.24 6.5Z" fill="var(--rk-sol)"/><path d="M19.5 7.28 L19.76 7.5 L19.5 7.72 L19.24 7.5Z" fill="var(--rk-sol)"/><rect x="1" y="1" width="8" height="5" fill="url(#wp-fisica-wfull)" stroke="var(--rk-ink-2)" stroke-width=".36"/><rect x="4" y="5.75" width="2" height=".5" fill="var(--rk-surface)"/><rect x="3.55" y="5.7" width=".45" height=".6" fill="var(--rk-hall-fisica)"/><rect x="6" y="5.7" width=".45" height=".6" fill="var(--rk-hall-fisica)"/><rect x="4" y="4.5" width="2" height=".9" rx=".18" fill="var(--rk-hall-fisica)"/><svg x="4.65" y="4.6" width=".7" height=".7" viewBox="0 0 24 24" fill="none" stroke="var(--rk-on-hall-fisica)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-orbita"/></svg><circle cx="3.5" cy="3.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-fisica)" stroke-width=".18"/><circle cx="3.5" cy="3.5" r=".2" fill="var(--rk-foton)"/><circle cx="6.5" cy="3.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-fisica)" stroke-width=".18"/><circle cx="6.5" cy="3.5" r=".2" fill="var(--rk-foton)"/><rect x="11" y="1" width="8" height="5" fill="url(#wp-bio-wfull)" stroke="var(--rk-ink-2)" stroke-width=".36"/><rect x="14" y="5.75" width="2" height=".5" fill="var(--rk-surface)"/><rect x="13.55" y="5.7" width=".45" height=".6" fill="var(--rk-hall-bio)"/><rect x="16" y="5.7" width=".45" height=".6" fill="var(--rk-hall-bio)"/><rect x="14" y="4.5" width="2" height=".9" rx=".18" fill="var(--rk-hall-bio)"/><svg x="14.65" y="4.6" width=".7" height=".7" viewBox="0 0 24 24" fill="none" stroke="var(--rk-on-hall-bio)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-hoja"/></svg><circle cx="13.5" cy="3.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-bio)" stroke-width=".18"/><circle cx="13.5" cy="3.5" r=".2" fill="var(--rk-foton)"/><circle cx="16.5" cy="3.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-bio)" stroke-width=".18"/><circle cx="16.5" cy="3.5" r=".2" fill="var(--rk-foton)"/><rect x="1" y="8" width="8" height="5" fill="url(#wp-quim-wfull)" stroke="var(--rk-ink-2)" stroke-width=".36"/><rect x="4" y="7.75" width="2" height=".5" fill="var(--rk-surface)"/><rect x="3.55" y="7.7" width=".45" height=".6" fill="var(--rk-hall-quim)"/><rect x="6" y="7.7" width=".45" height=".6" fill="var(--rk-hall-quim)"/><rect x="4" y="8.5" width="2" height=".9" rx=".18" fill="var(--rk-hall-quim)"/><svg x="4.65" y="8.6" width=".7" height=".7" viewBox="0 0 24 24" fill="none" stroke="var(--rk-on-hall-quim)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-matraz"/></svg><circle cx="3.5" cy="10.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-quim)" stroke-width=".18"/><circle cx="3.5" cy="10.5" r=".2" fill="var(--rk-foton)"/><circle cx="6.5" cy="10.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-quim)" stroke-width=".18"/><circle cx="6.5" cy="10.5" r=".2" fill="var(--rk-foton)"/><rect x="11" y="8" width="8" height="5" fill="url(#wp-tierra-wfull)" stroke="var(--rk-ink-2)" stroke-width=".36"/><rect x="14" y="7.75" width="2" height=".5" fill="var(--rk-surface)"/><rect x="13.55" y="7.7" width=".45" height=".6" fill="var(--rk-hall-tierra)"/><rect x="16" y="7.7" width=".45" height=".6" fill="var(--rk-hall-tierra)"/><rect x="14" y="8.5" width="2" height=".9" rx=".18" fill="var(--rk-hall-tierra)"/><svg x="14.65" y="8.6" width=".7" height=".7" viewBox="0 0 24 24" fill="none" stroke="var(--rk-on-hall-tierra)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-monte"/></svg><circle cx="13.5" cy="10.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-tierra)" stroke-width=".18"/><circle cx="13.5" cy="10.5" r=".2" fill="var(--rk-foton)"/><circle cx="16.5" cy="10.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-tierra)" stroke-width=".18"/><circle cx="16.5" cy="10.5" r=".2" fill="var(--rk-foton)"/><rect x="2" y="1.6" width="2.4" height=".6" rx=".2" fill="var(--rk-hall-fisica)" opacity=".55"/><rect x="6" y="1.6" width="2.4" height=".6" rx=".2" fill="var(--rk-hall-fisica)" opacity=".55"/><circle cx="12.3" cy="1.9" r=".5" fill="var(--rk-hall-bio)" opacity=".7"/><circle cx="17.6" cy="1.9" r=".5" fill="var(--rk-hall-bio)" opacity=".7"/><circle cx="12.7" cy="4.7" r=".4" fill="var(--rk-hall-bio)" opacity=".7"/><rect x="2" y="11.6" width="2.6" height=".7" rx=".2" fill="var(--rk-hall-quim)" opacity=".55"/><rect x="5.6" y="11.6" width="2.6" height=".7" rx=".2" fill="var(--rk-hall-quim)" opacity=".55"/><path d="M12 12l.9-.8 .9.8-.9.5z M17.4 11.8l.8-.7 .8.7-.8.5z" fill="var(--rk-hall-tierra)" opacity=".7"/><circle cx="10" cy="7" r="1.5" fill="var(--rk-surface)" stroke="var(--rk-sol)" stroke-width=".18"/><line x1="10" y1="5.9" x2="10" y2="6.8" stroke="var(--rk-ink)" stroke-width=".14"/><circle cx="10" cy="7.3" r=".28" fill="var(--rk-primary)"/><g transform="translate(3.5 2.55)"><path d="M0 0 C-.5 -.7 -.6 -1.1 -.6 -1.4 a.6 .6 0 1 1 1.2 0 C.6 -1.1 .5 -.7 0 0z" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width=".1"/><circle cx="0" cy="-1.4" r=".2" fill="var(--rk-ink)"/></g><g transform="translate(8.1 6.9)"><ellipse cx="0" cy=".5" rx=".5" ry=".16" fill="var(--rk-ink)" opacity=".25"/><circle cx="0" cy="0" r=".5" fill="#0B6574" stroke="#052A31" stroke-width=".09"/><circle cx=".08" cy="-.04" r=".27" fill="#fff"/><circle cx=".14" cy="-.08" r=".14" fill="#19CBEE"/><circle cx=".15" cy="-.09" r=".06" fill="#0D2B33"/></g></svg></div><dl class="specs"><div><dt>Baldosa</dt><dd>16 px de arte, dibujada a 32 px CSS (2x). Mapa lógico en rejilla; todo se alinea a baldosa.</dd></div><div><dt>Cámara</dt><dd>Cenital fija. A 360 x 640 se ven 11 x 14 baldosas; el mapa se recorta, no se escala.</dd></div><div><dt>Color</dt><dd>Máximo 12 colores por sala: suelo en dos tonos de Sala clara, muro en Tinta suave, puertas y rótulos en el color de la sala.</dd></div><div><dt>Suelo</dt><dd>Tablero de 2 x 2 baldosas con una al 13 % de color de sala. Pasillos en Hoja con una hilera de rombos Sol como trama.</dd></div><div><dt>Exposiciones</dt><dd>Pedestal de anillo con punto Fotón. Se puede tocar a 2 baldosas de distancia; el área táctil es 64 px.</dd></div><div><dt>Personaje</dt><dd>Rikuy en 32 x 32 px: 4 fotogramas de caminar, dos direcciones y espejo. Sin sombras suaves.</dd></div><div><dt>Presupuesto</dt><dd>Atlas único de 256 x 256 px indexado, menos de 20 KB. Sin blur, sin alfa parcial, sin partículas. Canvas 2D a 30 fps; al ganar un nudo, un solo destello de 400 ms.</dd></div></dl></div></div>
+<h3 class="sub">Cinco formatos de exposición</h3><div class="fmts"><article class="xcard" data-hall="fisica"><div class="xart" ><svg viewBox="0 0 200 110" width="86%" role="img" aria-label="Reproductor de video" focusable="false"><rect x="2" y="2" width="196" height="106" rx="10" fill="var(--rk-surface)" stroke="var(--rk-ink)" stroke-width="3"/><path d="M86 34l36 21-36 21z" fill="var(--hall)" stroke="var(--rk-ink)" stroke-width="3" stroke-linejoin="round"/><rect x="14" y="92" width="172" height="7" rx="3.5" fill="var(--rk-border)"/><rect x="14" y="92" width="64" height="7" rx="3.5" fill="var(--hall)"/><rect x="150" y="12" width="36" height="20" rx="5" fill="var(--rk-ink)"/><text x="168" y="27" text-anchor="middle" font-size="13" font-weight="700" fill="var(--rk-bg)">CC</text></svg><span class="fmt-badge"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-video"/></svg>Video</span></div><div class="xbody"><h3>Cómo late un péndulo</h3><p>Se ve a la vez la cuerda y el reloj. Con subtítulos.</p><div class="meta"><span class="chip chip-ok"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Guardado, 3.1 MB</span><span class="chip">90 s</span></div><button class="btn btn-tonal btn-block" type="button">Ver</button></div></article><article class="xcard" data-hall="bio"><div class="xart" ><div class="wave" aria-hidden="true"><i class="" style="height:18px"></i><i class="" style="height:34px"></i><i class="" style="height:50px"></i><i class="" style="height:26px"></i><i class="" style="height:58px"></i><i class="" style="height:40px"></i><i class="" style="height:20px"></i><i class="" style="height:46px"></i><i class="" style="height:60px"></i><i class="" style="height:32px"></i><i class="d" style="height:22px"></i><i class="d" style="height:44px"></i><i class="d" style="height:28px"></i><i class="d" style="height:52px"></i><i class="d" style="height:36px"></i><i class="d" style="height:16px"></i></div><span class="fmt-badge"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-audio"/></svg>Audio</span></div><div class="xbody"><h3>¿Cómo respira una planta?</h3><p>Una voz lo cuenta en castellano o en quechua. Con texto debajo.</p><div class="meta"><span class="chip chip-ok"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Guardado, 0.9 MB</span><span class="chip">2 min</span></div><button class="btn btn-tonal btn-block" type="button">Escuchar</button></div></article><article class="xcard" data-hall="tierra"><div class="xart" ><svg viewBox="0 0 200 110" width="86%" role="img" aria-label="Diagrama del ciclo del agua con tres pasos" focusable="false"><g fill="none" stroke="var(--rk-ink)" stroke-width="3" stroke-linecap="round"><path d="M44 78 C44 40 84 26 100 26"/><path d="M116 26 C150 30 164 50 164 78"/><path d="M60 92 H146"/></g><g fill="var(--hall)" stroke="var(--rk-ink)" stroke-width="3"><circle cx="44" cy="82" r="14"/><circle cx="104" cy="26" r="14"/><circle cx="164" cy="82" r="14"/></g><g font-size="13" font-weight="700" fill="var(--on-hall)" text-anchor="middle"><text x="44" y="87">1</text><text x="104" y="31">2</text><text x="164" y="87">3</text></g></svg><span class="fmt-badge"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-diagrama"/></svg>Diagrama</span></div><div class="xbody"><h3>Ciclo del agua</h3><p>Toca cada paso y se abre una explicación corta.</p><div class="meta"><span class="chip chip-ok"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Guardado, 0.1 MB</span></div><button class="btn btn-tonal btn-block" type="button">Ver</button></div></article><article class="xcard" data-hall="fisica"><div class="xart" data-theme="holo"><svg viewBox="0 0 120 150" height="118" role="img" aria-label="Péndulo en holograma" focusable="false" style="color:var(--rk-primary)"><use href="#wf-pendulo" width="120" height="150"/></svg><span class="fmt-badge"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-holograma"/></svg>Holograma</span></div><div class="xbody"><h3>El péndulo en tus manos</h3><p>Gíralo, acércalo y cambia la cuerda con la mano.</p><div class="meta"><span class="chip chip-ok"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Guardado, 0.4 MB</span><span class="chip"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-g-girar"/></svg>Gestos o toque</span></div><button class="btn btn-tonal btn-block" type="button">Explorar</button></div></article><article class="xcard" data-hall="quim"><div class="xart" ><div style="display:grid;gap:6px;width:100%;justify-items:center"><div class="opt"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Ácido</div><div class="opt sel">Base</div><div class="opt">Neutro</div></div><span class="fmt-badge"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-quiz"/></svg>Quiz</span></div><div class="xbody"><h3>¿Ácido o base?</h3><p>Tres respuestas. Si fallas, Rikuy pregunta, no corrige.</p><div class="meta"><span class="chip chip-ok"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Guardado, 0.05 MB</span></div><button class="btn btn-tonal btn-block" type="button">Responder</button></div></article></div>
+<h3 class="sub">Holograma y pista de gestos</h3><div class="grid3"><div class="stack"><div class="holo" data-theme="holo" style="height:300px"><svg class="art" viewBox="0 0 320 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Péndulo en holograma sobre un pedestal" focusable="false">
+<g fill="none" stroke="var(--rk-primary)" stroke-width="3" stroke-linecap="round"><path d="M10 38V10h28M282 10h28v28M310 262v28h-28M38 290H10v-28"/></g>
+<g stroke="var(--rk-border)" stroke-width="2"><line x1="298" x2="312" y1="70" y2="70"/><line x1="304" x2="312" y1="84" y2="84"/><line x1="304" x2="312" y1="98" y2="98"/><line x1="304" x2="312" y1="112" y2="112"/><line x1="298" x2="312" y1="126" y2="126"/><line x1="304" x2="312" y1="140" y2="140"/><line x1="304" x2="312" y1="154" y2="154"/><line x1="304" x2="312" y1="168" y2="168"/><line x1="298" x2="312" y1="182" y2="182"/><line x1="304" x2="312" y1="196" y2="196"/><line x1="304" x2="312" y1="210" y2="210"/><line x1="304" x2="312" y1="224" y2="224"/><line x1="298" x2="312" y1="238" y2="238"/></g>
+<ellipse cx="160" cy="264" rx="74" ry="12" fill="none" stroke="var(--rk-primary)" stroke-width="2.5"/><ellipse cx="160" cy="264" rx="40" ry="6" fill="none" stroke="var(--rk-border)" stroke-width="2"/>
+<use href="#wf-pendulo" x="80" y="50" width="160" height="200" style="color:var(--rk-primary)"/></svg><div class="plate"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-orbita"/></svg>Péndulo</div><div class="read"><span class="chip chip-sync">Periodo 1.42 s</span><span class="chip chip-warn">Cuerda 50 cm</span></div></div><p class="muted" style="font-size:15px">Marco de exposición. Esquinas en Fotón, placa en Sol y datos en una fila.</p></div><div class="stack"><div class="holo" data-theme="holo" style="height:300px"><svg class="art" viewBox="0 0 320 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Péndulo en holograma sobre un pedestal" focusable="false">
+<g fill="none" stroke="var(--rk-primary)" stroke-width="3" stroke-linecap="round"><path d="M10 38V10h28M282 10h28v28M310 262v28h-28M38 290H10v-28"/></g>
+<g stroke="var(--rk-border)" stroke-width="2"><line x1="298" x2="312" y1="70" y2="70"/><line x1="304" x2="312" y1="84" y2="84"/><line x1="304" x2="312" y1="98" y2="98"/><line x1="304" x2="312" y1="112" y2="112"/><line x1="298" x2="312" y1="126" y2="126"/><line x1="304" x2="312" y1="140" y2="140"/><line x1="304" x2="312" y1="154" y2="154"/><line x1="304" x2="312" y1="168" y2="168"/><line x1="298" x2="312" y1="182" y2="182"/><line x1="304" x2="312" y1="196" y2="196"/><line x1="304" x2="312" y1="210" y2="210"/><line x1="304" x2="312" y1="224" y2="224"/><line x1="298" x2="312" y1="238" y2="238"/></g>
+<ellipse cx="160" cy="264" rx="74" ry="12" fill="none" stroke="var(--rk-primary)" stroke-width="2.5"/><ellipse cx="160" cy="264" rx="40" ry="6" fill="none" stroke="var(--rk-border)" stroke-width="2"/>
+<use href="#wf-pendulo" x="80" y="50" width="160" height="200" style="color:var(--rk-primary)"/></svg><div class="plate"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-orbita"/></svg>Péndulo</div><div class="read"><span class="chip chip-sync">Periodo 1.42 s</span><span class="chip chip-warn">Cuerda 50 cm</span></div><div class="gest"><div class="gest-card" role="dialog" aria-label="Cómo mover el holograma"><h4>Mueve el holograma con la mano</h4><ul>
+<li><span class="gi"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-g-girar"/></svg></span><span><b data-qu="Muyuy">Gira con un dedo</b></span></li>
+<li><span class="gi"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-g-pellizcar"/></svg></span><span><b data-qu="Hatunchay">Pellizca para acercar</b></span></li>
+<li><span class="gi"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-g-palma"/></svg></span><span><b data-qu="Kutiy">Abre la mano para volver</b></span></li></ul>
+<button class="btn btn-primary btn-block" type="button">Entendido</button></div></div></div><p class="muted" style="font-size:15px">Pista de gestos: aparece las dos primeras veces. Siempre hay botones de respaldo.</p></div><div class="stack"><svg viewBox="0 0 260 260" role="img" aria-label="Cuatro vistas del péndulo en cruz para la pirámide" focusable="false" style="display:block;width:100%;height:auto;background:var(--rk-bg);border:2px solid var(--rk-border);border-radius:12px">
+<g style="color:var(--rk-primary)"><use href="#wf-pendulo" x="100" y="6" width="60" height="75" transform="rotate(180 130 43.5)"/><use href="#wf-pendulo" x="100" y="179" width="60" height="75"/><use href="#wf-pendulo" x="6" y="92" width="60" height="75" transform="rotate(90 36 129.5)"/><use href="#wf-pendulo" x="194" y="92" width="60" height="75" transform="rotate(-90 224 129.5)"/></g>
+<rect x="104" y="104" width="52" height="52" fill="none" stroke="var(--rk-sol)" stroke-width="2.5" stroke-dasharray="4 4"/></svg><p class="muted" style="font-size:15px">Pantalla bajo la pirámide: cuatro vistas en cruz sobre negro absoluto.</p></div></div></div></section>
+
+<section class="m" id="quipu"><div class="wrap"><h2>Quipu de logros y Mi Cerebro Rikuy</h2><p class="lead">Dos vistas del mismo avance. El quipu cuenta lo que hicieron juntos; el cerebro muestra lo que de verdad aprendieron.</p>
+<div class="grid2"><div class="card stack"><svg class="quipu" viewBox="0 0 352 236" role="img" aria-label="Quipu de logros: cuatro cordones por sala y un cordón del grupo, con nudos simples, largos y en ocho" focusable="false"><line x1="14" y1="16" x2="338" y2="16" stroke="var(--rk-ink-2)" stroke-width="8" stroke-linecap="round"/><line x1="40" y1="16" x2="40" y2="200" stroke="var(--rk-hall-fisica)" stroke-width="5" stroke-linecap="round"/><circle cx="40" cy="16" r="6" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width="2"/><circle cx="40" cy="62" r="9" fill="var(--rk-hall-fisica)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M34 59 l12 7" stroke="var(--rk-ink)" stroke-width="2" stroke-linecap="round"/><circle cx="40" cy="92" r="9" fill="var(--rk-hall-fisica)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M34 89 l12 7" stroke="var(--rk-ink)" stroke-width="2" stroke-linecap="round"/><rect x="33" y="116" width="14" height="32" rx="7" fill="var(--rk-hall-fisica)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M33 125 l14 5 M33 135 l14 5" stroke="var(--rk-ink)" stroke-width="2" stroke-linecap="round"/><circle cx="40" cy="169" r="7.5" fill="var(--rk-hall-fisica)" stroke="var(--rk-ink)" stroke-width="2.5"/><circle cx="40" cy="183" r="7.5" fill="var(--rk-hall-fisica)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M35 174 l10 4 M45 174 l-10 4" stroke="var(--rk-ink)" stroke-width="2" stroke-linecap="round"/><text x="40" y="224" text-anchor="middle">Física</text><line x1="108" y1="16" x2="108" y2="120" stroke="var(--rk-hall-bio)" stroke-width="5" stroke-linecap="round"/><circle cx="108" cy="16" r="6" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width="2"/><circle cx="108" cy="62" r="9" fill="var(--rk-hall-bio)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M102 59 l12 7" stroke="var(--rk-ink)" stroke-width="2" stroke-linecap="round"/><text x="108" y="224" text-anchor="middle">Biología</text><line x1="176" y1="16" x2="176" y2="140" stroke="var(--rk-hall-quim)" stroke-width="5" stroke-linecap="round"/><circle cx="176" cy="16" r="6" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width="2"/><circle cx="176" cy="62" r="9" fill="var(--rk-hall-quim)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M170 59 l12 7" stroke="var(--rk-ink)" stroke-width="2" stroke-linecap="round"/><circle cx="176" cy="96" r="9" fill="var(--rk-hall-quim)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M170 93 l12 7" stroke="var(--rk-ink)" stroke-width="2" stroke-linecap="round"/><text x="176" y="224" text-anchor="middle">Química</text><line x1="244" y1="16" x2="244" y2="90" stroke="var(--rk-hall-tierra)" stroke-width="5" stroke-linecap="round"/><circle cx="244" cy="16" r="6" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width="2"/><circle cx="244" cy="62" r="9" fill="var(--rk-surface)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="3 4"/><text x="244" y="224" text-anchor="middle">Tierra</text><line x1="312" y1="16" x2="312" y2="150" stroke="var(--rk-ink)" stroke-width="5" stroke-linecap="round"/><circle cx="312" cy="16" r="6" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width="2"/><circle cx="312" cy="63" r="7.5" fill="var(--rk-ink)" stroke="var(--rk-ink)" stroke-width="2.5"/><circle cx="312" cy="77" r="7.5" fill="var(--rk-ink)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M307 68 l10 4 M317 68 l-10 4" stroke="var(--rk-ink)" stroke-width="2" stroke-linecap="round"/><circle cx="312" cy="105" r="7.5" fill="var(--rk-ink)" stroke="var(--rk-ink)" stroke-width="2.5"/><circle cx="312" cy="119" r="7.5" fill="var(--rk-ink)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M307 110 l10 4 M317 110 l-10 4" stroke="var(--rk-ink)" stroke-width="2" stroke-linecap="round"/><text x="312" y="224" text-anchor="middle">Grupo</text></svg><ul class="legend"><li><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-simple"/></svg><span><b>Nudo simple.</b> Terminaste una exposición.</span></li><li><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-largo"/></svg><span><b>Nudo largo.</b> Explicaste algo a otro grupo.</span></li><li><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-ocho"/></svg><span><b>Nudo en ocho.</b> Lo resolvieron juntos.</span></li></ul><div class="toast" role="status"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-largo"/></svg>Nuevo nudo largo en Física. Ayudaste al grupo 5.</div></div>
+<div class="card stack"><svg class="brain" viewBox="22 28 316 262" role="img" aria-label="Mi Cerebro Rikuy: mapa de conceptos. Los nodos encendidos son los que ya trabajaste con evidencia" focusable="false"><path d="M58 152 C38 112 70 56 132 50 C172 24 238 30 264 62 C306 70 332 116 316 156 C328 190 300 226 264 230 C246 262 198 268 180 244 L172 280 L150 280 L146 240 C108 256 60 236 64 198 C38 192 38 166 58 152Z" fill="var(--rk-surface-2)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-linejoin="round"/><g fill="none" stroke="var(--rk-border)" stroke-width="2.5" stroke-linecap="round"><path d="M96 70c18 8 30 24 28 44"/><path d="M200 44c4 22-8 36-24 46"/><path d="M290 84c-16 6-26 18-26 36"/><path d="M88 190c22-4 40 2 52 16"/><path d="M262 198c-18-8-34-4-46 10"/><path d="M60 140c20-4 32 6 40 20"/></g><line x1="180" y1="118" x2="92" y2="112" stroke="var(--rk-ink-2)" stroke-width="3"  stroke-linecap="round"/><line x1="180" y1="118" x2="128" y2="76" stroke="var(--rk-ink-2)" stroke-width="3"  stroke-linecap="round"/><line x1="180" y1="118" x2="232" y2="74" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="180" y1="118" x2="142" y2="168" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="180" y1="118" x2="220" y2="168" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="92" y1="112" x2="128" y2="76" stroke="var(--rk-ink-2)" stroke-width="3"  stroke-linecap="round"/><line x1="92" y1="112" x2="76" y2="160" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="142" y1="168" x2="76" y2="160" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="142" y1="168" x2="92" y2="212" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="142" y1="168" x2="150" y2="232" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="142" y1="168" x2="192" y2="250" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="220" y1="168" x2="270" y2="166" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="220" y1="168" x2="236" y2="226" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="232" y1="74" x2="282" y2="116" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="232" y1="74" x2="270" y2="166" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="282" y1="116" x2="236" y2="226" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="92" y1="212" x2="150" y2="232" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="192" y1="250" x2="236" y2="226" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><circle cx="180" cy="118" r="20" fill="none" stroke="var(--rk-ink)" stroke-width="2" opacity=".45"/><circle cx="180" cy="118" r="15" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M173.7 118.5 l4.5 5.1000000000000005 l8.7 -10.5" fill="none" stroke="var(--rk-on-sol)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><text x="180" y="149" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Indaga</text><circle cx="142" cy="168" r="19" fill="none" stroke="var(--rk-border)" stroke-width="3"/><circle cx="142" cy="168" r="19" fill="none" stroke="var(--rk-ink)" stroke-width="3.5" stroke-dasharray="71.6 119.4" transform="rotate(-90 142 168)" stroke-linecap="round"/><circle cx="142" cy="168" r="15" fill="var(--rk-surface-2)" stroke="var(--rk-ink)" stroke-width="2.5"/><text x="142" y="202" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Explica</text><circle cx="220" cy="168" r="15" fill="var(--rk-surface)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="4 4"/><text x="220" y="199" text-anchor="middle" font-size="13.5" font-weight="400" fill="var(--rk-muted)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Diseña</text><circle cx="92" cy="112" r="15" fill="none" stroke="var(--rk-hall-fisica)" stroke-width="2" opacity=".45"/><circle cx="92" cy="112" r="10" fill="var(--rk-hall-fisica)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M87.8 112.5 l3 3.4000000000000004 l5.8 -7" fill="none" stroke="var(--rk-on-hall-fisica)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><text x="92" y="138" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Péndulo</text><circle cx="128" cy="76" r="14" fill="none" stroke="var(--rk-hall-fisica)" stroke-width="2" opacity=".45"/><circle cx="128" cy="76" r="9" fill="var(--rk-hall-fisica)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M124.22 76.5 l2.6999999999999997 3.06 l5.22 -6.3" fill="none" stroke="var(--rk-on-hall-fisica)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><text x="128" y="101" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Periodo</text><circle cx="76" cy="160" r="13" fill="none" stroke="var(--rk-border)" stroke-width="3"/><circle cx="76" cy="160" r="13" fill="none" stroke="var(--rk-hall-fisica)" stroke-width="3.5" stroke-dasharray="40.8 81.7" transform="rotate(-90 76 160)" stroke-linecap="round"/><circle cx="76" cy="160" r="9" fill="var(--rk-hall-fisica-tint)" stroke="var(--rk-hall-fisica)" stroke-width="2.5"/><text x="76" y="188" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Gravedad</text><circle cx="232" cy="74" r="13" fill="none" stroke="var(--rk-border)" stroke-width="3"/><circle cx="232" cy="74" r="13" fill="none" stroke="var(--rk-hall-bio)" stroke-width="3.5" stroke-dasharray="57.2 81.7" transform="rotate(-90 232 74)" stroke-linecap="round"/><circle cx="232" cy="74" r="9" fill="var(--rk-hall-bio-tint)" stroke="var(--rk-hall-bio)" stroke-width="2.5"/><text x="232" y="102" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Célula</text><circle cx="282" cy="116" r="9" fill="var(--rk-surface)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="4 4"/><text x="282" y="141" text-anchor="middle" font-size="13.5" font-weight="400" fill="var(--rk-muted)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Fotosíntesis</text><circle cx="270" cy="166" r="8" fill="var(--rk-surface)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="4 4"/><text x="270" y="190" text-anchor="middle" font-size="13.5" font-weight="400" fill="var(--rk-muted)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">ADN</text><circle cx="92" cy="212" r="14" fill="none" stroke="var(--rk-hall-quim)" stroke-width="2" opacity=".45"/><circle cx="92" cy="212" r="9" fill="var(--rk-hall-quim)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M88.22 212.5 l2.6999999999999997 3.06 l5.22 -6.3" fill="none" stroke="var(--rk-on-hall-quim)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><text x="92" y="237" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Mezclas</text><circle cx="150" cy="232" r="12" fill="none" stroke="var(--rk-border)" stroke-width="3"/><circle cx="150" cy="232" r="12" fill="none" stroke="var(--rk-hall-quim)" stroke-width="3.5" stroke-dasharray="30.2 75.4" transform="rotate(-90 150 232)" stroke-linecap="round"/><circle cx="150" cy="232" r="8" fill="var(--rk-hall-quim-tint)" stroke="var(--rk-hall-quim)" stroke-width="2.5"/><text x="150" y="259" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">pH</text><circle cx="236" cy="226" r="9" fill="var(--rk-surface)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="4 4"/><text x="236" y="251" text-anchor="middle" font-size="13.5" font-weight="400" fill="var(--rk-muted)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Clima</text><circle cx="192" cy="250" r="12" fill="none" stroke="var(--rk-border)" stroke-width="3"/><circle cx="192" cy="250" r="12" fill="none" stroke="var(--rk-hall-tierra)" stroke-width="3.5" stroke-dasharray="22.6 75.4" transform="rotate(-90 192 250)" stroke-linecap="round"/><circle cx="192" cy="250" r="8" fill="var(--rk-hall-tierra-tint)" stroke="var(--rk-hall-tierra)" stroke-width="2.5"/><text x="192" y="277" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Suelo</text></svg><div class="key"><span><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7" fill="var(--rk-ink)"/></svg>Logrado, con evidencia</span><span><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7" fill="var(--rk-surface-2)" stroke="var(--rk-border)" stroke-width="3"/><path d="M10 3a7 7 0 0 1 6.5 4.4" fill="none" stroke="var(--rk-ink)" stroke-width="3" stroke-linecap="round"/></svg>En camino</span><span><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7" fill="none" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="3 3"/></svg>Sin explorar</span></div><p class="muted" style="font-size:15px">Un nodo se enciende solo con evidencia guardada, no por tiempo de uso. Estado por forma y por color. Sin brillos ni sombras: 13 nodos, 18 líneas y una silueta.</p></div></div></div></section>
+
+<section class="m" id="senales"><div class="wrap"><h2>Señales de aprendizaje</h2><p class="lead">Función opcional, apagada por defecto. Pide permiso al estudiante y a su familia, se ve siempre que está activa, solo ofrece ayuda y se apaga con un toque.</p>
+<div class="grid2"><div class="card stack"><div class="say"><div class="mascot-s"><svg viewBox="0 0 240 300" role="img" aria-label="Rikuy, la piedra que mira" focusable="false"><defs><clipPath id="u2-clip"><path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z"/></clipPath></defs>
+<g class="rk-swing" style="transform-origin:120px 16px">
+  <line x1="120" y1="22" x2="120" y2="104" stroke="#F5B301" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="120" cy="66" r="7" fill="#F5B301" stroke="#8A5E00" stroke-width="2.5"/>
+  <path d="M114 63 l12 6 M114 69 l12 -6" stroke="#8A5E00" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="120" cy="16" r="8" fill="#F5F6F1" stroke="#0D2B33" stroke-width="3.5"/>
+  <path id="rikuy-body" d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="#0B6574"/>
+  <g clip-path="url(#u2-clip)">
+    <path d="M30 98 L120 78 L152 132 L62 236 L28 204Z" fill="#12879A"/>
+    <path d="M210 146 L210 290 L88 290 L172 192Z" fill="#064550"/>
+    <rect x="30" y="244" width="180" height="18" fill="#064550"/><path d="M34 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M50 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M66 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M82 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M98 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M114 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M130 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M146 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M162 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M178 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M194 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/>
+  </g>
+  <path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="none" stroke="#052A31" stroke-width="4" stroke-linejoin="round"/>
+  <g id="rikuy-eye"><circle cx="120" cy="176" r="42" fill="#FFFFFF" stroke="#052A31" stroke-width="5"/><circle cx="108" cy="160" r="24" fill="#19CBEE"/><circle cx="109" cy="159" r="11" fill="#0D2B33"/><circle cx="116" cy="151" r="5" fill="#FFFFFF"/><circle cx="103" cy="167" r="2.5" fill="#FFFFFF"/></g><path d="M78 122 Q106 124 144 136" fill="none" stroke="#052A31" stroke-width="8" stroke-linecap="round"/><path d="M110 230 H130" fill="none" stroke="#052A31" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><g fill="none" stroke="#F5B301" stroke-width="6" stroke-linecap="round"><path d="M176 70 q0-14 14-14 t14 14 q0 9-12 13 v7"/></g><circle cx="192" cy="104" r="3.6" fill="#F5B301"/>
+</g></svg></div><div><h3>Señales de aprendizaje</h3><p class="ink2" style="margin-top:4px">Rikuy puede notar cuándo te atascas y ofrecerte una pista.</p></div></div>
+<ul class="promises"><li><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-camara"/></svg><span><b>Qué usa.</b> La cámara de este celular, solo mientras haces la exposición.</span></li><li><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-escudo"/></svg><span><b>Qué no hace.</b> No graba, no guarda fotos y no cuenta nada a tus compañeros.</span></li><li><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-usuarios"/></svg><span><b>Quién ve algo.</b> Tu docente ve un resumen del grupo, nunca tu nombre.</span></li><li><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-apagar"/></svg><span><b>Cuándo se apaga.</b> Cuando tú quieras, con un toque.</span></li></ul>
+<div class="chip chip-warn" style="justify-self:start"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-lock"/></svg>Falta el permiso de tu familia</div>
+<div class="row"><button class="btn btn-primary" style="flex:1" type="button">Sí, quiero probarla</button><button class="btn" style="flex:1" type="button">No, gracias</button></div>
+<p class="muted" style="font-size:15px">Si dices que no, todo funciona igual.</p></div><div class="card stack"><h3>Permiso de la familia</h3><p class="ink2">Su hija o hijo puede usar “Señales de aprendizaje”. El celular calcula si se atasca y le ofrece una pista. No se guarda ninguna imagen ni video. La docente solo ve resúmenes de todo el grupo.</p>
+<div class="field"><label for="g1">Nombre de quien autoriza</label><input id="g1" type="text" placeholder="Nombre y apellido" autocomplete="off"></div>
+<div class="field"><label for="g2">Código de la clase</label><input id="g2" type="text" placeholder="Por ejemplo, AULA-2B" autocomplete="off"></div>
+<div class="row"><button class="btn btn-primary" style="flex:1" type="button">Autorizo</button><button class="btn" style="flex:1" type="button">No autorizo</button></div>
+<p class="muted" style="font-size:15px">Se guarda en este celular y funciona sin internet. También puede firmar en papel. Puede retirar el permiso cuando quiera.</p></div></div>
+<div class="grid2 sub"><div class="stack"><div class="row" style="justify-content:space-between;background:var(--rk-surface);border:2px solid var(--rk-border);border-radius:16px;padding:8px 12px"><b>Péndulo</b><span class="cam"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-camara"/></svg>Cámara activa<button class="off" type="button" aria-label="Apagar las señales de aprendizaje"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-apagar"/></svg></button></span></div>
+<div class="card stack"><div class="say"><div class="mascot-s"><svg viewBox="0 0 240 300" role="img" aria-label="Rikuy, la piedra que mira" focusable="false"><defs><clipPath id="u3-clip"><path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z"/></clipPath></defs>
+<g class="rk-swing" style="transform-origin:120px 16px">
+  <line x1="120" y1="22" x2="120" y2="104" stroke="#F5B301" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="120" cy="66" r="7" fill="#F5B301" stroke="#8A5E00" stroke-width="2.5"/>
+  <path d="M114 63 l12 6 M114 69 l12 -6" stroke="#8A5E00" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="120" cy="16" r="8" fill="#F5F6F1" stroke="#0D2B33" stroke-width="3.5"/>
+  <path id="rikuy-body" d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="#0B6574"/>
+  <g clip-path="url(#u3-clip)">
+    <path d="M30 98 L120 78 L152 132 L62 236 L28 204Z" fill="#12879A"/>
+    <path d="M210 146 L210 290 L88 290 L172 192Z" fill="#064550"/>
+    <rect x="30" y="244" width="180" height="18" fill="#064550"/><path d="M34 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M50 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M66 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M82 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M98 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M114 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M130 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M146 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M162 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M178 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M194 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/>
+  </g>
+  <path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="none" stroke="#052A31" stroke-width="4" stroke-linejoin="round"/>
+  <g id="rikuy-eye"><circle cx="120" cy="176" r="42" fill="#FFFFFF" stroke="#052A31" stroke-width="5"/><circle cx="108" cy="160" r="24" fill="#19CBEE"/><circle cx="109" cy="159" r="11" fill="#0D2B33"/><circle cx="116" cy="151" r="5" fill="#FFFFFF"/><circle cx="103" cy="167" r="2.5" fill="#FFFFFF"/></g><path d="M78 122 Q106 124 144 136" fill="none" stroke="#052A31" stroke-width="8" stroke-linecap="round"/><path d="M110 230 H130" fill="none" stroke="#052A31" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><g fill="none" stroke="#F5B301" stroke-width="6" stroke-linecap="round"><path d="M176 70 q0-14 14-14 t14 14 q0 9-12 13 v7"/></g><circle cx="192" cy="104" r="3.6" fill="#F5B301"/>
+</g></svg></div><div class="bubble">Esto cuesta un poco. ¿Te doy una pista?</div></div><div class="row"><button class="btn btn-primary" style="flex:1" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-pista"/></svg>Sí, una pista</button><button class="btn" style="flex:1" type="button">Ahora no</button></div><span class="chip" style="justify-self:start"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-lock"/></svg>Solo se ve en este celular</span></div></div><div class="card stack"><div class="row" style="justify-content:space-between"><h3>Señales del grupo</h3><span class="chip chip-ok"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-usuarios"/></svg>18 de 24 participan</span></div>
+<div><div class="bins" role="img" aria-label="Pedidos de pista por tramo de cinco minutos: el pico está entre los minutos 20 y 30"><i class="" style="height:20px"></i><i class="" style="height:26px"></i><i class="" style="height:32px"></i><i class="" style="height:46px"></i><i class="hot" style="height:96px"></i><i class="hot" style="height:104px"></i><i class="" style="height:58px"></i><i class="" style="height:30px"></i><i class="" style="height:22px"></i></div><div class="binsx"><span>5</span><span>10</span><span>15</span><span>20</span><span>25</span><span>30</span><span>35</span><span>40</span><span>45</span></div><p class="muted" style="font-size:14px;margin-top:4px">Minutos de clase. Cada barra es un tramo de cinco minutos.</p></div>
+<div class="concl" style="background:var(--rk-sol-tint);border-color:var(--rk-sol);color:var(--rk-ink)"><b>Entre los minutos 20 y 30, 4 de 5 grupos pidieron pista.</b> Revisa cómo se explica contar diez oscilaciones.</div>
+<p class="muted" style="font-size:15px">Solo se muestra con 5 o más participantes. No hay datos por estudiante ni se guarda ninguna imagen.</p>
+<button class="btn btn-danger btn-block" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-apagar"/></svg>Apagar para toda la clase</button></div></div><div class="sub"><div class="card stack"><h3>Señales de aprendizaje</h3>
+<div class="toggle"><div><b>Activas</b><div class="muted" style="font-size:15px;line-height:20px">Cámara usada solo en este celular</div></div><span class="switch" role="img" aria-label="Interruptor encendido"></span></div>
+<button class="btn btn-danger btn-lg btn-block" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-apagar"/></svg>Apagar ahora</button>
+<div class="toggle"><div><b>Apagadas</b><div class="muted" style="font-size:15px;line-height:20px">La cámara está libre</div></div><span class="switch offs" role="img" aria-label="Interruptor apagado"></span></div>
+<div class="toast" role="status"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Señales apagadas. No se guardó ninguna imagen.</div></div></div></div></section>
+
+<section class="m" id="mascota"><div class="wrap"><h2>Rikuy, la piedra que mira</h2><p class="lead">Una piedra de río con un solo ojo que cuelga de una cuerda con nudo: es el péndulo del primer experimento y la pregunta de todo el museo.</p>
+<div class="sp"><div class="mini"><div class="mascot-s"><svg viewBox="0 0 240 300" role="img" aria-label="Rikuy, la piedra que mira" focusable="false"><defs><clipPath id="u4-clip"><path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z"/></clipPath></defs>
+<g class="rk-swing" style="transform-origin:120px 16px">
+  <line x1="120" y1="22" x2="120" y2="104" stroke="#F5B301" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="120" cy="66" r="7" fill="#F5B301" stroke="#8A5E00" stroke-width="2.5"/>
+  <path d="M114 63 l12 6 M114 69 l12 -6" stroke="#8A5E00" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="120" cy="16" r="8" fill="#F5F6F1" stroke="#0D2B33" stroke-width="3.5"/>
+  <path id="rikuy-body" d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="#0B6574"/>
+  <g clip-path="url(#u4-clip)">
+    <path d="M30 98 L120 78 L152 132 L62 236 L28 204Z" fill="#12879A"/>
+    <path d="M210 146 L210 290 L88 290 L172 192Z" fill="#064550"/>
+    <rect x="30" y="244" width="180" height="18" fill="#064550"/><path d="M34 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M50 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M66 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M82 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M98 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M114 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M130 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M146 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M162 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M178 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M194 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/>
+  </g>
+  <path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="none" stroke="#052A31" stroke-width="4" stroke-linejoin="round"/>
+  <g id="rikuy-eye"><circle cx="120" cy="176" r="42" fill="#FFFFFF" stroke="#052A31" stroke-width="5"/><circle cx="128" cy="170" r="24" fill="#19CBEE"/><circle cx="129" cy="169" r="11" fill="#0D2B33"/><circle cx="136" cy="161" r="5" fill="#FFFFFF"/><circle cx="123" cy="177" r="2.5" fill="#FFFFFF"/></g><path d="M76 128 Q104 108 144 124" fill="none" stroke="#052A31" stroke-width="8" stroke-linecap="round"/><path d="M106 229 Q120 237 134 229" fill="none" stroke="#052A31" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g></svg></div><b>Curiosa</b><small>Hace una pregunta.</small></div><div class="mini"><div class="mascot-s"><svg viewBox="0 0 240 300" role="img" aria-label="Rikuy, la piedra que mira" focusable="false"><defs><clipPath id="u5-clip"><path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z"/></clipPath></defs>
+<g class="rk-swing" style="transform-origin:120px 16px">
+  <line x1="120" y1="22" x2="120" y2="104" stroke="#F5B301" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="120" cy="66" r="7" fill="#F5B301" stroke="#8A5E00" stroke-width="2.5"/>
+  <path d="M114 63 l12 6 M114 69 l12 -6" stroke="#8A5E00" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="120" cy="16" r="8" fill="#F5F6F1" stroke="#0D2B33" stroke-width="3.5"/>
+  <path id="rikuy-body" d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="#0B6574"/>
+  <g clip-path="url(#u5-clip)">
+    <path d="M30 98 L120 78 L152 132 L62 236 L28 204Z" fill="#12879A"/>
+    <path d="M210 146 L210 290 L88 290 L172 192Z" fill="#064550"/>
+    <rect x="30" y="244" width="180" height="18" fill="#064550"/><path d="M34 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M50 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M66 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M82 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M98 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M114 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M130 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M146 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M162 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M178 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M194 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/>
+  </g>
+  <path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="none" stroke="#052A31" stroke-width="4" stroke-linejoin="round"/>
+  <g id="rikuy-eye"><circle cx="120" cy="176" r="42" fill="#FFFFFF" stroke="#052A31" stroke-width="5"/><circle cx="108" cy="160" r="24" fill="#19CBEE"/><circle cx="109" cy="159" r="11" fill="#0D2B33"/><circle cx="116" cy="151" r="5" fill="#FFFFFF"/><circle cx="103" cy="167" r="2.5" fill="#FFFFFF"/></g><path d="M78 122 Q106 124 144 136" fill="none" stroke="#052A31" stroke-width="8" stroke-linecap="round"/><path d="M110 230 H130" fill="none" stroke="#052A31" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><g fill="none" stroke="#F5B301" stroke-width="6" stroke-linecap="round"><path d="M176 70 q0-14 14-14 t14 14 q0 9-12 13 v7"/></g><circle cx="192" cy="104" r="3.6" fill="#F5B301"/>
+</g></svg></div><b>Piensa</b><small>Ofrece una pista cuando se pide ayuda.</small></div><div class="mini"><div class="mascot-s"><svg viewBox="0 0 240 300" role="img" aria-label="Rikuy, la piedra que mira" focusable="false"><defs><clipPath id="u6-clip"><path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z"/></clipPath></defs>
+<g class="rk-swing" style="transform-origin:120px 16px">
+  <line x1="120" y1="22" x2="120" y2="104" stroke="#F5B301" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="120" cy="66" r="7" fill="#F5B301" stroke="#8A5E00" stroke-width="2.5"/>
+  <path d="M114 63 l12 6 M114 69 l12 -6" stroke="#8A5E00" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="120" cy="16" r="8" fill="#F5F6F1" stroke="#0D2B33" stroke-width="3.5"/>
+  <path id="rikuy-body" d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="#0B6574"/>
+  <g clip-path="url(#u6-clip)">
+    <path d="M30 98 L120 78 L152 132 L62 236 L28 204Z" fill="#12879A"/>
+    <path d="M210 146 L210 290 L88 290 L172 192Z" fill="#064550"/>
+    <rect x="30" y="244" width="180" height="18" fill="#064550"/><path d="M34 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M50 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M66 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M82 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M98 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M114 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M130 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M146 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M162 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M178 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M194 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/>
+  </g>
+  <path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="none" stroke="#052A31" stroke-width="4" stroke-linejoin="round"/>
+  <g id="rikuy-eye"><path d="M82 184 Q120 140 158 184" fill="none" stroke="#052A31" stroke-width="9" stroke-linecap="round"/></g><path d="M98 220 Q120 246 142 220 Z" fill="#052A31" stroke="#052A31" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M34 101 L37.08 108.92 L45 112 L37.08 115.08 L34 123 L30.92 115.08 L23 112 L30.92 108.92Z" fill="#F5B301"/><path d="M210 87 L213.64 96.36 L223 100 L213.64 103.64 L210 113 L206.36 103.64 L197 100 L206.36 96.36Z" fill="#F5B301"/><path d="M196 43 L197.96 48.04 L203 50 L197.96 51.96 L196 57 L194.04 51.96 L189 50 L194.04 48.04Z" fill="#F5B301"/>
+</g></svg></div><b>Celebra</b><small>Ganaron un nudo.</small></div><div class="mini"><div class="mascot-s"><svg viewBox="0 0 240 300" role="img" aria-label="Rikuy, la piedra que mira" focusable="false"><defs><clipPath id="u7-clip"><path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z"/></clipPath></defs>
+<g class="rk-swing" style="transform-origin:120px 16px">
+  <line x1="120" y1="22" x2="120" y2="104" stroke="#F5B301" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="120" cy="66" r="7" fill="#F5B301" stroke="#8A5E00" stroke-width="2.5"/>
+  <path d="M114 63 l12 6 M114 69 l12 -6" stroke="#8A5E00" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="120" cy="16" r="8" fill="#F5F6F1" stroke="#0D2B33" stroke-width="3.5"/>
+  <path id="rikuy-body" d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="#0B6574"/>
+  <g clip-path="url(#u7-clip)">
+    <path d="M30 98 L120 78 L152 132 L62 236 L28 204Z" fill="#12879A"/>
+    <path d="M210 146 L210 290 L88 290 L172 192Z" fill="#064550"/>
+    <rect x="30" y="244" width="180" height="18" fill="#064550"/><path d="M34 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M50 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M66 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M82 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M98 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M114 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M130 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M146 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M162 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M178 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M194 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/>
+  </g>
+  <path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="none" stroke="#052A31" stroke-width="4" stroke-linejoin="round"/>
+  <g id="rikuy-eye"><circle cx="120" cy="176" r="42" fill="#FFFFFF" stroke="#052A31" stroke-width="5"/><circle cx="120" cy="188" r="24" fill="#19CBEE"/><circle cx="121" cy="187" r="11" fill="#0D2B33"/><circle cx="128" cy="179" r="5" fill="#FFFFFF"/><circle cx="115" cy="195" r="2.5" fill="#FFFFFF"/><path d="M78 172 A42 42 0 0 1 162 172 Z" fill="#0B6574" stroke="#052A31" stroke-width="5" stroke-linejoin="round"/></g><path d="M108 230 Q120 235 132 230" fill="none" stroke="#052A31" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><g fill="none" stroke="#F5B301" stroke-width="5.5" stroke-linecap="round"><path d="M172 80 a26 26 0 0 1 34 0"/><path d="M180 92 a14 14 0 0 1 18 0"/><path d="M164 66 L214 112"/></g><circle cx="189" cy="103" r="3" fill="#F5B301"/>
+</g></svg></div><b>Sin red</b><small>Sigue contigo sin conexión.</small></div></div>
+<p class="muted" style="margin-top:24px">Los gestos de Rikuy los dispara la aplicación según el evento de la clase. Nunca copian ni interpretan la cara del estudiante.</p></div></section>
+
+<section class="m" id="componentes"><div class="wrap"><h2>Componentes del laboratorio</h2><p class="lead">Los instrumentos se leen a pleno sol, se tocan con el pulgar y guardan primero en el celular.</p>
+<div class="grid2"><div class="stack"><div class="card"><div class="row" style="justify-content:space-between"><h3>Cronómetro</h3><span class="chip chip-sync"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-timer"/></svg>Oscilación 7 de 10</span></div>
+<div class="sw-time" role="timer" aria-label="14.82 segundos">14.82<small>s</small></div>
+<div class="cord" aria-hidden="true"><i class="kn on"></i><i class="kn on"></i><i class="kn on"></i><i class="kn on"></i><i class="kn on"></i><i class="kn on"></i><i class="kn now"></i><i class="kn "></i><i class="kn "></i><i class="kn "></i></div>
+<button class="btn btn-primary btn-lg btn-block" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-timer"/></svg>Contar oscilación</button>
+<div class="row" style="margin-top:10px"><button class="btn" type="button" style="flex:1">Reiniciar</button><button class="btn" type="button" style="flex:1">Parar</button></div></div><div class="hyp"><div class="hd"><span class="row" style="gap:6px"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-pista"/></svg><span data-qu="Yuyay" data-ay="Amuyt'aña">Mi hipótesis</span></span><span class="chip chip-warn"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-lock"/></svg>Antes de medir</span></div><p>Si alargo la cuerda, el péndulo tarda más en ir y volver.</p></div><div class="evi"><div class="hd"><span class="row" style="gap:6px"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-eye"/></svg>Grupo 3</span><span class="chip chip-sync">Frase literal</span></div><blockquote>“Tarda más porque la cuerda es más larga y da una vuelta más grande.”</blockquote><small>Muestra que relaciona longitud y periodo.</small></div><div class="evi none"><div class="hd"><span class="row" style="gap:6px"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-eye"/></svg>Grupo 5</span><span class="chip">No evaluable</span></div><p style="margin-top:6px;color:var(--rk-ink-2)">Todavía no hay una frase del grupo sobre esto. La docente decide cómo seguir.</p></div><div class="concl row" style="gap:10px"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-check"/></svg><span><b>Conclusión del grupo.</b> A más cuerda, más tiempo por vaivén.</span></div></div>
+<div class="stack"><div class="card"><h3>Medidas y teoría</h3><table class="tbl"><caption class="vh">Mediciones del péndulo</caption><thead><tr><th scope="col">Cuerda (cm)</th><th scope="col">Tu periodo (s)</th><th scope="col">Teoría (s)</th><th scope="col">Error</th></tr></thead><tbody>
+<tr><td>25</td><td>1.02</td><td>1.00</td><td class="err">1.7 %</td></tr><tr><td>50</td><td>1.44</td><td>1.42</td><td class="err">1.5 %</td></tr><tr><td>100</td><td>2.03</td><td>2.01</td><td class="err">1.2 %</td></tr></tbody></table></div><div class="card"><h3>Periodo contra longitud</h3><svg class="chart" viewBox="0 0 320 196" role="img" aria-label="Gráfico del periodo contra la longitud: los tres puntos medidos siguen la curva de la teoría" focusable="false">
+  <line x1="48" x2="304" y1="152" y2="152" stroke="var(--rk-border)" stroke-width="1.5"/><text x="40" y="156" text-anchor="end">0.0</text><line x1="48" x2="304" y1="123.25" y2="123.25" stroke="var(--rk-border)" stroke-width="1.5"/><text x="40" y="127.25" text-anchor="end">0.5</text><line x1="48" x2="304" y1="94.5" y2="94.5" stroke="var(--rk-border)" stroke-width="1.5"/><text x="40" y="98.5" text-anchor="end">1.0</text><line x1="48" x2="304" y1="65.75" y2="65.75" stroke="var(--rk-border)" stroke-width="1.5"/><text x="40" y="69.75" text-anchor="end">1.5</text><line x1="48" x2="304" y1="37" y2="37" stroke="var(--rk-border)" stroke-width="1.5"/><text x="40" y="41" text-anchor="end">2.0</text><text x="48" y="172" text-anchor="middle">0</text><text x="106.18181818181819" y="172" text-anchor="middle">25</text><text x="164.36363636363637" y="172" text-anchor="middle">50</text><text x="222.54545454545453" y="172" text-anchor="middle">75</text><text x="280.72727272727275" y="172" text-anchor="middle">100</text><line x1="48" y1="152" x2="304" y2="152" stroke="var(--rk-ink-2)" stroke-width="2"/><line x1="48" y1="14" x2="48" y2="152" stroke="var(--rk-ink-2)" stroke-width="2"/>
+  <path d="M48.0 152.0 L59.6 126.2 L71.3 115.5 L82.9 107.3 L94.5 100.4 L106.2 94.3 L117.8 88.8 L129.5 83.8 L141.1 79.0 L152.7 74.6 L164.4 70.4 L176.0 66.5 L187.6 62.7 L199.3 59.0 L210.9 55.5 L222.5 52.1 L234.2 48.8 L245.8 45.7 L257.5 42.6 L269.1 39.6 L280.7 36.7 L292.4 33.8 L304.0 31.0 " fill="none" stroke="var(--rk-ink-2)" stroke-width="2.5" stroke-dasharray="7 5"/>
+  <circle cx="106.2" cy="93.3" r="7" fill="var(--rk-primary)" stroke="var(--rk-surface)" stroke-width="2.5"/><circle cx="164.4" cy="69.2" r="7" fill="var(--rk-primary)" stroke="var(--rk-surface)" stroke-width="2.5"/><circle cx="280.7" cy="35.3" r="7" fill="var(--rk-primary)" stroke="var(--rk-surface)" stroke-width="2.5"/>
+  <text x="296" y="13.474999999999994" text-anchor="end">Teoría</text><text x="176.36363636363637" y="91.2">Tus datos</text>
+  <text x="176" y="192" text-anchor="middle">Longitud de la cuerda (cm)</text><text x="14" y="84" transform="rotate(-90 14 84)" text-anchor="middle">Periodo (s)</text></svg></div>
+<div style="max-width:380px;margin-inline:auto;width:100%"><div class="sheet"><div class="handle"></div><h3>Muestra este código a tu docente</h3><div class="qr"><svg viewBox="-2 -2 29 29" role="img" aria-label="Código QR animado del grupo" focusable="false"><rect x="-2" y="-2" width="29" height="29" style="fill:var(--rk-qr-paper)"/><path d="M0 0h7v1h-7zM9 0h3v1h-3zM13 0h4v1h-4zM18 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h2v1h-2zM11 1h2v1h-2zM14 1h1v1h-1zM18 1h1v1h-1zM24 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM10 2h2v1h-2zM13 2h3v1h-3zM18 2h1v1h-1zM20 2h3v1h-3zM24 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 3h2v1h-2zM12 3h1v1h-1zM18 3h1v1h-1zM20 3h3v1h-3zM24 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h1v1h-1zM10 4h4v1h-4zM15 4h1v1h-1zM18 4h1v1h-1zM20 4h3v1h-3zM24 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM14 5h1v1h-1zM18 5h1v1h-1zM24 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM18 6h7v1h-7zM9 7h2v1h-2zM12 7h1v1h-1zM14 7h1v1h-1zM1 8h2v1h-2zM5 8h1v1h-1zM9 8h1v1h-1zM12 8h4v1h-4zM19 8h5v1h-5zM0 9h1v1h-1zM3 9h2v1h-2zM6 9h3v1h-3zM11 9h3v1h-3zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h2v1h-2zM22 9h3v1h-3zM5 10h2v1h-2zM9 10h1v1h-1zM11 10h2v1h-2zM14 10h2v1h-2zM23 10h1v1h-1zM0 11h3v1h-3zM4 11h2v1h-2zM7 11h1v1h-1zM11 11h1v1h-1zM17 11h1v1h-1zM19 11h1v1h-1zM21 11h1v1h-1zM23 11h1v1h-1zM2 12h2v1h-2zM8 12h5v1h-5zM14 12h2v1h-2zM18 12h2v1h-2zM2 13h1v1h-1zM5 13h1v1h-1zM8 13h2v1h-2zM11 13h3v1h-3zM16 13h2v1h-2zM21 13h2v1h-2zM1 14h1v1h-1zM6 14h2v1h-2zM9 14h1v1h-1zM14 14h2v1h-2zM19 14h2v1h-2zM23 14h1v1h-1zM1 15h1v1h-1zM3 15h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM13 15h1v1h-1zM17 15h2v1h-2zM20 15h2v1h-2zM23 15h1v1h-1zM2 16h3v1h-3zM8 16h1v1h-1zM10 16h1v1h-1zM15 16h1v1h-1zM20 16h2v1h-2zM23 16h1v1h-1zM9 17h2v1h-2zM13 17h1v1h-1zM16 17h2v1h-2zM19 17h1v1h-1zM21 17h2v1h-2zM24 17h1v1h-1zM0 18h7v1h-7zM10 18h3v1h-3zM14 18h2v1h-2zM20 18h5v1h-5zM0 19h1v1h-1zM6 19h1v1h-1zM9 19h2v1h-2zM13 19h4v1h-4zM19 19h1v1h-1zM0 20h1v1h-1zM2 20h3v1h-3zM6 20h1v1h-1zM9 20h2v1h-2zM13 20h3v1h-3zM17 20h1v1h-1zM19 20h3v1h-3zM24 20h1v1h-1zM0 21h1v1h-1zM2 21h3v1h-3zM6 21h1v1h-1zM11 21h5v1h-5zM18 21h1v1h-1zM21 21h4v1h-4zM0 22h1v1h-1zM2 22h3v1h-3zM6 22h1v1h-1zM9 22h2v1h-2zM12 22h1v1h-1zM14 22h1v1h-1zM16 22h3v1h-3zM20 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM8 23h1v1h-1zM11 23h2v1h-2zM17 23h2v1h-2zM0 24h7v1h-7zM9 24h2v1h-2zM12 24h1v1h-1zM16 24h1v1h-1zM18 24h1v1h-1zM21 24h2v1h-2z" style="fill:var(--rk-qr-ink)"/></svg></div><div class="cord" style="margin:6px 0 12px"><i class="kn on"></i><i class="kn on"></i><i class="kn on"></i><i class="kn "></i><i class="kn "></i></div><p class="muted" style="margin:0 auto 12px;font-size:15px">Parte 3 de 5. Mantén el celular quieto.</p><button class="btn btn-primary btn-lg btn-block" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-qr"/></svg>Ya lo leyó</button></div></div></div></div>
+<h3 class="sub">Botones, estados de conexión y tarjeta de juego</h3>
+<div class="grid3"><div class="stack"><button class="btn btn-primary btn-lg btn-block" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-play"/></svg>Empezar la clase</button><button class="btn btn-block" type="button">Ver el paquete</button><button class="btn btn-tonal btn-block" type="button">Guardar medición</button><button class="btn btn-danger btn-block" type="button">Borrar medición</button><button class="btn btn-block" type="button" disabled>Enviar al docente</button><button class="btn btn-primary btn-lg btn-block btn-stack" type="button"><span>Empezar a medir</span><span class="qu">Tupuyta qallariy</span></button></div>
+<div class="stack"><span class="chip chip-off"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-wifioff"/></svg>Sin red, todo guardado</span><span class="chip chip-warn"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-subir"/></svg>3 mediciones por enviar</span><span class="chip chip-sync"><svg class="ic spin" aria-hidden="true" focusable="false"><use href="#ic-subir"/></svg>Enviando</span><span class="chip chip-ok"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Enviado hace 2 minutos</span><span class="chip chip-off"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-info"/></svg>No se pudo enviar. Sigue en este celular.</span><div class="card" data-hall="fisica" style="display:grid;gap:8px"><div class="row" style="justify-content:space-between"><b>Afina el péndulo</b><span class="chip chip-hall"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-orbita"/></svg>Física</span></div><div style="height:72px;border:2px solid var(--rk-border);border-radius:12px;background:var(--hall-tint);display:grid;place-items:center"><svg viewBox="0 0 120 150" height="60" aria-hidden="true" focusable="false" style="color:var(--hall-ink)"><use href="#wf-pendulo" width="120" height="150"/></svg></div><p class="ink2" style="font-size:15px;line-height:22px">Ajusta la cuerda hasta que el periodo sea 1.5 s. Dura 5 minutos.</p><button class="btn btn-tonal btn-block" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-play"/></svg>Jugar</button></div></div>
+<div class="stack"><div class="phone" style="height:auto;border-radius:20px"><nav class="tabs" role="tablist" aria-label="Secciones"><button class="tab" role="tab" aria-selected="true"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-museo"/></svg><span data-qu="Yachay wasi" data-ay="Yatiña uta">Museo</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-lab"/></svg><span data-qu="Tupuy" data-ay="Tupuña">Lab</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-cerebro"/></svg><span data-qu="Yuyay" data-ay="Amuyt'aña">Cerebro</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-largo"/></svg><span data-qu="Khipu" data-ay="Khipu">Quipu</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-bolsa"/></svg><span data-qu="Apay" data-ay="Apaña">Llevar</span></button></nav></div><div class="card stack"><h3>Mensajes</h3><p><b>Medición guardada.</b> Sigue en este celular.</p><p><b>Aún no hay mediciones.</b> Cuenta diez oscilaciones para empezar.</p><p><b>No se pudo guardar.</b> Libera espacio y vuelve a intentarlo. Tu medición sigue aquí.</p></div></div></div></div></section>
+
+<section class="m" id="pantallas"><div class="wrap"><h2>Cuatro pantallas</h2><p class="lead">360 por 640, un solo hogar con pestañas. De izquierda a derecha: el museo, una exposición con pista de gestos, Mi Cerebro Rikuy y el laboratorio. Usa los interruptores de arriba para verlas en Noche y Holograma.</p></div>
+<div class="wide"><div class="phones"><div class="phone"><header class="topbar"><h3>Museo Rikuy</h3><button class="chip chip-off chip-btn" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-wifioff"/></svg>Sin red</button></header>
+<div class="pb flush" style="flex:1"><svg class="w1" viewBox="0 1 10.6 11.6" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mapa del museo visto desde arriba: cuatro salas alrededor de una plaza" focusable="false"><defs><pattern id="wp-fisica-w1" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="var(--rk-hall-fisica-tint)"/><rect width="1" height="1" fill="var(--rk-hall-fisica)" opacity=".13"/><rect x="1" y="1" width="1" height="1" fill="var(--rk-hall-fisica)" opacity=".13"/></pattern><pattern id="wp-bio-w1" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="var(--rk-hall-bio-tint)"/><rect width="1" height="1" fill="var(--rk-hall-bio)" opacity=".13"/><rect x="1" y="1" width="1" height="1" fill="var(--rk-hall-bio)" opacity=".13"/></pattern><pattern id="wp-quim-w1" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="var(--rk-hall-quim-tint)"/><rect width="1" height="1" fill="var(--rk-hall-quim)" opacity=".13"/><rect x="1" y="1" width="1" height="1" fill="var(--rk-hall-quim)" opacity=".13"/></pattern><pattern id="wp-tierra-w1" width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="2" fill="var(--rk-hall-tierra-tint)"/><rect width="1" height="1" fill="var(--rk-hall-tierra)" opacity=".13"/><rect x="1" y="1" width="1" height="1" fill="var(--rk-hall-tierra)" opacity=".13"/></pattern></defs><rect x="0" y="0" width="20" height="14" fill="var(--rk-surface-2)"/><rect x="9" y="0" width="2" height="14" fill="var(--rk-surface)"/><rect x="0" y="6" width="20" height="2" fill="var(--rk-surface)"/><path d="M0.5 6.28 L0.76 6.5 L0.5 6.72 L0.24 6.5Z" fill="var(--rk-sol)"/><path d="M0.5 7.28 L0.76 7.5 L0.5 7.72 L0.24 7.5Z" fill="var(--rk-sol)"/><path d="M1.5 6.28 L1.76 6.5 L1.5 6.72 L1.24 6.5Z" fill="var(--rk-sol)"/><path d="M1.5 7.28 L1.76 7.5 L1.5 7.72 L1.24 7.5Z" fill="var(--rk-sol)"/><path d="M2.5 6.28 L2.76 6.5 L2.5 6.72 L2.24 6.5Z" fill="var(--rk-sol)"/><path d="M2.5 7.28 L2.76 7.5 L2.5 7.72 L2.24 7.5Z" fill="var(--rk-sol)"/><path d="M3.5 6.28 L3.76 6.5 L3.5 6.72 L3.24 6.5Z" fill="var(--rk-sol)"/><path d="M3.5 7.28 L3.76 7.5 L3.5 7.72 L3.24 7.5Z" fill="var(--rk-sol)"/><path d="M4.5 6.28 L4.76 6.5 L4.5 6.72 L4.24 6.5Z" fill="var(--rk-sol)"/><path d="M4.5 7.28 L4.76 7.5 L4.5 7.72 L4.24 7.5Z" fill="var(--rk-sol)"/><path d="M5.5 6.28 L5.76 6.5 L5.5 6.72 L5.24 6.5Z" fill="var(--rk-sol)"/><path d="M5.5 7.28 L5.76 7.5 L5.5 7.72 L5.24 7.5Z" fill="var(--rk-sol)"/><path d="M6.5 6.28 L6.76 6.5 L6.5 6.72 L6.24 6.5Z" fill="var(--rk-sol)"/><path d="M6.5 7.28 L6.76 7.5 L6.5 7.72 L6.24 7.5Z" fill="var(--rk-sol)"/><path d="M7.5 6.28 L7.76 6.5 L7.5 6.72 L7.24 6.5Z" fill="var(--rk-sol)"/><path d="M7.5 7.28 L7.76 7.5 L7.5 7.72 L7.24 7.5Z" fill="var(--rk-sol)"/><path d="M8.5 6.28 L8.76 6.5 L8.5 6.72 L8.24 6.5Z" fill="var(--rk-sol)"/><path d="M8.5 7.28 L8.76 7.5 L8.5 7.72 L8.24 7.5Z" fill="var(--rk-sol)"/><path d="M9.5 6.28 L9.76 6.5 L9.5 6.72 L9.24 6.5Z" fill="var(--rk-sol)"/><path d="M9.5 7.28 L9.76 7.5 L9.5 7.72 L9.24 7.5Z" fill="var(--rk-sol)"/><path d="M10.5 6.28 L10.76 6.5 L10.5 6.72 L10.24 6.5Z" fill="var(--rk-sol)"/><path d="M10.5 7.28 L10.76 7.5 L10.5 7.72 L10.24 7.5Z" fill="var(--rk-sol)"/><path d="M11.5 6.28 L11.76 6.5 L11.5 6.72 L11.24 6.5Z" fill="var(--rk-sol)"/><path d="M11.5 7.28 L11.76 7.5 L11.5 7.72 L11.24 7.5Z" fill="var(--rk-sol)"/><path d="M12.5 6.28 L12.76 6.5 L12.5 6.72 L12.24 6.5Z" fill="var(--rk-sol)"/><path d="M12.5 7.28 L12.76 7.5 L12.5 7.72 L12.24 7.5Z" fill="var(--rk-sol)"/><path d="M13.5 6.28 L13.76 6.5 L13.5 6.72 L13.24 6.5Z" fill="var(--rk-sol)"/><path d="M13.5 7.28 L13.76 7.5 L13.5 7.72 L13.24 7.5Z" fill="var(--rk-sol)"/><path d="M14.5 6.28 L14.76 6.5 L14.5 6.72 L14.24 6.5Z" fill="var(--rk-sol)"/><path d="M14.5 7.28 L14.76 7.5 L14.5 7.72 L14.24 7.5Z" fill="var(--rk-sol)"/><path d="M15.5 6.28 L15.76 6.5 L15.5 6.72 L15.24 6.5Z" fill="var(--rk-sol)"/><path d="M15.5 7.28 L15.76 7.5 L15.5 7.72 L15.24 7.5Z" fill="var(--rk-sol)"/><path d="M16.5 6.28 L16.76 6.5 L16.5 6.72 L16.24 6.5Z" fill="var(--rk-sol)"/><path d="M16.5 7.28 L16.76 7.5 L16.5 7.72 L16.24 7.5Z" fill="var(--rk-sol)"/><path d="M17.5 6.28 L17.76 6.5 L17.5 6.72 L17.24 6.5Z" fill="var(--rk-sol)"/><path d="M17.5 7.28 L17.76 7.5 L17.5 7.72 L17.24 7.5Z" fill="var(--rk-sol)"/><path d="M18.5 6.28 L18.76 6.5 L18.5 6.72 L18.24 6.5Z" fill="var(--rk-sol)"/><path d="M18.5 7.28 L18.76 7.5 L18.5 7.72 L18.24 7.5Z" fill="var(--rk-sol)"/><path d="M19.5 6.28 L19.76 6.5 L19.5 6.72 L19.24 6.5Z" fill="var(--rk-sol)"/><path d="M19.5 7.28 L19.76 7.5 L19.5 7.72 L19.24 7.5Z" fill="var(--rk-sol)"/><rect x="1" y="1" width="8" height="5" fill="url(#wp-fisica-w1)" stroke="var(--rk-ink-2)" stroke-width=".36"/><rect x="4" y="5.75" width="2" height=".5" fill="var(--rk-surface)"/><rect x="3.55" y="5.7" width=".45" height=".6" fill="var(--rk-hall-fisica)"/><rect x="6" y="5.7" width=".45" height=".6" fill="var(--rk-hall-fisica)"/><rect x="4" y="4.5" width="2" height=".9" rx=".18" fill="var(--rk-hall-fisica)"/><svg x="4.65" y="4.6" width=".7" height=".7" viewBox="0 0 24 24" fill="none" stroke="var(--rk-on-hall-fisica)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-orbita"/></svg><circle cx="3.5" cy="3.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-fisica)" stroke-width=".18"/><circle cx="3.5" cy="3.5" r=".2" fill="var(--rk-foton)"/><circle cx="6.5" cy="3.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-fisica)" stroke-width=".18"/><circle cx="6.5" cy="3.5" r=".2" fill="var(--rk-foton)"/><rect x="11" y="1" width="8" height="5" fill="url(#wp-bio-w1)" stroke="var(--rk-ink-2)" stroke-width=".36"/><rect x="14" y="5.75" width="2" height=".5" fill="var(--rk-surface)"/><rect x="13.55" y="5.7" width=".45" height=".6" fill="var(--rk-hall-bio)"/><rect x="16" y="5.7" width=".45" height=".6" fill="var(--rk-hall-bio)"/><rect x="14" y="4.5" width="2" height=".9" rx=".18" fill="var(--rk-hall-bio)"/><svg x="14.65" y="4.6" width=".7" height=".7" viewBox="0 0 24 24" fill="none" stroke="var(--rk-on-hall-bio)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-hoja"/></svg><circle cx="13.5" cy="3.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-bio)" stroke-width=".18"/><circle cx="13.5" cy="3.5" r=".2" fill="var(--rk-foton)"/><circle cx="16.5" cy="3.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-bio)" stroke-width=".18"/><circle cx="16.5" cy="3.5" r=".2" fill="var(--rk-foton)"/><rect x="1" y="8" width="8" height="5" fill="url(#wp-quim-w1)" stroke="var(--rk-ink-2)" stroke-width=".36"/><rect x="4" y="7.75" width="2" height=".5" fill="var(--rk-surface)"/><rect x="3.55" y="7.7" width=".45" height=".6" fill="var(--rk-hall-quim)"/><rect x="6" y="7.7" width=".45" height=".6" fill="var(--rk-hall-quim)"/><rect x="4" y="8.5" width="2" height=".9" rx=".18" fill="var(--rk-hall-quim)"/><svg x="4.65" y="8.6" width=".7" height=".7" viewBox="0 0 24 24" fill="none" stroke="var(--rk-on-hall-quim)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-matraz"/></svg><circle cx="3.5" cy="10.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-quim)" stroke-width=".18"/><circle cx="3.5" cy="10.5" r=".2" fill="var(--rk-foton)"/><circle cx="6.5" cy="10.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-quim)" stroke-width=".18"/><circle cx="6.5" cy="10.5" r=".2" fill="var(--rk-foton)"/><rect x="11" y="8" width="8" height="5" fill="url(#wp-tierra-w1)" stroke="var(--rk-ink-2)" stroke-width=".36"/><rect x="14" y="7.75" width="2" height=".5" fill="var(--rk-surface)"/><rect x="13.55" y="7.7" width=".45" height=".6" fill="var(--rk-hall-tierra)"/><rect x="16" y="7.7" width=".45" height=".6" fill="var(--rk-hall-tierra)"/><rect x="14" y="8.5" width="2" height=".9" rx=".18" fill="var(--rk-hall-tierra)"/><svg x="14.65" y="8.6" width=".7" height=".7" viewBox="0 0 24 24" fill="none" stroke="var(--rk-on-hall-tierra)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><use href="#ic-monte"/></svg><circle cx="13.5" cy="10.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-tierra)" stroke-width=".18"/><circle cx="13.5" cy="10.5" r=".2" fill="var(--rk-foton)"/><circle cx="16.5" cy="10.5" r=".62" fill="var(--rk-surface)" stroke="var(--rk-hall-tierra)" stroke-width=".18"/><circle cx="16.5" cy="10.5" r=".2" fill="var(--rk-foton)"/><rect x="2" y="1.6" width="2.4" height=".6" rx=".2" fill="var(--rk-hall-fisica)" opacity=".55"/><rect x="6" y="1.6" width="2.4" height=".6" rx=".2" fill="var(--rk-hall-fisica)" opacity=".55"/><circle cx="12.3" cy="1.9" r=".5" fill="var(--rk-hall-bio)" opacity=".7"/><circle cx="17.6" cy="1.9" r=".5" fill="var(--rk-hall-bio)" opacity=".7"/><circle cx="12.7" cy="4.7" r=".4" fill="var(--rk-hall-bio)" opacity=".7"/><rect x="2" y="11.6" width="2.6" height=".7" rx=".2" fill="var(--rk-hall-quim)" opacity=".55"/><rect x="5.6" y="11.6" width="2.6" height=".7" rx=".2" fill="var(--rk-hall-quim)" opacity=".55"/><path d="M12 12l.9-.8 .9.8-.9.5z M17.4 11.8l.8-.7 .8.7-.8.5z" fill="var(--rk-hall-tierra)" opacity=".7"/><circle cx="10" cy="7" r="1.5" fill="var(--rk-surface)" stroke="var(--rk-sol)" stroke-width=".18"/><line x1="10" y1="5.9" x2="10" y2="6.8" stroke="var(--rk-ink)" stroke-width=".14"/><circle cx="10" cy="7.3" r=".28" fill="var(--rk-primary)"/><g transform="translate(3.5 2.55)"><path d="M0 0 C-.5 -.7 -.6 -1.1 -.6 -1.4 a.6 .6 0 1 1 1.2 0 C.6 -1.1 .5 -.7 0 0z" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width=".1"/><circle cx="0" cy="-1.4" r=".2" fill="var(--rk-ink)"/></g><g transform="translate(8.1 6.9)"><ellipse cx="0" cy=".5" rx=".5" ry=".16" fill="var(--rk-ink)" opacity=".25"/><circle cx="0" cy="0" r=".5" fill="#0B6574" stroke="#052A31" stroke-width=".09"/><circle cx=".08" cy="-.04" r=".27" fill="#fff"/><circle cx=".14" cy="-.08" r=".14" fill="#19CBEE"/><circle cx=".15" cy="-.09" r=".06" fill="#0D2B33"/></g></svg>
+<div style="position:absolute;left:10px;right:10px;bottom:10px"><article class="plaque" data-hall="fisica" style="box-shadow:var(--rk-shadow-sheet)"><div class="hd"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-orbita"/></svg>Física, Kallpa</div><h3>Péndulo: ¿de qué depende su ritmo?</h3><div class="meta"><span class="chip chip-ok"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Guardado</span><span class="mini-k" aria-label="1 de 3 nudos"><span class=""><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-simple"/></svg></span><span class="off"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-largo"/></svg></span><span class="off"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-ocho"/></svg></span></span></div></article><div style="margin-top:8px"><button class="btn btn-primary btn-lg btn-block" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-holograma"/></svg>Entrar a la exposición</button></div></div></div><nav class="tabs" role="tablist" aria-label="Secciones"><button class="tab" role="tab" aria-selected="true"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-museo"/></svg><span data-qu="Yachay wasi" data-ay="Yatiña uta">Museo</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-lab"/></svg><span data-qu="Tupuy" data-ay="Tupuña">Lab</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-cerebro"/></svg><span data-qu="Yuyay" data-ay="Amuyt'aña">Cerebro</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-largo"/></svg><span data-qu="Khipu" data-ay="Khipu">Quipu</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-bolsa"/></svg><span data-qu="Apay" data-ay="Apaña">Llevar</span></button></nav></div><div class="phone"><header class="topbar"><button class="btn btn-ic" type="button" aria-label="Volver" style="border:0;background:transparent"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-atras"/></svg></button><span class="cam"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-camara"/></svg>Cámara activa<button class="off" type="button" aria-label="Apagar las señales de aprendizaje"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-apagar"/></svg></button></span></header>
+<div class="pb"><div style="position:relative"><div class="holo" data-theme="holo" style="height:318px"><svg class="art" viewBox="0 0 320 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Péndulo en holograma sobre un pedestal" focusable="false">
+<g fill="none" stroke="var(--rk-primary)" stroke-width="3" stroke-linecap="round"><path d="M10 38V10h28M282 10h28v28M310 262v28h-28M38 290H10v-28"/></g>
+<g stroke="var(--rk-border)" stroke-width="2"><line x1="298" x2="312" y1="70" y2="70"/><line x1="304" x2="312" y1="84" y2="84"/><line x1="304" x2="312" y1="98" y2="98"/><line x1="304" x2="312" y1="112" y2="112"/><line x1="298" x2="312" y1="126" y2="126"/><line x1="304" x2="312" y1="140" y2="140"/><line x1="304" x2="312" y1="154" y2="154"/><line x1="304" x2="312" y1="168" y2="168"/><line x1="298" x2="312" y1="182" y2="182"/><line x1="304" x2="312" y1="196" y2="196"/><line x1="304" x2="312" y1="210" y2="210"/><line x1="304" x2="312" y1="224" y2="224"/><line x1="298" x2="312" y1="238" y2="238"/></g>
+<ellipse cx="160" cy="264" rx="74" ry="12" fill="none" stroke="var(--rk-primary)" stroke-width="2.5"/><ellipse cx="160" cy="264" rx="40" ry="6" fill="none" stroke="var(--rk-border)" stroke-width="2"/>
+<use href="#wf-pendulo" x="80" y="50" width="160" height="200" style="color:var(--rk-primary)"/></svg><div class="plate"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-orbita"/></svg>Péndulo</div><div class="read"><span class="chip chip-sync">Periodo 1.42 s</span><span class="chip chip-warn">Cuerda 50 cm</span></div><div class="gest"><div class="gest-card" role="dialog" aria-label="Cómo mover el holograma"><h4>Mueve el holograma con la mano</h4><ul>
+<li><span class="gi"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-g-girar"/></svg></span><span><b data-qu="Muyuy">Gira con un dedo</b></span></li>
+<li><span class="gi"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-g-pellizcar"/></svg></span><span><b data-qu="Hatunchay">Pellizca para acercar</b></span></li>
+<li><span class="gi"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-g-palma"/></svg></span><span><b data-qu="Kutiy">Abre la mano para volver</b></span></li></ul>
+<button class="btn btn-primary btn-block" type="button">Entendido</button></div></div></div></div>
+<div class="row" style="justify-content:space-between;flex-wrap:nowrap"><button class="btn btn-stack" style="flex:1" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-g-girar"/></svg>Girar</button><button class="btn btn-stack" style="flex:1" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-g-pellizcar"/></svg>Acercar</button><button class="btn btn-stack" style="flex:1" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-g-palma"/></svg>Centrar</button></div>
+<article class="plaque" data-hall="fisica"><h3>Ahora mídelo de verdad</h3><p>Cuerda, piedra y cronómetro. Funciona sin red.</p><button class="btn btn-tonal btn-block" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-lab"/></svg>Ir al laboratorio</button></article></div><nav class="tabs" role="tablist" aria-label="Secciones"><button class="tab" role="tab" aria-selected="true"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-museo"/></svg><span data-qu="Yachay wasi" data-ay="Yatiña uta">Museo</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-lab"/></svg><span data-qu="Tupuy" data-ay="Tupuña">Lab</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-cerebro"/></svg><span data-qu="Yuyay" data-ay="Amuyt'aña">Cerebro</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-largo"/></svg><span data-qu="Khipu" data-ay="Khipu">Quipu</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-bolsa"/></svg><span data-qu="Apay" data-ay="Apaña">Llevar</span></button></nav></div><div class="phone"><header class="topbar"><h3>Mi Cerebro Rikuy</h3><span class="chip chip-ok"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>5 de 13 logrados</span></header>
+<div class="pb" style="gap:8px"><svg class="brain" viewBox="22 28 316 262" role="img" aria-label="Mi Cerebro Rikuy: mapa de conceptos. Los nodos encendidos son los que ya trabajaste con evidencia" focusable="false"><path d="M58 152 C38 112 70 56 132 50 C172 24 238 30 264 62 C306 70 332 116 316 156 C328 190 300 226 264 230 C246 262 198 268 180 244 L172 280 L150 280 L146 240 C108 256 60 236 64 198 C38 192 38 166 58 152Z" fill="var(--rk-surface-2)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-linejoin="round"/><g fill="none" stroke="var(--rk-border)" stroke-width="2.5" stroke-linecap="round"><path d="M96 70c18 8 30 24 28 44"/><path d="M200 44c4 22-8 36-24 46"/><path d="M290 84c-16 6-26 18-26 36"/><path d="M88 190c22-4 40 2 52 16"/><path d="M262 198c-18-8-34-4-46 10"/><path d="M60 140c20-4 32 6 40 20"/></g><line x1="180" y1="118" x2="92" y2="112" stroke="var(--rk-ink-2)" stroke-width="3"  stroke-linecap="round"/><line x1="180" y1="118" x2="128" y2="76" stroke="var(--rk-ink-2)" stroke-width="3"  stroke-linecap="round"/><line x1="180" y1="118" x2="232" y2="74" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="180" y1="118" x2="142" y2="168" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="180" y1="118" x2="220" y2="168" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="92" y1="112" x2="128" y2="76" stroke="var(--rk-ink-2)" stroke-width="3"  stroke-linecap="round"/><line x1="92" y1="112" x2="76" y2="160" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="142" y1="168" x2="76" y2="160" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="142" y1="168" x2="92" y2="212" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="142" y1="168" x2="150" y2="232" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="142" y1="168" x2="192" y2="250" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="220" y1="168" x2="270" y2="166" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="220" y1="168" x2="236" y2="226" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="232" y1="74" x2="282" y2="116" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="232" y1="74" x2="270" y2="166" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="282" y1="116" x2="236" y2="226" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><line x1="92" y1="212" x2="150" y2="232" stroke="var(--rk-border-strong)" stroke-width="1.5"  stroke-linecap="round"/><line x1="192" y1="250" x2="236" y2="226" stroke="var(--rk-border-strong)" stroke-width="1.5" stroke-dasharray="3 5" stroke-linecap="round"/><circle cx="180" cy="118" r="20" fill="none" stroke="var(--rk-ink)" stroke-width="2" opacity=".45"/><circle cx="180" cy="118" r="15" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M173.7 118.5 l4.5 5.1000000000000005 l8.7 -10.5" fill="none" stroke="var(--rk-on-sol)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><text x="180" y="149" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Indaga</text><circle cx="142" cy="168" r="19" fill="none" stroke="var(--rk-border)" stroke-width="3"/><circle cx="142" cy="168" r="19" fill="none" stroke="var(--rk-ink)" stroke-width="3.5" stroke-dasharray="71.6 119.4" transform="rotate(-90 142 168)" stroke-linecap="round"/><circle cx="142" cy="168" r="15" fill="var(--rk-surface-2)" stroke="var(--rk-ink)" stroke-width="2.5"/><text x="142" y="202" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Explica</text><circle cx="220" cy="168" r="15" fill="var(--rk-surface)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="4 4"/><text x="220" y="199" text-anchor="middle" font-size="13.5" font-weight="400" fill="var(--rk-muted)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Diseña</text><circle cx="92" cy="112" r="15" fill="none" stroke="var(--rk-hall-fisica)" stroke-width="2" opacity=".45"/><circle cx="92" cy="112" r="10" fill="var(--rk-hall-fisica)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M87.8 112.5 l3 3.4000000000000004 l5.8 -7" fill="none" stroke="var(--rk-on-hall-fisica)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><text x="92" y="138" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Péndulo</text><circle cx="128" cy="76" r="14" fill="none" stroke="var(--rk-hall-fisica)" stroke-width="2" opacity=".45"/><circle cx="128" cy="76" r="9" fill="var(--rk-hall-fisica)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M124.22 76.5 l2.6999999999999997 3.06 l5.22 -6.3" fill="none" stroke="var(--rk-on-hall-fisica)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><text x="128" y="101" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Periodo</text><circle cx="76" cy="160" r="13" fill="none" stroke="var(--rk-border)" stroke-width="3"/><circle cx="76" cy="160" r="13" fill="none" stroke="var(--rk-hall-fisica)" stroke-width="3.5" stroke-dasharray="40.8 81.7" transform="rotate(-90 76 160)" stroke-linecap="round"/><circle cx="76" cy="160" r="9" fill="var(--rk-hall-fisica-tint)" stroke="var(--rk-hall-fisica)" stroke-width="2.5"/><text x="76" y="188" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Gravedad</text><circle cx="232" cy="74" r="13" fill="none" stroke="var(--rk-border)" stroke-width="3"/><circle cx="232" cy="74" r="13" fill="none" stroke="var(--rk-hall-bio)" stroke-width="3.5" stroke-dasharray="57.2 81.7" transform="rotate(-90 232 74)" stroke-linecap="round"/><circle cx="232" cy="74" r="9" fill="var(--rk-hall-bio-tint)" stroke="var(--rk-hall-bio)" stroke-width="2.5"/><text x="232" y="102" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Célula</text><circle cx="282" cy="116" r="9" fill="var(--rk-surface)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="4 4"/><text x="282" y="141" text-anchor="middle" font-size="13.5" font-weight="400" fill="var(--rk-muted)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Fotosíntesis</text><circle cx="270" cy="166" r="8" fill="var(--rk-surface)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="4 4"/><text x="270" y="190" text-anchor="middle" font-size="13.5" font-weight="400" fill="var(--rk-muted)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">ADN</text><circle cx="92" cy="212" r="14" fill="none" stroke="var(--rk-hall-quim)" stroke-width="2" opacity=".45"/><circle cx="92" cy="212" r="9" fill="var(--rk-hall-quim)" stroke="var(--rk-ink)" stroke-width="2.5"/><path d="M88.22 212.5 l2.6999999999999997 3.06 l5.22 -6.3" fill="none" stroke="var(--rk-on-hall-quim)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><text x="92" y="237" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Mezclas</text><circle cx="150" cy="232" r="12" fill="none" stroke="var(--rk-border)" stroke-width="3"/><circle cx="150" cy="232" r="12" fill="none" stroke="var(--rk-hall-quim)" stroke-width="3.5" stroke-dasharray="30.2 75.4" transform="rotate(-90 150 232)" stroke-linecap="round"/><circle cx="150" cy="232" r="8" fill="var(--rk-hall-quim-tint)" stroke="var(--rk-hall-quim)" stroke-width="2.5"/><text x="150" y="259" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">pH</text><circle cx="236" cy="226" r="9" fill="var(--rk-surface)" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="4 4"/><text x="236" y="251" text-anchor="middle" font-size="13.5" font-weight="400" fill="var(--rk-muted)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Clima</text><circle cx="192" cy="250" r="12" fill="none" stroke="var(--rk-border)" stroke-width="3"/><circle cx="192" cy="250" r="12" fill="none" stroke="var(--rk-hall-tierra)" stroke-width="3.5" stroke-dasharray="22.6 75.4" transform="rotate(-90 192 250)" stroke-linecap="round"/><circle cx="192" cy="250" r="8" fill="var(--rk-hall-tierra-tint)" stroke="var(--rk-hall-tierra)" stroke-width="2.5"/><text x="192" y="277" text-anchor="middle" font-size="13.5" font-weight="700" fill="var(--rk-ink)" paint-order="stroke" stroke="var(--rk-surface-2)" stroke-width="4" stroke-linejoin="round">Suelo</text></svg><div class="key"><span><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7" fill="var(--rk-ink)" stroke="var(--rk-ink)" stroke-width="2"/></svg>Logrado</span><span><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7" fill="var(--rk-surface-2)" stroke="var(--rk-border)" stroke-width="3"/><path d="M10 3a7 7 0 0 1 6.5 4.4" fill="none" stroke="var(--rk-ink)" stroke-width="3" stroke-linecap="round"/></svg>En camino</span><span><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7" fill="none" stroke="var(--rk-border-strong)" stroke-width="2.5" stroke-dasharray="3 3"/></svg>Sin explorar</span></div>
+<div class="say"><div class="mascot-s"><svg viewBox="0 0 240 300" role="img" aria-label="Rikuy, la piedra que mira" focusable="false"><defs><clipPath id="u0-clip"><path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z"/></clipPath></defs>
+<g class="rk-swing" style="transform-origin:120px 16px">
+  <line x1="120" y1="22" x2="120" y2="104" stroke="#F5B301" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="120" cy="66" r="7" fill="#F5B301" stroke="#8A5E00" stroke-width="2.5"/>
+  <path d="M114 63 l12 6 M114 69 l12 -6" stroke="#8A5E00" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="120" cy="16" r="8" fill="#F5F6F1" stroke="#0D2B33" stroke-width="3.5"/>
+  <path id="rikuy-body" d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="#0B6574"/>
+  <g clip-path="url(#u0-clip)">
+    <path d="M30 98 L120 78 L152 132 L62 236 L28 204Z" fill="#12879A"/>
+    <path d="M210 146 L210 290 L88 290 L172 192Z" fill="#064550"/>
+    <rect x="30" y="244" width="180" height="18" fill="#064550"/><path d="M34 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M50 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M66 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M82 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M98 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M114 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M130 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M146 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M162 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M178 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M194 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/>
+  </g>
+  <path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="none" stroke="#052A31" stroke-width="4" stroke-linejoin="round"/>
+  <g id="rikuy-eye"><circle cx="120" cy="176" r="42" fill="#FFFFFF" stroke="#052A31" stroke-width="5"/><circle cx="128" cy="170" r="24" fill="#19CBEE"/><circle cx="129" cy="169" r="11" fill="#0D2B33"/><circle cx="136" cy="161" r="5" fill="#FFFFFF"/><circle cx="123" cy="177" r="2.5" fill="#FFFFFF"/></g><path d="M76 128 Q104 108 144 124" fill="none" stroke="#052A31" stroke-width="8" stroke-linecap="round"/><path d="M106 229 Q120 237 134 229" fill="none" stroke="#052A31" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g></svg></div><div class="bubble">Fotosíntesis sigue apagada. ¿La exploramos?</div></div>
+<button class="btn btn-tonal btn-block" data-hall="bio" type="button" style="border-color:var(--hall)"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-hoja"/></svg>Ir a la sala de Biología</button></div><nav class="tabs" role="tablist" aria-label="Secciones"><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-museo"/></svg><span data-qu="Yachay wasi" data-ay="Yatiña uta">Museo</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-lab"/></svg><span data-qu="Tupuy" data-ay="Tupuña">Lab</span></button><button class="tab" role="tab" aria-selected="true"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-cerebro"/></svg><span data-qu="Yuyay" data-ay="Amuyt'aña">Cerebro</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-largo"/></svg><span data-qu="Khipu" data-ay="Khipu">Quipu</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-bolsa"/></svg><span data-qu="Apay" data-ay="Apaña">Llevar</span></button></nav></div><div class="phone"><header class="topbar"><h3>Grupo 3</h3><button class="chip chip-off chip-btn" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-wifioff"/></svg>Sin red</button></header>
+<div class="pb"><div class="say"><div class="mascot-s"><svg viewBox="0 0 240 300" role="img" aria-label="Rikuy, la piedra que mira" focusable="false"><defs><clipPath id="u1-clip"><path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z"/></clipPath></defs>
+<g class="rk-swing" style="transform-origin:120px 16px">
+  <line x1="120" y1="22" x2="120" y2="104" stroke="#F5B301" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="120" cy="66" r="7" fill="#F5B301" stroke="#8A5E00" stroke-width="2.5"/>
+  <path d="M114 63 l12 6 M114 69 l12 -6" stroke="#8A5E00" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="120" cy="16" r="8" fill="#F5F6F1" stroke="#0D2B33" stroke-width="3.5"/>
+  <path id="rikuy-body" d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="#0B6574"/>
+  <g clip-path="url(#u1-clip)">
+    <path d="M30 98 L120 78 L152 132 L62 236 L28 204Z" fill="#12879A"/>
+    <path d="M210 146 L210 290 L88 290 L172 192Z" fill="#064550"/>
+    <rect x="30" y="244" width="180" height="18" fill="#064550"/><path d="M34 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M50 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M66 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M82 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M98 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M114 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M130 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M146 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M162 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M178 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/><path d="M194 253 l8 -7 l8 7 l-8 7z" fill="#F5B301"/>
+  </g>
+  <path d="M120 92 C170 90 206 128 206 180 C206 234 168 276 118 276 C70 276 34 236 34 182 C34 130 72 94 120 92Z" fill="none" stroke="#052A31" stroke-width="4" stroke-linejoin="round"/>
+  <g id="rikuy-eye"><circle cx="120" cy="176" r="42" fill="#FFFFFF" stroke="#052A31" stroke-width="5"/><circle cx="128" cy="170" r="24" fill="#19CBEE"/><circle cx="129" cy="169" r="11" fill="#0D2B33"/><circle cx="136" cy="161" r="5" fill="#FFFFFF"/><circle cx="123" cy="177" r="2.5" fill="#FFFFFF"/></g><path d="M76 128 Q104 108 144 124" fill="none" stroke="#052A31" stroke-width="8" stroke-linecap="round"/><path d="M106 229 Q120 237 134 229" fill="none" stroke="#052A31" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g></svg></div><div class="bubble">¿Qué crees que pasa con el tiempo si alargas la cuerda?</div></div><div class="hyp"><div class="hd"><span class="row" style="gap:6px"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-pista"/></svg><span data-qu="Yuyay" data-ay="Amuyt'aña">Mi hipótesis</span></span><span class="chip chip-warn"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-lock"/></svg>Antes de medir</span></div><p>Si alargo la cuerda, el péndulo tarda más en ir y volver.</p></div><div class="card"><div class="row" style="justify-content:space-between"><h3>Cronómetro</h3><span class="chip chip-sync"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-timer"/></svg>Oscilación 7 de 10</span></div>
+<div class="sw-time" role="timer" aria-label="14.82 segundos">14.82<small>s</small></div>
+<div class="cord" aria-hidden="true"><i class="kn on"></i><i class="kn on"></i><i class="kn on"></i><i class="kn on"></i><i class="kn on"></i><i class="kn on"></i><i class="kn now"></i><i class="kn "></i><i class="kn "></i><i class="kn "></i></div>
+<button class="btn btn-primary btn-lg btn-block" type="button"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-timer"/></svg>Contar oscilación</button>
+<div class="row" style="margin-top:10px"><button class="btn" type="button" style="flex:1">Reiniciar</button><button class="btn" type="button" style="flex:1">Parar</button></div></div><div class="card"><table class="tbl"><caption class="vh">Mediciones del péndulo</caption><thead><tr><th scope="col">Cuerda (cm)</th><th scope="col">Tu periodo (s)</th><th scope="col">Teoría (s)</th><th scope="col">Error</th></tr></thead><tbody>
+<tr><td>25</td><td>1.02</td><td>1.00</td><td class="err">1.7 %</td></tr><tr><td>50</td><td>1.44</td><td>1.42</td><td class="err">1.5 %</td></tr><tr><td>100</td><td>2.03</td><td>2.01</td><td class="err">1.2 %</td></tr></tbody></table></div></div><nav class="tabs" role="tablist" aria-label="Secciones"><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-museo"/></svg><span data-qu="Yachay wasi" data-ay="Yatiña uta">Museo</span></button><button class="tab" role="tab" aria-selected="true"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-lab"/></svg><span data-qu="Tupuy" data-ay="Tupuña">Lab</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-cerebro"/></svg><span data-qu="Yuyay" data-ay="Amuyt'aña">Cerebro</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-k-largo"/></svg><span data-qu="Khipu" data-ay="Khipu">Quipu</span></button><button class="tab" role="tab" aria-selected="false"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-bolsa"/></svg><span data-qu="Apay" data-ay="Apaña">Llevar</span></button></nav></div></div></div></section>
+
+<section class="m" id="informe"><div class="wrap"><h2>Informe para director y UGEL</h2><p class="lead">Serio, imprimible y legible en blanco y negro: sin mascota, texto en tinta, tramas en lugar de solo color y fuente de los datos al pie.</p><div class="paper" data-theme="light"><header><div><div style="height:36px;width:auto"><svg class="logo" style="height:36px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 296 96" role="img" aria-labelledby="t">
+  <title id="t">Rikuy</title>
+  <!-- Simbolo: un ojo que cuelga de una cuerda con nudo (pendulo). Palabra: trazo monolinea de 9 px, terminales redondos, como un cordon. La i lleva el punto Foton. -->
+  
+  <g fill="none" stroke="var(--rk-ink)" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="26" y1="4" x2="26" y2="26" stroke-width="5"/>
+    <circle cx="26" cy="47" r="19" stroke-width="6" fill="var(--rk-surface)"/>
+  </g>
+  <circle cx="26" cy="14" r="5.5" fill="var(--rk-sol)" stroke="var(--rk-ink)" stroke-width="2"/>
+  <circle cx="30" cy="46" r="12" fill="var(--rk-foton)"/>
+  <circle cx="31" cy="45" r="5.5" fill="#0D2B33"/>
+  <circle cx="35" cy="40" r="2.4" fill="#FFFFFF"/>
+  <g transform="translate(76 0)" fill="none" stroke="var(--rk-ink)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 26 V70 M5 46 C5 33 13 26 27 26"/>
+    <path d="M45 26 V70"/>
+    <path d="M69 8 V70 M97 26 L69 52 M81 44 L99 70"/>
+    <path d="M117 26 V52 C117 64 123 70 133 70 C143 70 149 64 149 52 V26 M149 44 V70"/>
+    <path d="M165 26 L181 62 M197 26 L175 80"/>
+  </g>
+  <circle cx="121" cy="10" r="6.5" fill="var(--rk-foton)"/>
+</svg>
+</div><h3 style="margin-top:10px">Informe de uso del Museo Rikuy</h3><p class="ink2" style="margin-top:2px">Institución educativa de ejemplo, octubre de 2026, 2.º de secundaria</p></div><span class="chip chip-warn"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-info"/></svg>Datos de ejemplo</span></header>
+<div class="kpis"><div><b>12</b><span>clases realizadas</span></div><div><b>5</b><span>grupos activos por clase</span></div><div><b>41 <small style="font-size:18px;font-weight:600">de 46</small></b><span>hipótesis escritas antes de medir</span></div><div><b>38 <small style="font-size:18px;font-weight:600">de 46</small></b><span>conclusiones con frase literal</span></div></div>
+<h4 style="margin-bottom:6px">Exposiciones exploradas por sala</h4><div><div class="hb" data-hall="fisica"><span class="row" style="gap:8px;flex-wrap:nowrap"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-orbita"/></svg>Física</span><div class="tr" aria-hidden="true"><div class="fi p0" style="width:100%"></div></div><b>31</b></div><div class="hb" data-hall="bio"><span class="row" style="gap:8px;flex-wrap:nowrap"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-hoja"/></svg>Biología</span><div class="tr" aria-hidden="true"><div class="fi p1" style="width:45%"></div></div><b>14</b></div><div class="hb" data-hall="quim"><span class="row" style="gap:8px;flex-wrap:nowrap"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-matraz"/></svg>Química</span><div class="tr" aria-hidden="true"><div class="fi p2" style="width:29%"></div></div><b>9</b></div><div class="hb" data-hall="tierra"><span class="row" style="gap:8px;flex-wrap:nowrap"><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-monte"/></svg>Tierra y ambiente</span><div class="tr" aria-hidden="true"><div class="fi p3" style="width:19%"></div></div><b>6</b></div></div>
+<h4 style="margin:18px 0 6px">Competencias con evidencia, por grupo</h4><table class="tbl"><thead><tr><th scope="col">Competencia CNEB</th><th scope="col">Grupos con evidencia</th></tr></thead><tbody><tr><td>Indaga mediante métodos científicos</td><td>5 de 5</td></tr><tr><td>Explica el mundo físico</td><td>3 de 5</td></tr><tr><td>Diseña soluciones tecnológicas</td><td>0 de 5</td></tr></tbody></table>
+<div class="foot"><b>Cómo leerlo.</b> Física concentra el uso; las otras salas tienen menos exploración. El informe no incluye nombres de estudiantes ni imágenes. Datos guardados en cada celular, sincronizados el 3 de noviembre. <br><button class="btn" type="button" style="margin-top:10px"><svg class="ic " aria-hidden="true" focusable="false"><use href="#ic-imprimir"/></svg>Imprimir informe</button></div></div></div></section>
+
+<section class="m" id="voz"><div class="wrap"><h2>Voz y lenguas</h2><p class="lead">Habla como una docente cercana: frases cortas, verbos claros y nada de promesas. Los textos en quechua y aymara son provisionales y deben validarlos docentes de EIB y hablantes.</p>
+<div class="grid2"><table class="vt"><thead><tr><th scope="col">Castellano</th><th scope="col">En pantalla</th><th scope="col">Quechua</th><th scope="col">Aymara</th></tr></thead><tbody><tr><td>Ver</td><td data-qu="Rikuy" data-ay="Uñjaña">Ver</td><td>Rikuy</td><td>Uñjaña</td></tr><tr><td>Medir</td><td data-qu="Tupuy" data-ay="Tupuña">Medir</td><td>Tupuy</td><td>Tupuña</td></tr><tr><td>Aprender</td><td data-qu="Yachay" data-ay="Yatiqaña">Aprender</td><td>Yachay</td><td>Yatiqaña</td></tr><tr><td>Preguntar</td><td data-qu="Tapuy" data-ay="Jiskt'aña">Preguntar</td><td>Tapuy</td><td>Jiskt'aña</td></tr><tr><td>Ayudar</td><td data-qu="Yanapay" data-ay="Yanapaña">Ayudar</td><td>Yanapay</td><td>Yanapaña</td></tr><tr><td>Llevar</td><td data-qu="Apay" data-ay="Apaña">Llevar</td><td>Apay</td><td>Apaña</td></tr><tr><td>Luz</td><td data-qu="K'anchay" data-ay="Qhana">Luz</td><td>K'anchay</td><td>Qhana</td></tr><tr><td>Piedra</td><td data-qu="Rumi" data-ay="Qala">Piedra</td><td>Rumi</td><td>Qala</td></tr></tbody></table>
+<div class="dd"><div class="do"><h3 style="margin-bottom:12px">Sí</h3><ul><li><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Un botón dice lo que ocurre: “Guardar medición”.</li><li><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Un error dice qué pasó y cómo seguir.</li><li><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Rikuy pregunta antes de explicar.</li><li><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-check"/></svg>Icono, palabra y forma para cada estado.</li></ul></div><div class="dont"><h3 style="margin-bottom:12px">No</h3><ul><li><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-cerrar"/></svg>Ponchos, llamas ni letras “andinas” de adorno.</li><li><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-cerrar"/></svg>Mostrar a un compañero cómo se siente otro.</li><li><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-cerrar"/></svg>Gris sobre gris ni texto menor de 14 px.</li><li><svg class="ic sm" aria-hidden="true" focusable="false"><use href="#ic-cerrar"/></svg>Sombras suaves, blur o animación de página.</li></ul></div></div></div></div></section>
+</main>
+<footer class="m"><div class="wrap">Luz de Puna, versión 0.2. Tokens en packages/ui/tokens. Quechua y aymara provisionales.</div></footer>
+<script>
+const root=document.documentElement;
+function pressed(g,btn){g.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)))}
+document.getElementById('theme').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;root.dataset.theme=b.dataset.v;pressed(e.currentTarget,b)});
+const els=[...document.querySelectorAll('[data-qu],[data-ay]')];
+els.forEach(e=>{if(e.dataset.es===undefined)e.dataset.es=e.textContent});
+document.getElementById('lang').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const l=b.dataset.v;els.forEach(x=>{x.textContent=x.dataset[l]||x.dataset.es});pressed(e.currentTarget,b)});
+document.querySelectorAll('.gest .btn').forEach(b=>b.addEventListener('click',()=>b.closest('.gest').hidden=true));
+</script>
+</body>
+</html>
