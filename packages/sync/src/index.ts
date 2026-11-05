@@ -22,3 +22,8 @@ export * from './codec/enlace.ts';
 export { base45Decode, base45Encode } from './codec/base45.ts';
 export { crc32 } from './codec/crc32.ts';
 export { fromPositional, toPositional } from './codec/posicional.ts';
+export * from './transportes/broadcast.ts';
+export * from './transportes/qr.ts';
+export * from './transportes/webrtc.ts';
+export * from './respaldo.ts';
+export * from './boveda.ts';
