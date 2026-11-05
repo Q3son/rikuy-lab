@@ -123,19 +123,26 @@ export function PadTactil({ enviar, children }: { enviar: (a: ViewerAction) => v
   );
 }
 
-const POSES: Record<HandPose, string> = {
-  palm: 'mano abierta: girando',
-  pinch: 'pellizco: acercando',
-  fist: 'puño: pausa',
-  thumbs_up: 'pulgar arriba: soltar',
+const esPendulo = (escena?: string) => escena === undefined || escena === 'pendulo';
+
+/** What the thumbs-up does on this scene (the pendulum is released; other scenes resume). */
+function pulgar(escena?: string): string {
+  return esPendulo(escena) ? 'soltar el péndulo' : 'reanudar la animación';
+}
+
+const POSES: Record<HandPose, { icono: string; nombre: string; hace: (escena?: string) => string }> = {
+  palm: { icono: '✋', nombre: 'Mano abierta', hace: () => 'girando' },
+  pinch: { icono: '🤏', nombre: 'Pellizco', hace: () => 'acercando o alejando' },
+  fist: { icono: '✊', nombre: 'Puño', hace: () => 'pausa' },
+  thumbs_up: { icono: '👍', nombre: 'Pulgar arriba', hace: pulgar },
 };
 
 /** One sentence about the camera state, always with a way forward (E-05b). */
-export function EstadoCamara({ status, pose }: { status: GestureStatus; pose: HandPose | null }) {
+export function EstadoCamara({ status, pose, escena }: { status: GestureStatus; pose: HandPose | null; escena?: string }) {
   const texto: Record<GestureStatus, string | null> = {
     off: null,
     loading: 'Preparando la cámara de manos…',
-    active: pose ? `Mano detectada · ${POSES[pose]}` : 'Muestra tu mano a la cámara frontal.',
+    active: pose ? `Mano detectada · ${POSES[pose].nombre.toLowerCase()}: ${POSES[pose].hace(escena)}` : 'Muestra tu mano a la cámara frontal.',
     slow: 'Este celular va lento con la cámara. Usa los botones de abajo.',
     blocked: 'La profesora apagó los gestos. Usa los botones o la voz.',
     error: 'La cámara no funcionó. Usa los botones o la voz: hacen lo mismo.',
@@ -153,7 +160,7 @@ export function EstadoCamara({ status, pose }: { status: GestureStatus; pose: Ha
 const GUIA_KEY = 'rikuy.holo.guiaGestos';
 
 /** Gesture-hint card (7.6): first two openings, dismiss anywhere, never needs the camera. */
-export function GuiaGestos() {
+export function GuiaGestos({ escena }: { escena?: string }) {
   const [visible, setVisible] = useState(() => {
     try {
       const n = Number(localStorage.getItem(GUIA_KEY) ?? '0');
@@ -168,7 +175,7 @@ export function GuiaGestos() {
     ['✋', 'Mano abierta y mueve: girar'],
     ['🤏', 'Pellizca: acercar o alejar'],
     ['✊', 'Puño: pausa'],
-    ['👍', 'Pulgar arriba: soltar el péndulo'],
+    ['👍', `Pulgar arriba: ${pulgar(escena)}`],
   ];
   return (
     <div role="dialog" aria-label="Guía de gestos" onClick={() => setVisible(false)} className="rounded-2xl border-2 border-[#D3D9CC] bg-white p-4 text-[#0D2B33]">
@@ -184,5 +191,84 @@ export function GuiaGestos() {
       <p className="mb-3 text-sm text-[#33494F]">¿Sin cámara? Los botones de abajo hacen lo mismo.</p>
       <button type="button" className="h-12 w-full rounded-xl bg-[#075E6C] font-semibold text-white">Entendido</button>
     </div>
+  );
+}
+
+/**
+ * Big, unmistakable feedback of the hand camera on the control phone: the pose it sees right now
+ * and, for a moment, the order a gesture just fired (so the group knows the projector got it).
+ */
+export function GestoReconocido({ pose, escena, disparo }: { pose: HandPose | null; escena?: string; disparo?: { texto: string; n: number } | null }) {
+  // The flash lasts 1.6 s per fired order; `vencido` remembers which order already faded.
+  const [vencido, setVencido] = useState<number | null>(null);
+  useEffect(() => {
+    if (!disparo) return;
+    const t = setTimeout(() => setVencido(disparo.n), 1600);
+    return () => clearTimeout(t);
+  }, [disparo]);
+  const flash = disparo && vencido !== disparo.n ? disparo.texto : null;
+  const p = pose ? POSES[pose] : null;
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className={`flex min-h-24 items-center gap-4 rounded-2xl border-2 px-4 py-3 transition-colors ${flash ? 'border-[#F5B301] bg-[#2A2205] text-[#FFD45C]' : 'border-[#19CBEE] bg-[#0A1A1F] text-[#BFF3FF]'}`}
+    >
+      <span aria-hidden="true" className={`grid h-16 w-16 shrink-0 place-items-center rounded-full text-4xl ${flash ? 'bg-[#F5B301]/20' : p ? 'bg-[#19CBEE]/20' : 'bg-white/5'}`}>
+        {flash ? '✓' : (p?.icono ?? '·')}
+      </span>
+      <span className="flex flex-col">
+        {flash ? (
+          <>
+            <b className="text-2xl font-extrabold leading-tight">{flash}</b>
+            <span className="text-sm">Orden enviada al proyector</span>
+          </>
+        ) : p ? (
+          <>
+            <b className="text-2xl font-extrabold leading-tight">{p.nombre}</b>
+            <span className="text-base">{p.hace(escena)}</span>
+          </>
+        ) : (
+          <>
+            <b className="text-xl font-extrabold leading-tight">Muestra tu mano</b>
+            <span className="text-sm">a la cámara frontal, a un brazo de distancia</span>
+          </>
+        )}
+      </span>
+    </div>
+  );
+}
+
+const LONGITUDES = [0.25, 0.5, 1, 2];
+
+/** Pendulum variables from the control phone: rope length (with a smooth morph) and air friction. */
+export function ControlesPendulo({ enviar, longitud, amortiguacion }: { enviar: (a: ViewerAction) => void; longitud: number; amortiguacion: boolean }) {
+  return (
+    <section aria-label="Variables del péndulo" className="flex flex-col gap-2 rounded-2xl border-2 border-[#D3D9CC] bg-white p-3">
+      <p className="font-bold">Longitud de la cuerda</p>
+      <div className="grid grid-cols-4 gap-2">
+        {LONGITUDES.map((L) => (
+          <button
+            key={L}
+            type="button"
+            aria-pressed={longitud === L}
+            onClick={() => enviar({ type: 'variable', variable: 'longitud', value: L })}
+            className={`h-12 rounded-xl border-2 text-base font-bold ${longitud === L ? 'border-[#04474F] bg-[#075E6C] text-white' : 'border-[#6A7568] bg-white text-[#0D2B33]'}`}
+          >
+            {L} m
+          </button>
+        ))}
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={amortiguacion}
+        onClick={() => enviar({ type: 'variable', variable: 'amortiguacion', value: amortiguacion ? 0 : 1 })}
+        className="flex h-12 items-center justify-between rounded-xl border-2 border-[#6A7568] px-3 font-semibold"
+      >
+        <span>Rozamiento del aire</span>
+        <span className={amortiguacion ? 'text-[#14592D]' : 'text-[#4D6368]'}>{amortiguacion ? 'Con rozamiento' : 'Sin rozamiento'}</span>
+      </button>
+    </section>
   );
 }

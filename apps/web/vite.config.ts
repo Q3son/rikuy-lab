@@ -38,6 +38,9 @@ export default defineConfig({
         additionalManifestEntries: entradasMediapipe(resolve(import.meta.dirname, 'public')),
         // 8 MB is the whole precache budget (ARQUITECTURA 1.2); one file may not take more than 3 MB.
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+        // The MediaPipe hand model and runtime (~22 MB, fetched by scripts/mediapipe-assets.mjs) load on
+        // demand when a group turns the camera on; they would blow the precache budget.
+        globIgnores: ['**/node_modules/**', 'mediapipe/**/*.{task,wasm}'],
       },
       devOptions: { enabled: false },
     }),

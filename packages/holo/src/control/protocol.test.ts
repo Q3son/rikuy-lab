@@ -10,6 +10,8 @@ describe('control protocol (two-phone hologram over BusMessage)', () => {
     [{ type: 'release' }, { type: 'command', commands: [{ tool: 'correr', args: {} }], from: 'control' }],
     [{ type: 'center' }, { type: 'command', commands: [{ tool: 'reiniciar_vista', args: {} }], from: 'control' }],
     [{ type: 'scene', scene: 'pendulo' }, { type: 'command', commands: [{ tool: 'ir_a', args: { escena: 'pendulo' } }], from: 'control' }],
+    [{ type: 'variable', variable: 'longitud', value: 1 }, { type: 'command', commands: [{ tool: 'fijar_variable', args: { variable: 'longitud', valor: 1 } }], from: 'control' }],
+    [{ type: 'variable', variable: 'amortiguacion', value: 1 }, { type: 'command', commands: [{ tool: 'fijar_variable', args: { variable: 'amortiguacion', valor: 1 } }], from: 'control' }],
   ];
 
   it.each(cases)('encodes %o as a valid contract message', (action, expected) => {
@@ -38,6 +40,15 @@ describe('control protocol (two-phone hologram over BusMessage)', () => {
     expect(zoom).toEqual({ type: 'zoom', factor: 1.5 });
   });
 
+  it('accepts only known scene variables from the network, clamped to their lab range', () => {
+    const set = (variable: string, valor: number) => messageToActions({ type: 'command', commands: [{ tool: 'fijar_variable', args: { variable, valor } }], from: 'control' }, 'display');
+    expect(set('longitud', 1e9)).toEqual([{ type: 'variable', variable: 'longitud', value: 2.5 }]);
+    expect(set('longitud', -3)).toEqual([{ type: 'variable', variable: 'longitud', value: 0.1 }]);
+    expect(set('amortiguacion', 7)).toEqual([{ type: 'variable', variable: 'amortiguacion', value: 1 }]);
+    expect(set('__proto__', 1)).toEqual([]);
+    expect(set('temperatura', 40)).toEqual([{ type: 'variable', variable: 'temperatura', value: 40 }]);
+  });
+
   it('labels every action in Spanish for the confirmation chips', () => {
     expect(actionLabel({ type: 'rotate', dx: 1, dy: 0 })).toBe('Girar');
     expect(actionLabel({ type: 'zoom', factor: 1.2 })).toBe('Acercar');
@@ -45,5 +56,8 @@ describe('control protocol (two-phone hologram over BusMessage)', () => {
     expect(actionLabel({ type: 'pause' })).toBe('Pausa');
     expect(actionLabel({ type: 'release' })).toBe('Soltar el péndulo');
     expect(actionLabel({ type: 'center' })).toBe('Centrar');
+    expect(actionLabel({ type: 'variable', variable: 'longitud', value: 0.25 })).toBe('Longitud 0.25 m');
+    expect(actionLabel({ type: 'variable', variable: 'amortiguacion', value: 1 })).toBe('Con rozamiento');
+    expect(actionLabel({ type: 'variable', variable: 'amortiguacion', value: 0 })).toBe('Sin rozamiento');
   });
 });

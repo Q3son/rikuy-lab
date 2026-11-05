@@ -29,7 +29,77 @@ export function holo(color: number, opts: { emissive?: number; opacity?: number;
     wireframe: opts.wire ?? false,
     side: THREE.DoubleSide,
   });
+  withFresnel(m);
   return m;
+}
+
+/**
+ * Hologram rim: the edges facing away from the camera glow in the material's own emissive color
+ * (Fresnel term injected in the standard shader). One shared program for every holo material, so
+ * it costs a few ALU ops per pixel and no extra pass. Highlights keep working: the rim scales with
+ * emissiveIntensity.
+ */
+export function withFresnel<T extends THREE.MeshStandardMaterial>(m: T, strength = 1.8): T {
+  m.onBeforeCompile = (shader) => {
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <emissivemap_fragment>',
+      `#include <emissivemap_fragment>
+      {
+        float rim = 1.0 - abs(dot(normalize(normal), normalize(vViewPosition)));
+        totalEmissiveRadiance += mix(emissive, vec3(length(emissive)), 0.3) * pow(rim, 2.4) * ${strength.toFixed(2)};
+      }`,
+    );
+  };
+  m.customProgramCacheKey = () => `rikuy-holo-fresnel-${strength.toFixed(2)}`;
+  return m;
+}
+
+/**
+ * Canvas-backed texture. Outside a browser (unit tests in Node) it falls back to a 1x1 white
+ * texture so scenes still build.
+ */
+export function canvasTexture(width: number, height: number, draw?: (ctx: CanvasRenderingContext2D) => void): THREE.Texture {
+  if (typeof document === 'undefined') {
+    const t = new THREE.DataTexture(new Uint8Array([255, 255, 255, 255]), 1, 1);
+    t.needsUpdate = true;
+    return t;
+  }
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  if (ctx && draw) draw(ctx);
+  const t = new THREE.CanvasTexture(canvas);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+let glowTexture: THREE.Texture | null = null;
+/** Soft round glow shared by every halo sprite (created once). */
+export function glowMap(): THREE.Texture {
+  glowTexture ??= canvasTexture(128, 128, (ctx) => {
+    const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(0.18, 'rgba(255,255,255,0.75)');
+    g.addColorStop(0.45, 'rgba(255,255,255,0.22)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 128, 128);
+  });
+  return glowTexture;
+}
+
+/**
+ * Additive halo around a light-emitting part: a cheap stand-in for bloom on mid-range phones.
+ * The shared texture outlives the sprite (material.dispose() does not dispose maps).
+ */
+export function halo(color: number, size: number, opacity = 0.85): THREE.Sprite {
+  const s = new THREE.Sprite(
+    new THREE.SpriteMaterial({ map: glowMap(), color, transparent: true, opacity, blending: THREE.AdditiveBlending, depthWrite: false }),
+  );
+  s.scale.setScalar(size);
+  s.renderOrder = 2;
+  return s;
 }
 
 export function glowLine(color: number): THREE.LineBasicMaterial {

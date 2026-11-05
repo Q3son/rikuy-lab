@@ -23,5 +23,8 @@ export function applyViewerAction(action: ViewerAction, view: ViewController, sc
     case 'scene':
       void scenes.goTo(action.scene);
       break;
+    case 'variable':
+      scenes.apply([{ tool: 'fijar_variable', args: { variable: action.variable, valor: action.value } }]);
+      break;
   }
 }
