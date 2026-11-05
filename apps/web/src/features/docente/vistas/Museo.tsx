@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import { ObservarMuseo } from '../../escritorio/ObservarMuseo.tsx';
+import { useEscritorio } from '../../escritorio/useEscritorio.ts';
 import { QrAnimado } from '../componentes/QrAnimado.tsx';
 import { useAcciones, useProyeccion, useServicios } from '../Proveedor.tsx';
 
@@ -8,6 +10,7 @@ export function Museo() {
   const practica = useAcciones().practica;
   const srv = useServicios();
   const clase = p.clase;
+  const escritorio = useEscritorio();
   const marcos = useMemo(() => {
     if (!clase || !practica) return [];
     const paquete = {
@@ -22,8 +25,11 @@ export function Museo() {
     return srv.codec.codificar('J', paquete);
   }, [clase, practica, srv]);
 
-  if (!clase) return <p className="dc-card">Primero crea una clase en «Hoy».</p>;
-  return (
+  if (!clase) {
+    const aviso = <p className="dc-card">Primero crea una clase en «Hoy».</p>;
+    return escritorio ? <ObservarMuseo panel={aviso} /> : aviso;
+  }
+  const tarjetas = (
     <>
       <section className="dc-card" aria-labelledby="entrada">
         <h2 id="entrada">Entrada al museo</h2>
@@ -48,4 +54,5 @@ export function Museo() {
       </section>
     </>
   );
+  return escritorio ? <ObservarMuseo panel={tarjetas} /> : tarjetas;
 }

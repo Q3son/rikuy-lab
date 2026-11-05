@@ -6,7 +6,7 @@ import { CORDONES, type Destino, type Escena, MARCOS, type Punto, SALAS_CONTENID
 import { RUTAS } from '@rikuy/contracts';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
-import { EXHIBICION_DEL_DIA, EXHIBICIONES_DEMO, TITULOS_DEMO, construirMuseo } from './catalogo.ts';
+import { EXHIBICION_DEL_DIA, EXHIBICIONES_DEMO, PREGUNTAS_DEMO, TITULOS_DEMO, construirMuseo } from './catalogo.ts';
 import { ControladorMundo } from './controlador.ts';
 import { registroMuseo, visita } from './eventos.ts';
 import { grupoActual } from './grupo.ts';
@@ -14,11 +14,14 @@ import { Glifo, Rikuy } from './Iconos.tsx';
 import { PanelAyudante } from './ayudante/PanelAyudante.tsx';
 import { useAyudante } from './ayudante/servicio.ts';
 import { CuradorPanel } from './CuradorPanel.tsx';
-import { useEstadoGrupo } from './estadoGrupo.ts';
+import { AULA_DEMO, saldoQuipuAula, useEstadoGrupo } from './estadoGrupo.ts';
 import { colorDeSala } from './paleta.ts';
 import { Reacciones } from './presencia/Reacciones.tsx';
 import { usePresencia } from './presencia/usePresencia.ts';
 import { VistaMundo } from './VistaMundo.tsx';
+import { destinoDeTema, temasDeEscena, TEMAS_GUIA, type TemaGuia, type TemaGuiaId } from '../escritorio/guia.ts';
+import { MuseoEscritorio } from '../escritorio/MuseoEscritorio.tsx';
+import { useEscritorio } from '../escritorio/useEscritorio.ts';
 import './mundo.css';
 
 function textoBloqueo(d: Destino): string | null {
@@ -59,6 +62,11 @@ export function MuseoPagina() {
   const presencia = usePresencia(museo, escena?.id ?? 'vestibulo', simulados);
   const ayudante = useAyudante((s) => s.estado);
   const animado = useRef(false);
+  const escritorio = useEscritorio();
+  const [cercano, setCercano] = useState<Destino | undefined>(undefined);
+  const [guiando, setGuiando] = useState<TemaGuia | null>(null);
+  const [respuesta, setRespuesta] = useState<string | null>(null);
+  const nudosAyuda = useAyudante((s) => s.estado.nudos);
   const alActivar = useCallback((activo: boolean) => {
     animado.current = activo;
   }, []);
@@ -66,6 +74,7 @@ export function MuseoPagina() {
   /** Opens a destination: records the exhibit visit (no positions) and goes to its route. */
   const abrirDestino = useCallback(
     (d: Destino) => {
+      setGuiando(null);
       if (d.tipo === 'curador') {
         setCuradorAbierto(true);
         return;
@@ -125,6 +134,109 @@ export function MuseoPagina() {
     if (!animado.current || !controlador.irA(d.id)) abrirDestino(d);
   };
 
+  const fuente = {
+    jugador: () => ({
+      id: grupoActual().dispositivo,
+      x: controlador.pos.x,
+      y: controlador.pos.y,
+      dir: controlador.dir,
+      color: grupoActual().color,
+      etiqueta: piedra.nombre,
+      cordon: colorDe(CORDONES, piedra.cordon),
+      marco: colorDe(MARCOS, piedra.marco),
+      integrantes: grupoActual().integrantes,
+      propio: true,
+      pideAyuda: pidoAyuda,
+    }),
+    otros: presencia.otros,
+    alPaso: () => {
+      if (escena.id !== 'vestibulo') posiciones.set(escena.id, controlador.pos);
+      presencia.actualizar(controlador.pos.x, controlador.pos.y, controlador.dir);
+    },
+    resaltado: () => direccion.senalar,
+    sugerencia: () => sugerencia,
+  };
+
+  if (escritorio) {
+    const hoy = { exhibicionId: hoyExh?.id ?? EXHIBICION_DEL_DIA, salaId: hoyExh?.salaId ?? '' };
+    const guiar = (tema: TemaGuiaId) => {
+      const id = destinoDeTema(tema, escena, hoy);
+      if (id && controlador.irA(id)) {
+        setGuiando(TEMAS_GUIA[tema]);
+        setRespuesta(null);
+      } else {
+        setGuiando(null);
+        setRespuesta(TEMAS_GUIA[tema].dice);
+      }
+    };
+    return (
+      <MuseoEscritorio
+        sala={{
+          titulo: estilo ? `Sala ${estilo.nombre}` : 'Vestíbulo del Museo Rikuy',
+          ...(estilo?.sublabel ? { sublabel: estilo.sublabel } : {}),
+          glifo: estilo?.glifo ?? 'museo',
+          color: estilo ? colorDeSala(escena.id) : 'var(--rk-primary, #075e6c)',
+        }}
+        mundo={
+          <VistaMundo
+            llenar
+            controlador={controlador}
+            alActivar={alActivar}
+            alCercano={setCercano}
+            etiqueta={estilo ? `Mapa de la Sala ${estilo.nombre}` : 'Mapa del vestíbulo'}
+            fuente={fuente}
+          />
+        }
+        mensaje={respuesta ?? direccion.mensaje}
+        expresion={direccion.expresion}
+        destinos={escena.destinos.map((d) => ({
+          destino: d,
+          etiqueta: d.destino === RUTAS.museo ? d.etiqueta : `${d.tipo === 'puerta' ? 'Ir a la sala' : 'Ir a'} ${d.etiqueta}`,
+          bloqueo: textoBloqueo(d),
+          primario: d.id === direccion.senalar,
+          ...(d.tipo === 'puerta' && d.salaId && d.destino !== RUTAS.museo
+            ? { glifo: <Glifo nombre={estiloSala(SALAS_CONTENIDO.find((s) => s.id === d.salaId)!).glifo} /> }
+            : {}),
+        }))}
+        alIr={(d) => {
+          setGuiando(null);
+          ir(d);
+        }}
+        cercano={cercano}
+        preguntaDe={(id) => PREGUNTAS_DEMO[id]}
+        alAbrir={(d) => {
+          if (!textoBloqueo(d)) abrirDestino(d);
+        }}
+        temas={temasDeEscena(escena, hoy)}
+        guiando={guiando}
+        alGuiar={guiar}
+        alCancelarGuia={() => {
+          controlador.detener();
+          setGuiando(null);
+        }}
+        otros={presencia.otros}
+        propio={{ apodo: grupoActual().apodo, color: grupoActual().color, integrantes: grupoActual().integrantes }}
+        posicion={() => controlador.pos}
+        escena={escena}
+        quipu={{ total: saldoQuipuAula(nudosAyuda, grupoActual().claseId ?? AULA_DEMO) }}
+        extras={
+          <>
+            {curadorAbierto && (
+              <CuradorPanel salaId={escena.id} abierta={escena.rejaAbierta} alResponder={() => abrirReja(escena.id)} alCerrar={() => setCuradorAbierto(false)} />
+            )}
+            <PanelAyudante
+              exhibicionId={exhibicionAyuda}
+              {...(escena.destinos.some((d) => d.exhibicionId === exhibicionAyuda)
+                ? { alIrAExhibicion: () => controlador.irA(`exh-${exhibicionAyuda}`, { abrir: false }) }
+                : {})}
+            />
+            <Reacciones alReaccionar={presencia.reaccionar} />
+          </>
+        }
+      />
+    );
+  }
+
   return (
     <section className="rk-mundo" aria-labelledby="titulo-escena">
       <header className="rk-sign" style={{ background: estilo ? colorDeSala(escena.id) : 'var(--m-primary)' }}>
@@ -146,28 +258,7 @@ export function MuseoPagina() {
         controlador={controlador}
         alActivar={alActivar}
         etiqueta={estilo ? `Mapa de la Sala ${estilo.nombre}` : 'Mapa del vestíbulo'}
-        fuente={{
-          jugador: () => ({
-            id: grupoActual().dispositivo,
-            x: controlador.pos.x,
-            y: controlador.pos.y,
-            dir: controlador.dir,
-            color: grupoActual().color,
-            etiqueta: piedra.nombre,
-            cordon: colorDe(CORDONES, piedra.cordon),
-            marco: colorDe(MARCOS, piedra.marco),
-            integrantes: grupoActual().integrantes,
-            propio: true,
-            pideAyuda: pidoAyuda,
-          }),
-          otros: presencia.otros,
-          alPaso: () => {
-            if (escena.id !== 'vestibulo') posiciones.set(escena.id, controlador.pos);
-            presencia.actualizar(controlador.pos.x, controlador.pos.y, controlador.dir);
-          },
-          resaltado: () => direccion.senalar,
-          sugerencia: () => sugerencia,
-        }}
+        fuente={fuente}
       />
 
       <nav aria-label="Destinos">

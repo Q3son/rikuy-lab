@@ -1,4 +1,4 @@
-import { BottomTabs, CameraPill, CaptionBar, KnotIcon, SyncChip, TopBar, UpdateBanner, type TabItem } from '@rikuy/ui';
+import { BottomTabs, CameraPill, CaptionBar, KnotIcon, Logo, SyncChip, TopBar, UpdateBanner, cn, type TabItem } from '@rikuy/ui';
 import { Brain, CalendarCheck, ChartColumn, ClipboardList, FlaskConical, Landmark, Presentation, Settings, User } from 'lucide-react';
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,8 +11,9 @@ import { useEstadoNarrador, useNarrador } from '../shell/accesibilidad/narracion
 import { textoDePantalla } from '../shell/accesibilidad/texto-pantalla.ts';
 import { estadoDeRed, useCamara, useRed } from '../shell/estado.ts';
 import { useMarco } from '../shell/marco.ts';
-import { rutaSinMarco, tabActivo, TABS_DOCENTE, TABS_ESTUDIANTE } from '../shell/navegacion.ts';
+import { rutaAPantallaCompleta, rutaSinMarco, tabActivo, TABS_DOCENTE, TABS_ESTUDIANTE } from '../shell/navegacion.ts';
 import { useSesion } from '../shell/sesion.ts';
+import { useEscritorio } from '../features/escritorio/useEscritorio.ts';
 
 const ICONOS: Record<string, ReactNode> = {
   museo: <Landmark />,
@@ -116,6 +117,43 @@ function ControlDeBarrido() {
   );
 }
 
+/**
+ * Desktop rail (>= 1024 px): the same tabs as the bottom bar, as a vertical rail on the left, so the
+ * world and the side panels get the whole width. Links with aria-current; the router keeps the history.
+ */
+function RielEscritorio({ items, activo, etiqueta, alElegir }: { items: TabItem[]; activo: string | null; etiqueta: string; alElegir: (item: TabItem) => void }) {
+  return (
+    <nav aria-label={etiqueta} className="flex w-[92px] shrink-0 flex-col items-center gap-1 border-r-2 border-line bg-surface py-4">
+      <Logo className="mb-4 h-7 w-auto max-w-[76px]" />
+      {items.map((item) => {
+        const sel = item.id === activo;
+        return (
+          <a
+            key={item.id}
+            href={item.href}
+            aria-current={sel ? 'page' : undefined}
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+              e.preventDefault();
+              alElegir(item);
+            }}
+            className={cn(
+              'relative flex w-[76px] flex-col items-center gap-1 rounded-ctl px-1 py-2 text-[0.8125rem] leading-4 no-underline',
+              sel ? 'bg-primary-tint font-extrabold text-ink' : 'font-medium text-ink-2 hover:bg-bg',
+            )}
+          >
+            <span className={cn('inline-flex [&_svg]:size-6', sel ? 'text-primary' : '')} aria-hidden="true">
+              {item.icon}
+            </span>
+            <span className="max-w-full truncate">{item.label}</span>
+            {sel ? <span aria-hidden="true" className="absolute left-0 top-1/2 h-8 w-[5px] -translate-y-1/2 rounded-r-chip bg-primary" /> : null}
+          </a>
+        );
+      })}
+    </nav>
+  );
+}
+
 const SALTO = 'sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-ctl focus:bg-surface focus:p-3';
 
 /**
@@ -132,6 +170,7 @@ export function Shell() {
   const principal = useRef<HTMLElement | null>(null);
   const primera = useRef(true);
   const sinMarco = rutaSinMarco(pathname);
+  const escritorio = useEscritorio();
 
   // After a route change, focus the content so screen readers announce the new screen.
   useEffect(() => {
@@ -175,6 +214,44 @@ export function Shell() {
   const items: TabItem[] = tabs.map((tab) => ({ id: tab.id, label: t(tab.clave), href: `#${tab.ruta}`, icon: ICONOS[tab.id] }));
   const titulo = marco.titulo ?? (activo ? t(TITULOS[activo as keyof typeof TITULOS]) : t('app.nombre'));
   const ancho = rol === 'docente' ? 'max-w-[var(--rk-w-tablet)]' : 'max-w-[var(--rk-w-phone)]';
+  const etiquetaNav = t(rol === 'docente' ? 'nav.docente' : 'nav.estudiante');
+
+  if (escritorio) {
+    const completa = rutaAPantallaCompleta(pathname);
+    return (
+      <div className="flex h-dvh bg-bg text-ink">
+        {comun}
+        <a href="#contenido" className={SALTO}>
+          {t('app.saltarAlContenido')}
+        </a>
+        <RielEscritorio items={items} activo={activo} etiqueta={etiquetaNav} alElegir={(item) => navegar(item.href.slice(1))} />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <TopBar
+            title={titulo}
+            onBack={marco.volverA ? () => navegar(marco.volverA!) : undefined}
+            backLabel={t('topbar.volver')}
+            trailing={
+              <>
+                <PildoraCamara />
+                <ChipDeRed />
+              </>
+            }
+          />
+          <main
+            id="contenido"
+            ref={principal}
+            tabIndex={-1}
+            className={completa ? 'min-h-0 w-full flex-1 overflow-hidden outline-none' : cn('mx-auto min-h-0 w-full flex-1 overflow-y-auto px-6 py-6 outline-none', rol === 'docente' ? 'max-w-[1480px]' : 'max-w-[var(--rk-w-panel)]')}
+          >
+            <div className={completa ? 'h-full' : 'flex flex-col gap-4'}>
+              <Outlet />
+            </div>
+          </main>
+          <SubtitulosDeNarracion />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-dvh flex-col bg-bg text-ink">
@@ -199,7 +276,7 @@ export function Shell() {
         </div>
       </main>
       <SubtitulosDeNarracion />
-      <BottomTabs onSelect={(item) => navegar(item.href.slice(1))} items={items} activeId={activo} ariaLabel={t(rol === 'docente' ? 'nav.docente' : 'nav.estudiante')} className="shrink-0" />
+      <BottomTabs onSelect={(item) => navegar(item.href.slice(1))} items={items} activeId={activo} ariaLabel={etiquetaNav} className="shrink-0" />
     </div>
   );
 }
