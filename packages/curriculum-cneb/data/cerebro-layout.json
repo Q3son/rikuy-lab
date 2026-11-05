@@ -1,0 +1,318 @@
+{
+  "version": 1,
+  "generadoPor": "packages/curriculum-cneb/scripts/layout-cerebro.mjs",
+  "motor": "d3-force 3.0.0 (build time)",
+  "ancho": 800,
+  "alto": 800,
+  "nodos": [
+    {
+      "id": "sistema_digestivo",
+      "label": "Sistema digestivo",
+      "sistema": "digestivo",
+      "nivel": "sistema",
+      "x": 472.8,
+      "y": 433
+    },
+    {
+      "id": "intestino_delgado",
+      "label": "Intestino delgado",
+      "sistema": "digestivo",
+      "nivel": "organo",
+      "x": 394.4,
+      "y": 391.5
+    },
+    {
+      "id": "vellosidad",
+      "label": "Vellosidad intestinal",
+      "sistema": "digestivo",
+      "nivel": "tejido",
+      "x": 302.9,
+      "y": 382.9
+    },
+    {
+      "id": "enterocito",
+      "label": "Enterocito",
+      "sistema": "digestivo",
+      "nivel": "celula",
+      "x": 218.1,
+      "y": 421.5
+    },
+    {
+      "id": "lactasa",
+      "label": "Lactasa",
+      "sistema": "digestivo",
+      "nivel": "molecula",
+      "x": 158.7,
+      "y": 485.1
+    },
+    {
+      "id": "lactosa",
+      "label": "Lactosa",
+      "sistema": "quimica",
+      "nivel": "molecula",
+      "x": 203.3,
+      "y": 576.2
+    },
+    {
+      "id": "glucosa",
+      "label": "Glucosa",
+      "sistema": "quimica",
+      "nivel": "molecula",
+      "x": 277.9,
+      "y": 622
+    },
+    {
+      "id": "galactosa",
+      "label": "Galactosa",
+      "sistema": "quimica",
+      "nivel": "molecula",
+      "x": 228.6,
+      "y": 532.7
+    },
+    {
+      "id": "enlace_glucosidico",
+      "label": "Enlace glucosídico",
+      "sistema": "quimica",
+      "nivel": "molecula",
+      "x": 251.1,
+      "y": 590.4
+    },
+    {
+      "id": "temperatura",
+      "label": "Temperatura",
+      "sistema": "fisica",
+      "nivel": "fenomeno",
+      "x": 92.3,
+      "y": 514.4
+    },
+    {
+      "id": "ph",
+      "label": "pH",
+      "sistema": "quimica",
+      "nivel": "fenomeno",
+      "x": 136,
+      "y": 433.2
+    },
+    {
+      "id": "desnaturalizacion",
+      "label": "Desnaturalización",
+      "sistema": "quimica",
+      "nivel": "fenomeno",
+      "x": 40,
+      "y": 539.7
+    },
+    {
+      "id": "intolerancia_lactosa",
+      "label": "Intolerancia a la lactosa",
+      "sistema": "digestivo",
+      "nivel": "fenomeno",
+      "x": 107,
+      "y": 462.3
+    },
+    {
+      "id": "sistema_respiratorio",
+      "label": "Sistema respiratorio",
+      "sistema": "respiratorio",
+      "nivel": "sistema",
+      "x": 629.8,
+      "y": 445.1
+    },
+    {
+      "id": "pulmon",
+      "label": "Pulmón",
+      "sistema": "respiratorio",
+      "nivel": "organo",
+      "x": 674.8,
+      "y": 479.1
+    },
+    {
+      "id": "diafragma",
+      "label": "Diafragma",
+      "sistema": "respiratorio",
+      "nivel": "organo",
+      "x": 554.5,
+      "y": 433.4
+    },
+    {
+      "id": "altitud",
+      "label": "Altitud",
+      "sistema": "fisica",
+      "nivel": "fenomeno",
+      "x": 683.6,
+      "y": 430.6
+    },
+    {
+      "id": "higado",
+      "label": "Hígado",
+      "sistema": "hepatico",
+      "nivel": "organo",
+      "x": 464.2,
+      "y": 511.8
+    },
+    {
+      "id": "lobulillo_hepatico",
+      "label": "Lobulillo hepático",
+      "sistema": "hepatico",
+      "nivel": "tejido",
+      "x": 430.4,
+      "y": 587.3
+    },
+    {
+      "id": "hepatocito",
+      "label": "Hepatocito",
+      "sistema": "hepatico",
+      "nivel": "celula",
+      "x": 362.2,
+      "y": 629.5
+    },
+    {
+      "id": "pendulo",
+      "label": "Péndulo simple",
+      "sistema": "fisica",
+      "nivel": "fenomeno",
+      "x": 671.7,
+      "y": 170.5
+    },
+    {
+      "id": "periodo",
+      "label": "Periodo de oscilación",
+      "sistema": "fisica",
+      "nivel": "fenomeno",
+      "x": 707.7,
+      "y": 208.9
+    },
+    {
+      "id": "longitud",
+      "label": "Longitud de la cuerda",
+      "sistema": "fisica",
+      "nivel": "fenomeno",
+      "x": 692.5,
+      "y": 258.7
+    },
+    {
+      "id": "gravedad",
+      "label": "Gravedad",
+      "sistema": "fisica",
+      "nivel": "fenomeno",
+      "x": 760,
+      "y": 204.9
+    }
+  ],
+  "aristas": [
+    {
+      "desde": "sistema_digestivo",
+      "hasta": "intestino_delgado",
+      "relacion": "contiene"
+    },
+    {
+      "desde": "intestino_delgado",
+      "hasta": "vellosidad",
+      "relacion": "contiene"
+    },
+    {
+      "desde": "vellosidad",
+      "hasta": "enterocito",
+      "relacion": "contiene"
+    },
+    {
+      "desde": "enterocito",
+      "hasta": "lactasa",
+      "relacion": "produce"
+    },
+    {
+      "desde": "lactasa",
+      "hasta": "lactosa",
+      "relacion": "actua_sobre"
+    },
+    {
+      "desde": "lactosa",
+      "hasta": "enlace_glucosidico",
+      "relacion": "contiene"
+    },
+    {
+      "desde": "lactosa",
+      "hasta": "glucosa",
+      "relacion": "produce"
+    },
+    {
+      "desde": "lactosa",
+      "hasta": "galactosa",
+      "relacion": "produce"
+    },
+    {
+      "desde": "lactasa",
+      "hasta": "temperatura",
+      "relacion": "depende_de"
+    },
+    {
+      "desde": "lactasa",
+      "hasta": "ph",
+      "relacion": "depende_de"
+    },
+    {
+      "desde": "temperatura",
+      "hasta": "desnaturalizacion",
+      "relacion": "produce"
+    },
+    {
+      "desde": "lactasa",
+      "hasta": "intolerancia_lactosa",
+      "relacion": "se_relaciona"
+    },
+    {
+      "desde": "sistema_respiratorio",
+      "hasta": "pulmon",
+      "relacion": "contiene"
+    },
+    {
+      "desde": "sistema_respiratorio",
+      "hasta": "diafragma",
+      "relacion": "contiene"
+    },
+    {
+      "desde": "diafragma",
+      "hasta": "sistema_digestivo",
+      "relacion": "se_relaciona"
+    },
+    {
+      "desde": "altitud",
+      "hasta": "sistema_respiratorio",
+      "relacion": "actua_sobre"
+    },
+    {
+      "desde": "higado",
+      "hasta": "lobulillo_hepatico",
+      "relacion": "contiene"
+    },
+    {
+      "desde": "lobulillo_hepatico",
+      "hasta": "hepatocito",
+      "relacion": "contiene"
+    },
+    {
+      "desde": "higado",
+      "hasta": "sistema_digestivo",
+      "relacion": "se_relaciona"
+    },
+    {
+      "desde": "hepatocito",
+      "hasta": "glucosa",
+      "relacion": "actua_sobre"
+    },
+    {
+      "desde": "pendulo",
+      "hasta": "periodo",
+      "relacion": "produce"
+    },
+    {
+      "desde": "periodo",
+      "hasta": "longitud",
+      "relacion": "depende_de"
+    },
+    {
+      "desde": "periodo",
+      "hasta": "gravedad",
+      "relacion": "depende_de"
+    }
+  ]
+}
