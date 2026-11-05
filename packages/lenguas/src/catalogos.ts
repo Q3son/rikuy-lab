@@ -4,9 +4,9 @@
  * quy and ayr are placeholders until a native speaker reviews them: no text is
  * invented here (texto stays empty and revisado false).
  */
-import es from '../catalogos/es.json';
-import quy from '../catalogos/quy.json';
-import ayr from '../catalogos/ayr.json';
+import es from '../catalogos/es.json' with { type: 'json' };
+import quy from '../catalogos/quy.json' with { type: 'json' };
+import ayr from '../catalogos/ayr.json' with { type: 'json' };
 import type { Catalogo } from './resolver.ts';
 
 export const CATALOGOS: Record<string, Catalogo> = { es, quy, ayr };
