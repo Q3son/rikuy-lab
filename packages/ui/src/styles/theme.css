@@ -1,0 +1,183 @@
+/*
+ * "Luz de Puna" wired to Tailwind v4 and to the shadcn/ui variable names.
+ * The only source of colour is tokens/tokens.css (--rk-*): Luz, Noche (data-theme="dark") and
+ * Holograma (data-theme="holo") swap those variables at runtime, so utilities never change.
+ * Hall colours are scoped with data-hall="fisica|bio|quim|tierra" (see tokens.css).
+ * Apps import this file after `@import "tailwindcss"` and add `@source` for packages/ui/src.
+ */
+@import "../../tokens/tokens.css";
+
+@theme inline {
+  /* Surfaces and ink */
+  --color-bg: var(--rk-bg);
+  --color-surface: var(--rk-surface);
+  --color-surface-2: var(--rk-surface-2);
+  --color-line: var(--rk-border);
+  --color-line-strong: var(--rk-border-strong);
+  --color-ink: var(--rk-ink);
+  --color-ink-2: var(--rk-ink-2);
+  --color-niebla: var(--rk-muted);
+
+  /* Brand roles */
+  --color-primary: var(--rk-primary);
+  --color-primary-press: var(--rk-primary-press);
+  --color-primary-on: var(--rk-on-primary);
+  --color-primary-tint: var(--rk-primary-tint);
+  --color-foton: var(--rk-foton);
+  --color-foton-on: var(--rk-on-foton);
+  --color-foton-ink: var(--rk-foton-ink);
+  --color-foton-tint: var(--rk-foton-tint);
+  --color-sol: var(--rk-sol);
+  --color-sol-on: var(--rk-on-sol);
+  --color-sol-ink: var(--rk-sol-ink);
+  --color-sol-tint: var(--rk-sol-tint);
+  --color-grana: var(--rk-grana);
+  --color-grana-on: var(--rk-on-grana);
+  --color-grana-ink: var(--rk-grana-ink);
+  --color-grana-tint: var(--rk-grana-tint);
+  --color-ichu: var(--rk-ichu);
+  --color-ichu-on: var(--rk-on-ichu);
+  --color-ichu-ink: var(--rk-ichu-ink);
+  --color-ichu-tint: var(--rk-ichu-tint);
+  --color-focus: var(--rk-focus);
+  --color-overlay: var(--rk-overlay);
+
+  /* Halls: fixed names for the museum map and a scoped one driven by data-hall */
+  --color-hall-fisica: var(--rk-hall-fisica);
+  --color-hall-fisica-on: var(--rk-on-hall-fisica);
+  --color-hall-fisica-tint: var(--rk-hall-fisica-tint);
+  --color-hall-fisica-ink: var(--rk-hall-fisica-ink);
+  --color-hall-bio: var(--rk-hall-bio);
+  --color-hall-bio-on: var(--rk-on-hall-bio);
+  --color-hall-bio-tint: var(--rk-hall-bio-tint);
+  --color-hall-bio-ink: var(--rk-hall-bio-ink);
+  --color-hall-quim: var(--rk-hall-quim);
+  --color-hall-quim-on: var(--rk-on-hall-quim);
+  --color-hall-quim-tint: var(--rk-hall-quim-tint);
+  --color-hall-quim-ink: var(--rk-hall-quim-ink);
+  --color-hall-tierra: var(--rk-hall-tierra);
+  --color-hall-tierra-on: var(--rk-on-hall-tierra);
+  --color-hall-tierra-tint: var(--rk-hall-tierra-tint);
+  --color-hall-tierra-ink: var(--rk-hall-tierra-ink);
+  --color-hall: var(--hall);
+  --color-hall-on: var(--on-hall);
+  --color-hall-tint: var(--hall-tint);
+  --color-hall-ink: var(--hall-ink);
+
+  /* shadcn/ui semantic aliases */
+  --color-background: var(--rk-bg);
+  --color-foreground: var(--rk-ink);
+  --color-card: var(--rk-surface);
+  --color-card-foreground: var(--rk-ink);
+  --color-popover: var(--rk-surface);
+  --color-popover-foreground: var(--rk-ink);
+  --color-primary-foreground: var(--rk-on-primary);
+  --color-secondary: var(--rk-surface);
+  --color-secondary-foreground: var(--rk-ink);
+  --color-muted: var(--rk-surface-2);
+  --color-muted-foreground: var(--rk-muted);
+  --color-accent: var(--rk-primary-tint);
+  --color-accent-foreground: var(--rk-primary-press);
+  --color-destructive: var(--rk-grana);
+  --color-destructive-foreground: var(--rk-on-grana);
+  --color-border: var(--rk-border);
+  --color-input: var(--rk-border-strong);
+  --color-ring: var(--rk-focus);
+
+  /* Type */
+  --font-sans: var(--rk-font-sans);
+  --font-mono: var(--rk-font-mono);
+  --text-caption: 14px;
+  --text-caption--line-height: 20px;
+  --text-small: 15px;
+  --text-small--line-height: 22px;
+  --text-body: 17px;
+  --text-body--line-height: 26px;
+  --text-body-lg: 19px;
+  --text-body-lg--line-height: 28px;
+  --text-title-sm: 20px;
+  --text-title-sm--line-height: 26px;
+  --text-title: 24px;
+  --text-title--line-height: 30px;
+  --text-headline: 30px;
+  --text-headline--line-height: 36px;
+  --text-display: 40px;
+  --text-display--line-height: 44px;
+  --text-numeral: 56px;
+  --text-numeral--line-height: 56px;
+
+  /* One radius per nesting level */
+  --radius-ctl: var(--rk-r-ctl);
+  --radius-card: var(--rk-r-card);
+  --radius-sheet: var(--rk-r-sheet);
+  --radius-chip: var(--rk-r-chip);
+
+  /* Edges, not blur */
+  --shadow-card: var(--rk-shadow-card);
+  --shadow-press: var(--rk-shadow-press);
+  --shadow-sheet: var(--rk-shadow-sheet);
+
+  /* Motion */
+  --ease-rk: var(--rk-ease);
+}
+
+@layer base {
+  html {
+    background: var(--rk-bg);
+    color: var(--rk-ink);
+    font-family: var(--rk-font-sans);
+    font-size: var(--rk-fs-body);
+    line-height: var(--rk-lh-body);
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--rk-bg);
+    color: var(--rk-ink);
+  }
+  *,
+  *::before,
+  *::after {
+    border-color: var(--rk-border);
+  }
+  /* Interactive elements are never smaller than 48 px (DESIGN.md 4) */
+  button,
+  [role="tab"],
+  [role="switch"],
+  a.rk-hit {
+    min-height: var(--rk-hit);
+    min-width: var(--rk-hit);
+  }
+  :focus-visible {
+    outline: 3px solid var(--rk-focus);
+    outline-offset: 2px;
+    transition: none;
+  }
+}
+
+@layer utilities {
+  /* Prose never runs longer than 62 characters */
+  .measure {
+    max-width: 62ch;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  /* Primary button press edge: moves with transform only */
+  .press-edge {
+    box-shadow: var(--rk-shadow-press);
+    transition: transform var(--rk-dur-fast) var(--rk-ease);
+  }
+  .press-edge:active {
+    transform: translateY(2px);
+    box-shadow: none;
+  }
+  /* The trama: one stepped-diamond strip, at most one per screen */
+  .trama {
+    height: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='12' viewBox='0 0 16 12'%3E%3Cpath d='M0 6l8-6 8 6-8 6z' fill='%23F5B301'/%3E%3C/svg%3E");
+    background-size: 16px 12px;
+    background-repeat: repeat-x;
+  }
+}

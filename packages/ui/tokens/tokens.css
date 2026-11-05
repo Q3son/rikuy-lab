@@ -1,0 +1,388 @@
+/* Hallmark · custom: Luz de Puna · genre: modern-minimal · surface: absolute (solo modo holograma) · job: usar el museo en el aula */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: S, el mapa 2D podia parecer un juego generico; se le dio rotulos de sala, trama de rombos y exposiciones como pedestales */
+/* Hallmark · waive 7b · fondo negro absoluto en data-theme holo · la piramide holografica solo refleja pixeles encendidos, el negro puro es el requisito del museo */
+/* Hallmark · waive 24b · padding de 10 y 14 px en chips y tarjetas del telefono · el museo usa pasos de 2 px solo en componentes compactos de 360 px */
+/* rikuy-ui tokens v0.2.0, direccion "Luz de Puna" para el Museo Rikuy. Fuente de verdad: docs/ecosistema/DESIGN.md. Generado desde un solo origen; edita DESIGN.md primero. */
+/* critique: sin CDN, sin fuentes remotas, sin blur ni backdrop-filter; solo transform y opacity se animan. */
+
+/* Fuente: "Rikuy Sans" apunta a Atkinson Hyperlegible Next si esta instalada o autoalojada. */
+@font-face {
+  font-family: 'Rikuy Sans';
+  src: local('Atkinson Hyperlegible Next'), local('AtkinsonHyperlegibleNext-Regular'), local('Atkinson Hyperlegible');
+  font-weight: 400 800;
+  font-display: swap;
+}
+/* Al autoalojar (unos 30 KB en woff2, latin + latin-ext con apostrofes de quechua), agrega:
+   src: url('./fonts/AtkinsonHyperlegibleNext-var.woff2') format('woff2-variations'), local(...);  */
+
+:root {
+  /* Familias */
+  --rk-font-sans: 'Rikuy Sans', 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  --rk-font-mono: ui-monospace, 'Cascadia Mono', 'Roboto Mono', Menlo, monospace;
+
+  /* Escala tipografica (base 16; el cuerpo es 17 para pantallas de 360 a pleno sol) */
+  --rk-fs-caption: 14px;
+  --rk-lh-caption: 20px;
+  --rk-fw-caption: 400;
+  --rk-ls-caption: 0;
+  --rk-fs-small: 15px;
+  --rk-lh-small: 22px;
+  --rk-fw-small: 400;
+  --rk-ls-small: 0;
+  --rk-fs-body: 17px;
+  --rk-lh-body: 26px;
+  --rk-fw-body: 400;
+  --rk-ls-body: 0;
+  --rk-fs-body-lg: 19px;
+  --rk-lh-body-lg: 28px;
+  --rk-fw-body-lg: 400;
+  --rk-ls-body-lg: 0;
+  --rk-fs-title-sm: 20px;
+  --rk-lh-title-sm: 26px;
+  --rk-fw-title-sm: 700;
+  --rk-ls-title-sm: 0;
+  --rk-fs-title: 24px;
+  --rk-lh-title: 30px;
+  --rk-fw-title: 800;
+  --rk-ls-title: -0.005em;
+  --rk-fs-headline: 30px;
+  --rk-lh-headline: 36px;
+  --rk-fw-headline: 800;
+  --rk-ls-headline: -0.01em;
+  --rk-fs-display: 40px;
+  --rk-lh-display: 44px;
+  --rk-fw-display: 800;
+  --rk-ls-display: -0.02em;
+  --rk-fs-numeral: 56px;
+  --rk-lh-numeral: 56px;
+  --rk-fw-numeral: 800;
+  --rk-ls-numeral: 0;
+  --rk-fs-numeral-xl: 72px;
+  --rk-lh-numeral-xl: 72px;
+  --rk-fw-numeral-xl: 800;
+  --rk-ls-numeral-xl: -0.01em;
+
+  /* Espaciado, rejilla de 4 */
+  --rk-space-0: 0;
+  --rk-space-1: 4px;
+  --rk-space-2: 8px;
+  --rk-space-3: 12px;
+  --rk-space-4: 16px;
+  --rk-space-5: 20px;
+  --rk-space-6: 24px;
+  --rk-space-8: 32px;
+  --rk-space-10: 40px;
+  --rk-space-12: 48px;
+  --rk-space-16: 64px;
+
+  /* Radios: uno por nivel de anidacion */
+  --rk-r-ctl: 12px;
+  --rk-r-card: 16px;
+  --rk-r-sheet: 24px;
+  --rk-r-chip: 999px;
+
+  /* Tamanos tactiles */
+  --rk-hit: 48px;
+  --rk-hit-primary: 56px;
+  --rk-icon: 24px;
+  --rk-tabbar: 64px;
+
+  /* Colores fijos, iguales en todos los modos: QR (siempre tinta sobre papel) y etiquetas de muestras */
+  --rk-qr-paper: #FCFDFB;
+  --rk-qr-ink: #0D2B33;
+  --rk-static-ink: #0D2B33;
+  --rk-static-paper: #FFFFFF;
+
+  /* Mundo 2D: baldosa logica de 32 px CSS (16 px de arte a 2x) */
+  --rk-tile: 32px;
+
+  /* Movimiento: barato y callado */
+  --rk-dur-fast: 120ms;
+  --rk-dur: 200ms;
+  --rk-dur-slow: 320ms;
+  --rk-dur-swing: 4200ms;
+  --rk-ease: cubic-bezier(0.2, 0, 0, 1);
+  --rk-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --rk-ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+  /* Contenedores */
+  --rk-w-phone: 480px;
+  --rk-w-tablet: 720px;
+  --rk-w-panel: 1120px;
+}
+
+/* Tema Luz (por defecto): aula a pleno sol */
+:root,
+[data-theme="light"] {
+  --rk-bg: #F5F6F1;
+  --rk-surface: #FFFFFF;
+  --rk-surface-2: #E9ECE4;
+  --rk-border: #D3D9CC;
+  --rk-border-strong: #6A7568;
+  --rk-ink: #0D2B33;
+  --rk-ink-2: #33494F;
+  --rk-muted: #4D6368;
+  --rk-primary: #075E6C;
+  --rk-primary-press: #04474F;
+  --rk-on-primary: #FFFFFF;
+  --rk-primary-tint: #DCEBEC;
+  --rk-foton: #19CBEE;
+  --rk-on-foton: #0D2B33;
+  --rk-foton-ink: #00566A;
+  --rk-foton-tint: #D9F4FA;
+  --rk-sol: #F5B301;
+  --rk-on-sol: #0D2B33;
+  --rk-sol-ink: #6B4300;
+  --rk-sol-tint: #FFF1CC;
+  --rk-grana: #A8123B;
+  --rk-on-grana: #FFFFFF;
+  --rk-grana-ink: #96102F;
+  --rk-grana-tint: #FBE6EA;
+  --rk-ichu: #14592D;
+  --rk-on-ichu: #FFFFFF;
+  --rk-ichu-ink: #14592D;
+  --rk-ichu-tint: #E3F2E6;
+  --rk-hall-fisica: #075E6C;
+  --rk-on-hall-fisica: #FFFFFF;
+  --rk-hall-fisica-tint: #DCEBEC;
+  --rk-hall-fisica-ink: #04474F;
+  --rk-hall-bio: #435F0F;
+  --rk-on-hall-bio: #FFFFFF;
+  --rk-hall-bio-tint: #E9F1D3;
+  --rk-hall-bio-ink: #3A5209;
+  --rk-hall-quim: #9E3206;
+  --rk-on-hall-quim: #FFFFFF;
+  --rk-hall-quim-tint: #FBE4D8;
+  --rk-hall-quim-ink: #8A2C05;
+  --rk-hall-tierra: #6E4A2F;
+  --rk-on-hall-tierra: #FFFFFF;
+  --rk-hall-tierra-tint: #F1E6D8;
+  --rk-hall-tierra-ink: #5A3A20;
+  --rk-focus: #0D2B33;
+  --rk-overlay: rgba(13, 43, 51, 0.58);
+  --rk-shadow-card: 0 1px 0 0 #D3D9CC;
+  --rk-shadow-press: 0 3px 0 0 #04474F;
+  --rk-shadow-sheet: 0 -8px 24px rgba(13, 43, 51, 0.22);
+}
+
+/* Tema Noche: aula en penumbra */
+[data-theme="dark"] {
+  --rk-bg: #0A1A1F;
+  --rk-surface: #112429;
+  --rk-surface-2: #183139;
+  --rk-border: #254049;
+  --rk-border-strong: #7B979E;
+  --rk-ink: #EDF5F6;
+  --rk-ink-2: #C3D6D9;
+  --rk-muted: #9FB8BC;
+  --rk-primary: #3FD8F2;
+  --rk-primary-press: #2BB8D1;
+  --rk-on-primary: #03222A;
+  --rk-primary-tint: #123A44;
+  --rk-foton: #3FD8F2;
+  --rk-on-foton: #03222A;
+  --rk-foton-ink: #3FD8F2;
+  --rk-foton-tint: #0F3A44;
+  --rk-sol: #FFC83D;
+  --rk-on-sol: #03222A;
+  --rk-sol-ink: #FFC83D;
+  --rk-sol-tint: #3A2E0B;
+  --rk-grana: #FF6B87;
+  --rk-on-grana: #03222A;
+  --rk-grana-ink: #FF93A6;
+  --rk-grana-tint: #3A1520;
+  --rk-ichu: #5BC47E;
+  --rk-on-ichu: #04222A;
+  --rk-ichu-ink: #86DCA0;
+  --rk-ichu-tint: #12301E;
+  --rk-hall-fisica: #4FC3D9;
+  --rk-on-hall-fisica: #03222A;
+  --rk-hall-fisica-tint: #0A2A33;
+  --rk-hall-fisica-ink: #4FC3D9;
+  --rk-hall-bio: #B7D95C;
+  --rk-on-hall-bio: #03222A;
+  --rk-hall-bio-tint: #26310C;
+  --rk-hall-bio-ink: #B7D95C;
+  --rk-hall-quim: #FF9266;
+  --rk-on-hall-quim: #03222A;
+  --rk-hall-quim-tint: #3A1D10;
+  --rk-hall-quim-ink: #FF9266;
+  --rk-hall-tierra: #D9A877;
+  --rk-on-hall-tierra: #03222A;
+  --rk-hall-tierra-tint: #2A1F14;
+  --rk-hall-tierra-ink: #D9A877;
+  --rk-focus: #FFC83D;
+  --rk-overlay: rgba(0, 0, 0, 0.66);
+  --rk-shadow-card: 0 1px 0 0 #254049;
+  --rk-shadow-press: 0 3px 0 0 #2BB8D1;
+  --rk-shadow-sheet: 0 -8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Sin eleccion explicita, respeta el sistema */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --rk-bg: #0A1A1F;
+    --rk-surface: #112429;
+    --rk-surface-2: #183139;
+    --rk-border: #254049;
+    --rk-border-strong: #7B979E;
+    --rk-ink: #EDF5F6;
+    --rk-ink-2: #C3D6D9;
+    --rk-muted: #9FB8BC;
+    --rk-primary: #3FD8F2;
+    --rk-primary-press: #2BB8D1;
+    --rk-on-primary: #03222A;
+    --rk-primary-tint: #123A44;
+    --rk-foton: #3FD8F2;
+    --rk-on-foton: #03222A;
+    --rk-foton-ink: #3FD8F2;
+    --rk-foton-tint: #0F3A44;
+    --rk-sol: #FFC83D;
+    --rk-on-sol: #03222A;
+    --rk-sol-ink: #FFC83D;
+    --rk-sol-tint: #3A2E0B;
+    --rk-grana: #FF6B87;
+    --rk-on-grana: #03222A;
+    --rk-grana-ink: #FF93A6;
+    --rk-grana-tint: #3A1520;
+    --rk-ichu: #5BC47E;
+    --rk-on-ichu: #04222A;
+    --rk-ichu-ink: #86DCA0;
+    --rk-ichu-tint: #12301E;
+    --rk-hall-fisica: #4FC3D9;
+    --rk-on-hall-fisica: #03222A;
+    --rk-hall-fisica-tint: #0A2A33;
+    --rk-hall-fisica-ink: #4FC3D9;
+    --rk-hall-bio: #B7D95C;
+    --rk-on-hall-bio: #03222A;
+    --rk-hall-bio-tint: #26310C;
+    --rk-hall-bio-ink: #B7D95C;
+    --rk-hall-quim: #FF9266;
+    --rk-on-hall-quim: #03222A;
+    --rk-hall-quim-tint: #3A1D10;
+    --rk-hall-quim-ink: #FF9266;
+    --rk-hall-tierra: #D9A877;
+    --rk-on-hall-tierra: #03222A;
+    --rk-hall-tierra-tint: #2A1F14;
+    --rk-hall-tierra-ink: #D9A877;
+    --rk-focus: #FFC83D;
+    --rk-overlay: rgba(0, 0, 0, 0.66);
+    --rk-shadow-card: 0 1px 0 0 #254049;
+    --rk-shadow-press: 0 3px 0 0 #2BB8D1;
+    --rk-shadow-sheet: 0 -8px 24px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* Tema Holograma: fondo negro absoluto (el negro no se refleja en la piramide); solo trazos, sin rellenos grandes */
+[data-theme="holo"] {
+  --rk-bg: #000000;
+  --rk-surface: #000000;
+  --rk-surface-2: #04141A;
+  --rk-border: #2A7587;
+  --rk-border-strong: #5FE3FF;
+  --rk-ink: #F2FBFF;
+  --rk-ink-2: #BFE9F5;
+  --rk-muted: #8FB5BF;
+  --rk-primary: #5FE3FF;
+  --rk-primary-press: #A8F1FF;
+  --rk-on-primary: #000000;
+  --rk-primary-tint: #031E25;
+  --rk-foton: #5FE3FF;
+  --rk-on-foton: #000000;
+  --rk-foton-ink: #5FE3FF;
+  --rk-foton-tint: #031E25;
+  --rk-sol: #FFC14D;
+  --rk-on-sol: #000000;
+  --rk-sol-ink: #FFC14D;
+  --rk-sol-tint: #241A04;
+  --rk-grana: #FF7A6B;
+  --rk-on-grana: #000000;
+  --rk-grana-ink: #FF7A6B;
+  --rk-grana-tint: #260C08;
+  --rk-ichu: #3DFFC5;
+  --rk-on-ichu: #000000;
+  --rk-ichu-ink: #3DFFC5;
+  --rk-ichu-tint: #03261D;
+  --rk-hall-fisica: #5FE3FF;
+  --rk-on-hall-fisica: #000000;
+  --rk-hall-fisica-tint: #031E25;
+  --rk-hall-fisica-ink: #5FE3FF;
+  --rk-hall-bio: #B7F25A;
+  --rk-on-hall-bio: #000000;
+  --rk-hall-bio-tint: #141E04;
+  --rk-hall-bio-ink: #B7F25A;
+  --rk-hall-quim: #FF9D5C;
+  --rk-on-hall-quim: #000000;
+  --rk-hall-quim-tint: #261204;
+  --rk-hall-quim-ink: #FF9D5C;
+  --rk-hall-tierra: #E0B48A;
+  --rk-on-hall-tierra: #000000;
+  --rk-hall-tierra-tint: #211708;
+  --rk-hall-tierra-ink: #E0B48A;
+  --rk-focus: #FFC14D;
+  --rk-overlay: rgba(0, 0, 0, 0.8);
+  --rk-shadow-card: none;
+  --rk-shadow-press: none;
+  --rk-shadow-sheet: none;
+}
+
+/* Roles de la indagacion: un color, un significado, siempre con icono y palabra */
+:root,
+[data-theme] {
+  --rk-role-hypothesis: var(--rk-sol);
+  --rk-role-evidence: var(--rk-foton);
+  --rk-role-data: var(--rk-primary);
+  --rk-role-conclusion: var(--rk-ichu);
+  --rk-role-alert: var(--rk-grana);
+}
+
+/* Salas del museo: el color solo orienta (rotulos, suelos, cordones); nunca lleva significado cientifico.
+   Uso: <section data-hall="fisica"> y luego var(--hall), var(--on-hall), var(--hall-tint), var(--hall-ink). */
+[data-hall="fisica"] {
+  --hall: var(--rk-hall-fisica);
+  --on-hall: var(--rk-on-hall-fisica);
+  --hall-tint: var(--rk-hall-fisica-tint);
+  --hall-ink: var(--rk-hall-fisica-ink);
+}
+[data-hall="bio"] {
+  --hall: var(--rk-hall-bio);
+  --on-hall: var(--rk-on-hall-bio);
+  --hall-tint: var(--rk-hall-bio-tint);
+  --hall-ink: var(--rk-hall-bio-ink);
+}
+[data-hall="quim"] {
+  --hall: var(--rk-hall-quim);
+  --on-hall: var(--rk-on-hall-quim);
+  --hall-tint: var(--rk-hall-quim-tint);
+  --hall-ink: var(--rk-hall-quim-ink);
+}
+[data-hall="tierra"] {
+  --hall: var(--rk-hall-tierra);
+  --on-hall: var(--rk-on-hall-tierra);
+  --hall-tint: var(--rk-hall-tierra-tint);
+  --hall-ink: var(--rk-hall-tierra-ink);
+}
+
+/* Base minima segura */
+:where(:root) { color-scheme: light; }
+:where([data-theme="dark"], [data-theme="holo"]) { color-scheme: dark; }
+:where(:focus-visible) {
+  outline: 3px solid var(--rk-focus);
+  outline-offset: 2px;
+  transition: none;
+}
+.rk-hit { min-width: var(--rk-hit); min-height: var(--rk-hit); }
+.rk-num { font-variant-numeric: tabular-nums lining-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --rk-dur-fast: 0.01ms;
+    --rk-dur: 0.01ms;
+    --rk-dur-slow: 0.01ms;
+    --rk-dur-swing: 0.01ms;
+  }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}
+@media (forced-colors: active) {
+  :where(button, input, select, textarea, [role="tab"]) { border: 2px solid ButtonText; }
+}
