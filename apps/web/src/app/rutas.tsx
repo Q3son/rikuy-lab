@@ -23,7 +23,7 @@ import { rutas as retos } from '../features/retos/rutas.ts';
 import { rutas as tutor } from '../features/tutor/rutas.ts';
 import { PanelAccesibilidad } from '../shell/accesibilidad/PanelAccesibilidad.tsx';
 import { ALIAS_DOCENTE } from '../shell/navegacion.ts';
-import { Lab, Quipu, Yo } from '../shell/pantallas/Estudiante.tsx';
+import { Lab, Yo } from '../shell/pantallas/Estudiante.tsx';
 import { Unirse } from '../shell/pantallas/Unirse.tsx';
 import { flagsActuales } from './flags.ts';
 import './grupoMuseo.ts';
@@ -65,7 +65,7 @@ const delShell: RouteObject[] = [
   // Student tabs (Museo and Cerebro are registered by their features)
   { path: 'lab', element: <Navigate to="/lab/pendulo" replace /> },
   { path: 'lab/inicio', element: <Lab /> },
-  { path: 'quipu', element: <Quipu /> },
+  // The Quipu tab (/quipu) is registered by the mundo feature: it reads the class quipu ledger
   { path: 'yo', element: <Yo /> },
   { path: 'yo/checkin', element: <ConIdentidad hijo={(id) => <CheckInPagina identidad={id} />} /> },
   { path: 'yo/dudas', element: <ConIdentidad hijo={(id) => <CajaDeDudasPagina identidad={id} />} /> },

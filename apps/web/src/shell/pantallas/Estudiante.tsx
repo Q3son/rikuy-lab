@@ -1,4 +1,4 @@
-import { Button, Chip, KnotIcon } from '@rikuy/ui';
+import { Button, Chip } from '@rikuy/ui';
 import { QrCode } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
@@ -37,29 +37,6 @@ export function Lab() {
     <>
       {inicio}
       {frases}
-    </>
-  );
-}
-
-/** E-15 Quipu: the legend of the three knots and an empty cord. No ranking, no scores, no streaks. */
-export function Quipu() {
-  const { t } = useTranslation();
-  return (
-    <>
-      <TarjetaNarrable id="quipu-vacio" texto={t('quipu.vacio')} />
-      <section aria-labelledby="leyenda-nudos" className="flex flex-col gap-2">
-        <h2 id="leyenda-nudos" className="m-0 text-title-sm font-bold">
-          {t('quipu.leyenda')}
-        </h2>
-        <ul className="m-0 flex list-none flex-col gap-2 p-0">
-          {(['simple', 'largo', 'ocho'] as const).map((tipo) => (
-            <li key={tipo} className="flex min-h-12 items-center gap-3 rounded-ctl border-2 border-line bg-surface px-3 py-2">
-              <KnotIcon tipo={tipo} size={32} className="text-primary" />
-              <span className="text-body">{t(`nudo.${tipo}`)}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
     </>
   );
 }

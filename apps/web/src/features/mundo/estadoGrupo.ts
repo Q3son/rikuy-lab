@@ -4,7 +4,7 @@
  * The class quipu balance comes from the F10 ledger (`saldoQuipuAula`).
  */
 import { type AparienciaPiedra, type NudoAyuda, PIEDRA_INICIAL } from '@rikuy/campus';
-import { agregarAsiento, asientosDeAyuda, type AyudaCerrada, crearLibro, idDeterminista, saldoTotalAula } from '@rikuy/quipu';
+import { agregarAsiento, asientosDeAyuda, type AyudaCerrada, crearLibro, idDeterminista, type LibroQuipu, saldoTotalAula } from '@rikuy/quipu';
 import { create } from 'zustand';
 import { useAyudante } from './ayudante/servicio.ts';
 import { grupoActual } from './grupo.ts';
@@ -58,14 +58,14 @@ export const useEstadoGrupo = create<EstadoGrupo>((set, get) => ({
   reiniciar: () => set({ piedra: PIEDRA_INICIAL, rejas: [] }),
 }));
 
-const AULA_DEMO = '01JC0000000000000000000A01';
+export const AULA_DEMO = '01JC0000000000000000000A01';
 const CLASE_DEMO = '01JC0000000000000000000C01';
 
 /**
  * Class quipu balance from the @rikuy/quipu ledger (F10): each help knot the teacher confirmed becomes
  * the ledger entries of `asientosDeAyuda` (daily cap and weekly repeat rules included).
  */
-export function saldoQuipuAula(nudos: NudoAyuda[], aulaId = grupoActual().claseId ?? AULA_DEMO): number {
+export function libroQuipuAula(nudos: NudoAyuda[], aulaId = grupoActual().claseId ?? AULA_DEMO): LibroQuipu {
   let libro = crearLibro();
   const historial: AyudaCerrada[] = [];
   for (const n of nudos.filter((x) => x.estado === 'confirmado').sort((a, b) => a.ts - b.ts)) {
@@ -74,7 +74,11 @@ export function saldoQuipuAula(nudos: NudoAyuda[], aulaId = grupoActual().claseI
     if ('asientos' in r) for (const a of r.asientos) libro = agregarAsiento(libro, a);
     historial.push(ayuda);
   }
-  return saldoTotalAula(libro, aulaId);
+  return libro;
+}
+
+export function saldoQuipuAula(nudos: NudoAyuda[], aulaId = grupoActual().claseId ?? AULA_DEMO): number {
+  return saldoTotalAula(libroQuipuAula(nudos, aulaId), aulaId);
 }
 
 export function useNudosAula(): number {
