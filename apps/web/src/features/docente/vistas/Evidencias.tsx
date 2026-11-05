@@ -60,6 +60,7 @@ function Fila({ i, apodo }: { i: IndicadorVista; apodo: string }) {
 export function Evidencias() {
   const { vista } = useProyeccion();
   const padron = useClase((s) => s.padron);
+  const confirmadas = vista.grupos.reduce((n, g) => n + g.indicadores.filter((i) => i.cita !== null && i.confirmada).length, 0);
   if (vista.grupos.length === 0) {
     return (
       <section className="dc-card">

@@ -9,6 +9,11 @@ describe('demo scenario', () => {
     expect(invalidos.map((e) => e.tipo)).toEqual([]);
   });
 
+  it('is the 2.º B class the demo announces', () => {
+    const { clase } = construirEscenario();
+    expect([clase.grado, clase.seccion]).toEqual([2, 'B']);
+  });
+
   it('has 4 groups and 12 students', () => {
     const { eventos, grupoIds } = construirEscenario();
     expect(Object.keys(grupoIds)).toHaveLength(GRUPOS_DEMO.length);

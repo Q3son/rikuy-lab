@@ -90,7 +90,7 @@ export interface Escenario {
 }
 
 export function construirEscenario(opciones: OpcionesEscenario = {}): Escenario {
-  const clase = ejemplos.clase as Clase;
+  const clase = { ...(ejemplos.clase as Clase), seccion: 'B' };
   const practica = ejemplos.practica as Practica;
   const seqs: Record<string, number> = {};
   let paso = 0;
