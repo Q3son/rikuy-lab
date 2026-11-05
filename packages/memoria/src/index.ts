@@ -1,5 +1,12 @@
 /**
- * @rikuy/memoria: Per-student learning memory: projection, keyword index, retrieval, crypto-erasure.
- * Sprint 0 skeleton. The owning front fills it in (docs/ecosistema/ARQUITECTURA_ECOSISTEMA.md, 5.4).
+ * @rikuy/memoria: per-student learning memory, local-first (ARQUITECTURA 3.10).
+ * Projection from events, MiniSearch keyword index, structured retrieval (ConsultaMemoria), forgetting.
+ * Owner: F4 (docs/ecosistema/ARQUITECTURA_ECOSISTEMA.md, 5.4).
  */
 export const packageName = '@rikuy/memoria' as const;
+
+export * from './boveda.ts';
+export * from './id.ts';
+export * from './memoria.ts';
+export * from './proyeccion.ts';
+export * from './puertos.ts';
