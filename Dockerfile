@@ -6,7 +6,9 @@ FROM node:24-slim AS build
 WORKDIR /app
 COPY . .
 RUN npm ci --no-audit --no-fund
-# MediaPipe hand assets are not bundled here (same as the Pages build): they exceed the PWA precache limit.
+# MediaPipe hand assets (pinned, hash-verified against public/mediapipe/manifest.json): hand tracking works
+# on the public URL. The build lists them outside the shell precache (vite.config.ts).
+RUN node apps/web/scripts/mediapipe-assets.mjs && node apps/web/scripts/mediapipe-assets.mjs --check
 ARG VITE_CLOUD_URL=/nube
 ENV VITE_CLOUD_URL=${VITE_CLOUD_URL}
 RUN npm run build -w @rikuy/web
