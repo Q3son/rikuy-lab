@@ -3,6 +3,7 @@ import { ParaLlevar } from '../familia/ParaLlevar.tsx';
 import { DelCursoPagina, ParaAcercarsePagina } from '../guardian/paginas.tsx';
 import { DudasDocentePagina } from '../reportes/paginas.tsx';
 import { PanelDocente } from './PanelDocente.tsx';
+import { MiPlan } from './plan/MiPlan.tsx';
 import { Ajustes } from './vistas/Ajustes.tsx';
 import { Ayudas } from './vistas/Ayudas.tsx';
 import { CrearClase } from './vistas/CrearClase.tsx';
@@ -32,6 +33,7 @@ export const rutas: RouteObject[] = [
           { path: 'ayudas', Component: Ayudas },
           { path: 'acercarse', Component: ParaAcercarsePagina },
           { path: 'llevar', Component: ParaLlevar },
+          { path: 'plan', Component: MiPlan },
         ],
       },
       {

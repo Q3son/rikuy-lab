@@ -15,7 +15,7 @@ function clienteSimulado(sobrescribir: Partial<ClienteNube> = {}, tope = 10): Cl
   const politica = { orden: ['gemini', 'meta'] as ('gemini' | 'meta')[], timeoutMs: 1000, privacidad: 'solo-docente' as const };
   const enrutador = crearEnrutador({
     adaptadores: crearAdaptadoresSimulados(),
-    politicas: { generarPractica: politica, revisarPractica: politica, pictogramas: politica, visionTabla: politica, traducir: politica },
+    politicas: { generarPractica: politica, revisarPractica: politica, pictogramas: politica, visionTabla: politica, traducir: politica, extraerPlan: politica },
     presupuesto,
     registro,
   });

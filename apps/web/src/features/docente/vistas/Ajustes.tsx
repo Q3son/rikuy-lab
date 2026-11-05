@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { useAcciones, useClase, useProyeccion } from '../Proveedor.tsx';
 import { InterruptorTutor } from './Hoy.tsx';
 import { SenalesPorGrupo } from './SenalesPorGrupo.tsx';
@@ -39,6 +40,16 @@ export function Ajustes({ senalesDisponibles = SENALES_COMPILADAS }: { senalesDi
       </section>
 
       {senalesDisponibles && senales ? <SenalesPorGrupo /> : null}
+
+      <section className="dc-card" aria-labelledby="aj-plan">
+        <h2 id="aj-plan">Mi plan</h2>
+        <p className="dc-muted" style={{ margin: 0 }}>
+          Sube tu programación anual, unidad o malla (PDF o fotos) para relacionarla con el CNEB.
+        </p>
+        <Link className="dc-btn dc-btn--tonal" to="/docente/clase/plan">
+          Abrir «Mi plan»
+        </Link>
+      </section>
 
       <section className="dc-card" aria-labelledby="aj-ctx">
         <h2 id="aj-ctx">Contexto del aula</h2>
