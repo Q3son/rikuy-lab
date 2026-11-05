@@ -55,3 +55,12 @@ describe('the museum group is the joined group (F1 session)', () => {
     expect(grupoActual().dispositivo).toHaveLength(10);
   });
 });
+
+describe('museum exhibits open their F9 practice', () => {
+  it('the pendulum exhibit opens the lab and the others their hologram scene', async () => {
+    const { router } = await renderApp('/exhibicion/exh-pendulo', GRUPO);
+    await waitFor(() => expect(router.state.location.pathname).toBe('/lab/pendulo'));
+    await router.navigate('/exhibicion/exh-lactasa');
+    await waitFor(() => expect(router.state.location.pathname).toBe('/holo/ver/lactasa'));
+  });
+});

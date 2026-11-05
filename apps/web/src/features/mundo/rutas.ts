@@ -1,4 +1,5 @@
 import { createElement } from 'react';
+import { AbrirExhibicion } from './AbrirExhibicion.tsx';
 import type { RouteObject } from 'react-router';
 import { TableroAyudas } from './ayudante/TableroAyudas.tsx';
 import { ListaMuseo } from './ListaMuseo.tsx';
@@ -13,4 +14,6 @@ export const rutas: RouteObject[] = [
   // T-23, teacher view of the help flows (F6 may embed TableroAyudas in its panel)
   { path: 'museo/ayudas', element: createElement(TableroAyudas) },
   { path: 'museo/:salaId', element: createElement(MuseoPagina) },
+  // An exhibit opens its practice: the lab for the pendulum, the hologram viewer for the others
+  { path: 'exhibicion/:exhibicionId', element: createElement(AbrirExhibicion) },
 ];

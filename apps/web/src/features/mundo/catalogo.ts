@@ -1,33 +1,39 @@
 /**
- * Demo exhibit catalog for the museum until the approved practices catalog (F9, `content/practicas/`)
- * is wired in. Exhibits follow the `Exhibicion` contract; the museum map is generated from them.
+ * Exhibit catalog of the museum, built from the practices of `content/practicas/` (F9). Exhibits follow
+ * the `Exhibicion` contract; the museum map is generated from them.
  */
 import type { Exhibicion } from '@rikuy/contracts';
 import { PLANTILLAS, SALAS_CONTENIDO, generarMuseo, type Museo } from '@rikuy/campus';
+import { PRACTICAS, textosParaEstudiantes } from '@rikuy/curriculum-cneb';
 import { RETOS } from '@rikuy/retos';
 
-const PRACTICA_PENDULO = '01JC0000000000000000000P01';
-const PRACTICA_LACTASA = '01JC0000000000000000000P02';
-const PRACTICA_RESPIRACION = '01JC0000000000000000000P03';
-
-export const EXHIBICIONES_DEMO: Exhibicion[] = [
-  { id: 'exh-pendulo', salaId: 'sala-fisica', practicaId: PRACTICA_PENDULO, pedestal: 'p1', recursos: [] },
-  { id: 'exh-lactasa', salaId: 'sala-biologia', practicaId: PRACTICA_LACTASA, pedestal: 'p1', recursos: [] },
-  { id: 'exh-respiracion', salaId: 'sala-biologia', practicaId: PRACTICA_RESPIRACION, pedestal: 'p2', recursos: [] },
-];
-
-export const TITULOS_DEMO: Record<string, string> = {
-  'exh-pendulo': 'El péndulo',
-  'exh-lactasa': 'Lactasa: de la leche a la molécula',
-  'exh-respiracion': 'Respiración en altura',
+/** Where each F9 practice stands in the museum and its short plaque name (presentation only). */
+const UBICACION: Record<string, { id: string; salaId: string; pedestal: string; nombre: string }> = {
+  pendulo: { id: 'exh-pendulo', salaId: 'sala-fisica', pedestal: 'p1', nombre: 'El péndulo' },
+  lactasa: { id: 'exh-lactasa', salaId: 'sala-biologia', pedestal: 'p1', nombre: 'Lactasa: de la leche a la molécula' },
+  respiratorio: { id: 'exh-respiracion', salaId: 'sala-biologia', pedestal: 'p2', nombre: 'Respiración en altura' },
 };
 
-/** Socratic plaque question per exhibit (one line, DESIGN.md 7.2). */
-export const PREGUNTAS_DEMO: Record<string, string> = {
-  'exh-pendulo': '¿Qué hace que un péndulo vaya más rápido o más lento?',
-  'exh-lactasa': '¿Por qué a algunas personas les cae mal la leche?',
-  'exh-respiracion': '¿Respiras igual en la puna que en la costa?',
-};
+const UBICADAS = Object.entries(UBICACION).flatMap(([slug, u]) => {
+  const practica = PRACTICAS[slug];
+  return practica ? [{ slug, u, practica }] : [];
+});
+
+/** Exhibits = the approved practices of content/practicas (F9, via @rikuy/curriculum-cneb). */
+export const EXHIBICIONES_DEMO: Exhibicion[] = UBICADAS.map(({ u, practica }) => ({ id: u.id, salaId: u.salaId, practicaId: practica.id, pedestal: u.pedestal, recursos: [] }));
+
+export const TITULOS_DEMO: Record<string, string> = Object.fromEntries(UBICADAS.map(({ u }) => [u.id, u.nombre]));
+
+/** Plaque question per exhibit: the reviewed Spanish guiding question of the practice (never an unreviewed text). */
+export const PREGUNTAS_DEMO: Record<string, string> = Object.fromEntries(
+  UBICADAS.flatMap(({ u, practica }) => {
+    const textos = textosParaEstudiantes(practica);
+    return textos ? [[u.id, textos.preguntaGuia]] : [];
+  }),
+);
+
+/** Exhibit id -> slug of its practice (`/lab/<slug>`). */
+export const SLUG_DE_EXHIBICION: Record<string, string> = Object.fromEntries(UBICADAS.map(({ slug, u }) => [u.id, slug]));
 
 export const EXHIBICION_DEL_DIA = 'exh-pendulo';
 
