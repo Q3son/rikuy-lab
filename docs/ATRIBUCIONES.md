@@ -23,3 +23,10 @@ Todo el código de este repositorio se escribió durante Hack4Edu 2026 (3–5 de
 
 Las escenas incluidas son procedurales (generadas por código). Si se agregan `.glb` en
 `apps/web/public/models/`, registrar aquí su autor y licencia.
+
+## Tutor, juez y memoria (F4)
+
+- Juez con nivel, cita literal y "NO" (`aggregateRuns`, `sanitizeQuote`): portado de `Educacion/web/src/lib/judge/rubric.ts`, proyecto propio del equipo.
+- Agente de reglas, escalera de pistas y herramientas: refactor del `rulesAgent.ts` y `tools.ts` de Rikuy Lab (código del equipo).
+- Contrato de honestidad ("anunciar en futuro, confirmar con el resultado"), patrón del director que propone JSON y el código valida, e idea de memoria por alumno: patrones de [paoloose/aulaquipu](https://github.com/paoloose/aulaquipu) (`apps/web-app/lib/director.ts`, `backend/agents/aulaquipu-tutor`). Solo patrones, sin copiar código.
+- Búsqueda por palabras clave: [MiniSearch](https://github.com/lucaong/minisearch) (MIT).
