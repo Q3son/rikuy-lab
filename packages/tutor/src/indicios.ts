@@ -14,6 +14,15 @@ export interface Span {
   fin: number;
 }
 
+export interface CuePrediccion {
+  cue: string;
+  /** comparativo: más/menos/mayor...; resultado: aumenta/baja/lento...; efecto: influye/cambia...; va_a: "va a". */
+  clase: 'comparativo' | 'resultado' | 'efecto' | 'va_a';
+  /** Preceded by "no" ("no influye"): a definite claim of no effect. */
+  negado: boolean;
+  span: Span;
+}
+
 export interface AnalisisRazonamiento {
   variable: boolean;
   prediccion: boolean;
@@ -24,6 +33,8 @@ export interface AnalisisRazonamiento {
   spans: { variable: Span[]; prediccion: Span[]; justificacion: Span[] };
   /** Ids of the practice variables (lexicon keys) that the sentence names. */
   variables: string[];
+  /** Every prediction cue with its class, to tell a vague effect from a stated direction. */
+  cues: CuePrediccion[];
   /** True if the sentence is a question (never a prediction or a justification). */
   esPregunta: boolean;
 }
@@ -38,15 +49,15 @@ export const LEXICO_VARIABLES: Readonly<Record<string, readonly string[]>> = {
   altitud: ['altitud', 'altura', 'msnm', 'puna'],
 };
 
-const COMPARATIVOS = ['mas', 'menos', 'mayor', 'menor', 'mejor', 'peor'];
+export const COMPARATIVOS = ['mas', 'menos', 'mayor', 'menor', 'mejor', 'peor'];
 
-const EFECTO = [
+export const EFECTO = [
   'influye', 'influyen', 'influya', 'influira', 'afecta', 'afectan', 'afecte', 'afectara',
   'depende', 'dependen', 'cambia', 'cambian', 'que cambie', 'cambiara', 'cambiaria', 'varia', 'varian',
   'no hace nada', 'no pasa nada', 'no importa', 'da igual',
 ];
 
-const RESULTADO = [
+export const RESULTADO = [
   'aumenta', 'aumentan', 'aumentara', 'aumentaran', 'aumentaria',
   'disminuye', 'disminuyen', 'disminuira', 'disminuiran',
   'baja', 'bajan', 'bajara', 'sube', 'suben', 'subira', 'crece', 'crecen', 'decrece',
@@ -81,7 +92,7 @@ function ocurrencias(tokens: readonly Token[], frase: string): Array<{ i: number
   return out;
 }
 
-function comparativoValido(t: readonly Token[], i: number): boolean {
+export function comparativoValido(t: readonly Token[], i: number): boolean {
   const palabra = t[i]!.t;
   const prev = t[i - 1]?.t;
   const sig = t[i + 1]?.t;
@@ -123,17 +134,21 @@ export function analizarRazonamiento(
   }
 
   // Prediction
+  const cues: CuePrediccion[] = [];
   if (!esPregunta) {
+    const anota = (cue: string, clase: CuePrediccion['clase'], i: number, n: number) => {
+      gana(spans.prediccion, ind.prediccion, t, i, i + n - 1, cue);
+      cues.push({ cue, clase, negado: t[i - 1]?.t === 'no', span: { ini: t[i]!.ini, fin: t[i + n - 1]!.fin } });
+    };
     t.forEach((tok, i) => {
-      if (COMPARATIVOS.includes(tok.t) && comparativoValido(t, i)) gana(spans.prediccion, ind.prediccion, t, i, i, tok.t);
+      if (COMPARATIVOS.includes(tok.t) && comparativoValido(t, i)) anota(tok.t, 'comparativo', i, 1);
     });
-    for (const frase of [...EFECTO, ...RESULTADO]) {
-      for (const m of ocurrencias(t, frase)) gana(spans.prediccion, ind.prediccion, t, m.i, m.i + m.n - 1, frase);
-    }
+    for (const frase of EFECTO) for (const m of ocurrencias(t, frase)) anota(frase, 'efecto', m.i, m.n);
+    for (const frase of RESULTADO) for (const m of ocurrencias(t, frase)) anota(frase, 'resultado', m.i, m.n);
     for (const frase of ['va a', 'van a']) {
       for (const m of ocurrencias(t, frase)) {
         const sig = t[m.i + 2]?.t;
-        if (sig && !NO_MOVIMIENTO.has(sig)) gana(spans.prediccion, ind.prediccion, t, m.i, m.i + 1, frase);
+        if (sig && !NO_MOVIMIENTO.has(sig)) anota(frase, 'va_a', m.i, 2);
       }
     }
   }
@@ -161,6 +176,7 @@ export function analizarRazonamiento(
     indicios: ind,
     spans,
     variables,
+    cues,
     esPregunta,
   };
 }
