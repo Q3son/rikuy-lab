@@ -1,11 +1,13 @@
 /**
  * Ephemeral room bus of the two-phone hologram (3.8), ported from the classic `net/bus.ts`:
  *  - BroadcastChannel: tabs of the same device, no server needed;
- *  - WebSocket to the existing relay (`/ws`, apps/server today, apps/hub later) for two phones on
- *    the classroom network. If the relay is missing it keeps working locally and retries.
+ *  - WebSocket to the F8 hub relay (`/ws`, HoloRelay) through @rikuy/presencia's ReconnectingSocket,
+ *    when the page is served by the hub; otherwise (or while the hub is down) it keeps working locally.
  * Nothing here is persisted: BusMessage is not part of the event log.
  */
 import type { BusMessage, Role } from '@rikuy/contracts';
+import { ReconnectingSocket, type SocketLike as SocketPresencia } from '@rikuy/presencia';
+import { hubDeEstaPagina } from '../../../platform/hub.ts';
 
 export interface SocketLike {
   readyState: number;
@@ -19,11 +21,12 @@ export interface SocketLike {
 export type ChannelStatus = 'local' | 'online';
 
 export interface RoomChannelOptions {
-  /** Socket factory; `null` disables the relay (single device). */
+  /**
+   * Socket factory; `null` disables the relay (single device). Omitted: the hub relay, only when this
+   * page is served by the hub.
+   */
   socket?: (() => SocketLike) | null;
 }
-
-const OPEN = 1;
 
 export function relayUrl(href = location.href): string {
   const url = new URL('ws', href.split('#')[0]);
@@ -38,11 +41,8 @@ export class RoomChannel {
 
   private readonly bc: BroadcastChannel | null;
   private readonly handlers = new Set<(m: BusMessage) => void>();
-  private socket: SocketLike | null = null;
-  private retry = 1000;
+  private relay: ReconnectingSocket | null = null;
   private closed = false;
-  private timer: ReturnType<typeof setTimeout> | undefined;
-  private readonly makeSocket: (() => SocketLike) | null;
 
   constructor(
     readonly room: string,
@@ -51,8 +51,11 @@ export class RoomChannel {
   ) {
     this.bc = typeof BroadcastChannel === 'function' ? new BroadcastChannel(`rikuy-${room}`) : null;
     if (this.bc) this.bc.onmessage = (e) => this.dispatch(e.data as BusMessage);
-    this.makeSocket = options.socket === undefined ? () => new WebSocket(relayUrl()) as unknown as SocketLike : options.socket;
-    this.connect();
+    if (options.socket) this.connect(options.socket);
+    else if (options.socket === undefined && typeof WebSocket === 'function')
+      void hubDeEstaPagina().then((hub) => {
+        if (hub) this.connect(() => new WebSocket(relayUrl()) as unknown as SocketLike);
+      });
   }
 
   on(handler: (m: BusMessage) => void): () => void {
@@ -64,7 +67,7 @@ export class RoomChannel {
 
   send(msg: BusMessage): void {
     this.bc?.postMessage(msg);
-    if (this.socket?.readyState === OPEN) this.socket.send(JSON.stringify(msg));
+    this.relay?.send(msg);
   }
 
   /** Announces this phone on the local channel too (the relay does it on its own). */
@@ -74,49 +77,22 @@ export class RoomChannel {
 
   close(): void {
     this.closed = true;
-    clearTimeout(this.timer);
     this.bc?.close();
-    const s = this.socket;
-    this.socket = null;
-    if (s) {
-      s.onclose = null;
-      s.close();
-    }
+    this.relay?.close();
+    this.relay = null;
   }
 
-  private connect() {
-    if (!this.makeSocket || this.closed) return;
-    let s: SocketLike;
-    try {
-      s = this.makeSocket();
-    } catch {
-      this.scheduleReconnect();
-      return;
-    }
-    this.socket = s;
-    s.onopen = () => {
-      this.retry = 1000;
-      s.send(JSON.stringify({ type: 'hello', role: this.role, room: this.room, clientId: this.clientId } satisfies BusMessage));
-      this.setStatus('online');
-    };
-    s.onmessage = (e) => {
-      try {
-        this.dispatch(JSON.parse(e.data) as BusMessage);
-      } catch {
-        /* invalid message from the network: ignored */
-      }
-    };
-    s.onclose = () => {
-      this.socket = null;
-      this.setStatus('local');
-      this.scheduleReconnect();
-    };
-  }
-
-  private scheduleReconnect() {
+  private connect(abrir: () => SocketLike) {
     if (this.closed) return;
-    this.timer = setTimeout(() => this.connect(), this.retry);
-    this.retry = Math.min(this.retry * 2, 15_000);
+    this.relay = new ReconnectingSocket({
+      open: () => abrir() as unknown as SocketPresencia,
+      // The hub keeps no client state across connections: hello again on every (re)connection.
+      onOpen: (send) => void send({ type: 'hello', role: this.role, room: this.room, clientId: this.clientId } satisfies BusMessage),
+      onMessage: (m) => this.dispatch(m as BusMessage),
+      onStatus: (conectado) => this.setStatus(conectado ? 'online' : 'local'),
+      minDelayMs: 1000,
+      maxDelayMs: 15_000,
+    });
   }
 
   private setStatus(s: ChannelStatus) {
@@ -126,6 +102,7 @@ export class RoomChannel {
   }
 
   private dispatch(msg: BusMessage) {
+    if (!msg || typeof msg !== 'object') return;
     for (const h of this.handlers) h(msg);
   }
 }
