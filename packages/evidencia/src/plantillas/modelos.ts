@@ -44,3 +44,72 @@ export const EntradaFamilia = z.discriminatedUnion('variante', [
 ]);
 export type EntradaFamilia = z.input<typeof EntradaFamilia>;
 export type EntradaFamiliaValida = z.output<typeof EntradaFamilia>;
+
+
+// ---- Weekly digest for the teacher-tutor ------------------------------------------------------
+
+const Entero = z.number().int().min(0);
+const Etiqueta = z.string().trim().min(1).max(120);
+
+export const ConceptoCosto = z.strictObject({ concepto: Etiqueta, gruposAfectados: Entero, gruposTotal: Entero });
+
+export const EntradaTutora = z.strictObject({
+  claseEtiqueta: z.string().trim().min(1).max(30),
+  fechaIni: FechaIso,
+  fechaFin: FechaIso,
+  exhibiciones: Entero,
+  gruposEntregaron: Entero,
+  gruposTotal: Entero,
+  competencia: z.strictObject({
+    nombre: Etiqueta,
+    capacidades: z.array(z.strictObject({ nombre: Etiqueta, conEvidencia: Entero, trabajadas: Entero })).max(5),
+  }),
+  costaron: z.array(ConceptoCosto).max(3),
+  dudas: z.array(z.strictObject({ tema: Etiqueta })).max(3).optional(),
+  ayuda: z.strictObject({ pedidos: Entero, cerrados: Entero, nudosPorConfirmar: Entero }).optional(),
+  pendientes: z.strictObject({
+    gruposSinEntregar: Entero,
+    nudosPorConfirmar: Entero,
+    vitrinasPorAbrir: Entero,
+    mensajesPorAprobar: Entero,
+    cierreEscolar: z.strictObject({ fecha: FechaIso, fuente: Etiqueta }).optional(),
+  }),
+  proxima: z.strictObject({ titulo: Etiqueta }).optional(),
+  fraseLocal: Palabras(12).optional(),
+  enlaceApp: Url,
+  /** Free text such as "viernes 17:00". */
+  sincronizadoHasta: z.string().trim().min(1).max(40),
+});
+export type EntradaTutora = z.input<typeof EntradaTutora>;
+
+// ---- Monthly report for the principal and the UGEL --------------------------------------------
+
+const Capacidad = z.strictObject({ nombre: Etiqueta, gruposConEvidencia: Entero, gruposTotal: Entero });
+
+export const EntradaInforme = z.strictObject({
+  alcance: z.enum(['director', 'ugel']),
+  institucion: Etiqueta,
+  /** YYYY-MM */
+  mes: z.string().regex(/^\d{4}-\d{2}$/),
+  datosSimulados: z.boolean().default(false),
+  sincronizacion: z.strictObject({ aulasSincronizadas: Entero, aulasTotal: Entero, ultima: FechaIso }),
+  cifras: z.strictObject({
+    exhibicionesRealizadas: Entero,
+    seccionesActivas: Entero,
+    pctSesionesConEvidencia: z.number().int().min(0).max(100),
+    diasCierreCubiertos: Entero,
+    coberturaDatosPct: z.number().int().min(0).max(100),
+  }),
+  cobertura: z.array(z.strictObject({ seccion: z.string().trim().min(1).max(30), capacidades: z.array(Capacidad).max(5) })).max(40),
+  conceptos: z.array(ConceptoCosto).max(5),
+  continuidad: z.strictObject({ diasCierre: Entero, paquetesEnviados: Entero, paquetesDevueltosQr: Entero, porCanal: z.strictObject({ qr: Entero, whatsapp: Entero, a4: Entero }) }),
+  brechas: z.strictObject({ sesionesSinRed: Entero, horasAudioQuechua: z.number().min(0) }),
+  ayuda: z.strictObject({ pedidos: Entero, cerrados: Entero }).optional(),
+  /** UGEL only: one row per school, identified by its modular code. */
+  territorial: z.array(z.strictObject({ codigoModular: z.string().regex(/^\d{7}$/), gruposConEvidencia: Entero, gruposTotal: Entero })).max(200).optional(),
+});
+export type EntradaInforme = z.input<typeof EntradaInforme>;
+export type EntradaInformeValida = z.output<typeof EntradaInforme>;
+
+/** Minimum cell size: anything with fewer groups is suppressed (4.7, DESIGN 12). */
+export const MIN_CELDA = 5;

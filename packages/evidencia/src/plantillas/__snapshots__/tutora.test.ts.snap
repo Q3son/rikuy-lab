@@ -1,0 +1,62 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`weekly digest for the teacher-tutor > matches the snapshot in the three shapes > asunto 1`] = `"Rikuy · 2.º B · semana del 2 al 6 de noviembre"`;
+
+exports[`weekly digest for the teacher-tutor > matches the snapshot in the three shapes > html 1`] = `
+"<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rikuy · 2.º B · semana del 2 al 6 de noviembre</title></head>
+<body style="margin:0;background:#F5F6F1;font-family:Arial,Helvetica,sans-serif;color:#0D2B33;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:16px;">
+<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#FFFFFF;border:2px solid #D3D9CC;border-radius:16px;"><tr><td style="padding:20px;font-size:16px;line-height:24px;">
+<p style="margin:0 0 4px;font-weight:bold;">Rikuy · 2.º B · semana del 2 al 6 de noviembre</p>
+<p style="margin:0 0 12px;font-size:18px;">Esta semana: 3 exhibiciones, 5 de 6 grupos entregaron evidencia.</p>
+<h2 style="margin:16px 0 6px;font-size:17px;">Competencia que avanzó: Indaga mediante métodos científicos para construir sus conocimientos</h2>
+<div style="margin:0 0 10px;"><div>Problematiza situaciones: <strong>5 de 6</strong></div><div style="height:14px;border:2px solid #0D2B33;border-radius:4px;background:#E9ECE4;"><div style="height:14px;width:83%;background:#075E6C;"></div></div></div><div style="margin:0 0 10px;"><div>Genera y registra datos o información: <strong>4 de 6</strong></div><div style="height:14px;border:2px solid #0D2B33;border-radius:4px;background:#E9ECE4;"><div style="height:14px;width:67%;background:#075E6C;"></div></div></div>
+<p style="margin:0 0 12px;font-size:14px;color:#4D6368;">El resto de cada barra es sin evidencia aún, no un resultado bajo.</p>
+<h2 style="margin:16px 0 6px;font-size:17px;">Lo que les costó</h2>
+<ul style="margin:0 0 16px;padding-left:20px;"><li style="margin:0 0 6px;">Longitud → periodo: 4 de 6 grupos tuvieron una idea por revisar.</li></ul>
+<h2 style="margin:16px 0 6px;font-size:17px;">Mapa de dudas</h2><ul style="margin:0 0 16px;padding-left:20px;"><li style="margin:0 0 6px;">Contar las oscilaciones</li></ul>
+<h2 style="margin:16px 0 6px;font-size:17px;">Ayuda entre pares</h2><p style="margin:0 0 12px;">7 pedidos, 6 cerrados, 4 nudos por confirmar.</p>
+<h2 style="margin:16px 0 6px;font-size:17px;">Pendientes</h2>
+<ul style="margin:0 0 16px;padding-left:20px;"><li style="margin:0 0 6px;">1 grupo falta por entregar su QR</li><li style="margin:0 0 6px;">4 nudos por confirmar</li><li style="margin:0 0 6px;">2 mensajes a familias por aprobar</li><li style="margin:0 0 6px;">Tu región cierra el 11 de diciembre (fuente: Infobae, 13 oct 2026). Prepara la hoja Para llevar.</li></ul>
+<p style="margin:0 0 12px;"><strong>Próxima exhibición sugerida:</strong> Plano inclinado</p>
+
+<p style="margin:16px 0;"><a href="https://rikuy.app/#/docente" style="display:inline-block;padding:14px 20px;background:#075E6C;color:#FFFFFF;text-decoration:none;border-radius:12px;font-weight:bold;">Abrir Mi clase de hoy</a></p>
+<p style="margin:0;font-size:13px;color:#4D6368;">Orienta, no califica. Datos hasta viernes 17:00. Puedes pausar estos correos en Ajustes.</p>
+</td></tr></table></td></tr></table></body></html>"
+`;
+
+exports[`weekly digest for the teacher-tutor > matches the snapshot in the three shapes > texto 1`] = `
+"Rikuy · 2.º B · semana del 2 al 6 de noviembre
+
+Esta semana: 3 exhibiciones, 5 de 6 grupos entregaron evidencia.
+
+Competencia que avanzó: Indaga mediante métodos científicos para construir sus conocimientos
+- Problematiza situaciones: 5 de 6 grupos con evidencia; el resto, sin evidencia aún.
+- Genera y registra datos o información: 4 de 6 grupos con evidencia; el resto, sin evidencia aún.
+
+Lo que les costó
+- Longitud → periodo: 4 de 6 grupos tuvieron una idea por revisar.
+
+Mapa de dudas
+- Contar las oscilaciones
+
+Ayuda entre pares
+7 pedidos, 6 cerrados, 4 nudos por confirmar.
+
+Pendientes
+- 1 grupo falta por entregar su QR
+- 4 nudos por confirmar
+- 2 mensajes a familias por aprobar
+- Tu región cierra el 11 de diciembre (fuente: Infobae, 13 oct 2026). Prepara la hoja Para llevar.
+
+Próxima exhibición sugerida: Plano inclinado
+
+Abrir Mi clase de hoy: https://rikuy.app/#/docente
+
+Orienta, no califica. Datos hasta viernes 17:00. Puedes pausar estos correos en Ajustes."
+`;
+
+exports[`weekly digest for the teacher-tutor > matches the snapshot in the three shapes > whatsapp 1`] = `
+"Rikuy · 2.º B: esta semana 3 exhibiciones, 5 de 6 grupos entregaron evidencia. Pendientes: 4.
+Abrir Mi clase de hoy: https://rikuy.app/#/docente"
+`;

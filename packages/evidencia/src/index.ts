@@ -21,3 +21,6 @@ export * from './mensajeria/puertos.ts';
 export * from './mensajeria/cola.ts';
 export * from './mensajeria/simulado.ts';
 export * from './mensajeria/sha256.ts';
+export * from './plantillas/tutora.ts';
+export * from './plantillas/informe.ts';
+export * from './plantillas/componer.ts';
