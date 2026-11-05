@@ -1,0 +1,134 @@
+/**
+ * CONTROL phone of the group (golden path of the pitch): its front camera reads hand gestures and
+ * drives the projector under the pyramid. Every gesture or button becomes a BusMessage; the
+ * projector acknowledges it and this phone shows "El proyector hizo: …" with the round trip.
+ * If the camera fails, is slow or the teacher turns it off, touch and voice do the same.
+ */
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useParams } from 'react-router';
+import { actionLabel, actionToMessage, type ViewerAction } from '@rikuy/holo';
+import { listenOnce, recognitionSupported } from '../../platform/voz/speech.ts';
+import { parseVoiceCommand } from '../../platform/voz/parse.ts';
+import { BotonesTactiles, CamaraActiva, EstadoCamara, GuiaGestos, PadTactil } from './componentes.tsx';
+import { ACK_PREFIX, ActionCoalescer, ConfirmationTracker, normalizeRoomCode, type Confirmation } from './sala/room.ts';
+import { RoomChannel } from './sala/RoomChannel.ts';
+import { useGestosMano, type GestosMano } from './useGestosMano.ts';
+
+export interface PaginaControlProps {
+  crearCanal?: (sala: string, rol: 'control') => RoomChannel;
+  usarGestos?: (onAction: (a: ViewerAction) => void) => GestosMano;
+}
+
+const defaultCanal = (sala: string) => new RoomChannel(sala, 'control');
+
+export function PaginaControl({ crearCanal = defaultCanal, usarGestos = useGestosMano }: PaginaControlProps) {
+  const sala = normalizeRoomCode(useParams().sala ?? '') ?? '';
+  const [conectado, setConectado] = useState(false);
+  const [enLinea, setEnLinea] = useState(false);
+  const [confirmacion, setConfirmacion] = useState<Confirmation | null>(null);
+  const [ultimo, setUltimo] = useState<string | null>(null);
+  const [voz, setVoz] = useState<string | null>(null);
+  const tracker = useRef(new ConfirmationTracker());
+  const coalescer = useRef<ActionCoalescer | null>(null);
+
+  useEffect(() => {
+    if (!sala) return;
+    const c = crearCanal(sala, 'control');
+    // Continuous gestures are merged once per frame: low latency without flooding the relay.
+    const merge = new ActionCoalescer((a) => {
+      tracker.current.sent(a, performance.now());
+      c.send(actionToMessage(a, 'control'));
+    });
+    coalescer.current = merge;
+    let raf = requestAnimationFrame(function loop() {
+      merge.flush();
+      raf = requestAnimationFrame(loop);
+    });
+    c.onStatus = (s) => setEnLinea(s === 'online');
+    const off = c.on((m) => {
+      if (m.type === 'hello' && m.role === 'display') setConectado(true);
+      if (m.type === 'peers') setConectado(m.roles.includes('display'));
+      if (m.type === 'state') setConectado(true);
+      if (m.type === 'say' && m.text.startsWith(ACK_PREFIX)) {
+        setConectado(true);
+        const ok = tracker.current.confirm(m.text.slice(ACK_PREFIX.length), performance.now());
+        if (ok) setConfirmacion(ok);
+      }
+    });
+    c.hello();
+    return () => {
+      cancelAnimationFrame(raf);
+      coalescer.current = null;
+      off();
+      c.close();
+    };
+  }, [sala, crearCanal]);
+
+  const enviar = useCallback(
+    (a: ViewerAction) => {
+      setUltimo(actionLabel(a));
+      coalescer.current?.push(a);
+    },
+    [],
+  );
+
+  const gestos = usarGestos(enviar);
+  const camaraEncendida = gestos.status === 'active' || gestos.status === 'slow' || gestos.status === 'loading';
+
+  async function hablar() {
+    setVoz('Escuchando…');
+    const texto = await listenOnce().result;
+    const accion = texto ? parseVoiceCommand(texto) : null;
+    if (accion) enviar(accion);
+    setVoz(texto ? (accion ? `“${texto}”` : `No entendí “${texto}”. Prueba: gira, acerca, pausa, suelta.`) : 'No te escuché. Usa los botones.');
+  }
+
+  if (!sala) {
+    return (
+      <main className="mx-auto max-w-md p-4">
+        <p role="alert">Ese código de sala no es válido.</p>
+        <Link to="/holo/unirse" className="text-[#075E6C] underline">Escribir otro código</Link>
+      </main>
+    );
+  }
+
+  return (
+    <main className="mx-auto flex min-h-dvh max-w-md flex-col gap-3 bg-[#F5F6F1] p-4 text-[#0D2B33]">
+      <header className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h1 className="text-[19px] font-extrabold">Control del holograma</h1>
+          <p className="text-sm text-[#33494F]">
+            Sala <b className="tracking-widest">{sala.toUpperCase()}</b> ·{' '}
+            <span className={conectado ? 'text-[#14592D]' : 'text-[#96102F]'}>{conectado ? '● Proyector conectado' : '○ Buscando el proyector…'}</span>
+            {!enLinea && <span className="text-[#4D6368]"> · sin servidor del aula</span>}
+          </p>
+        </div>
+        {camaraEncendida && <CamaraActiva onApagar={gestos.stop} />}
+      </header>
+
+      <output aria-live="polite" className="flex min-h-12 items-center rounded-xl border-2 border-[#14592D] bg-[#E3F2E6] px-3 font-semibold text-[#14592D]">
+        {confirmacion ? `✓ El proyector hizo: ${confirmacion.label} · ${confirmacion.latencyMs} ms` : ultimo ? `Enviado: ${ultimo}` : 'Aún no envías órdenes.'}
+      </output>
+
+      {!camaraEncendida && gestos.status !== 'blocked' && (
+        <button type="button" onClick={() => void gestos.start()} className="h-14 rounded-xl border-2 border-[#04474F] bg-[#075E6C] text-lg font-bold text-white">
+          ✋ Activar cámara de manos
+        </button>
+      )}
+      <EstadoCamara status={gestos.status} pose={gestos.pose} />
+      {gestos.status === 'active' && <GuiaGestos />}
+
+      <PadTactil enviar={enviar} />
+      <BotonesTactiles enviar={enviar} />
+
+      {recognitionSupported() && (
+        <div className="flex flex-col gap-1">
+          <button type="button" onClick={() => void hablar()} className="h-12 rounded-xl border-2 border-[#6A7568] bg-white font-semibold">
+            🎙 Decir una orden
+          </button>
+          <p className="text-xs text-[#4D6368]">La voz del navegador puede usar internet. {voz}</p>
+        </div>
+      )}
+    </main>
+  );
+}
