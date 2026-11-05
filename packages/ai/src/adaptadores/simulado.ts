@@ -5,6 +5,7 @@
 import type { Adaptador } from '../enrutador.ts';
 import type { BorradorPractica, SolicitudPractica } from '../esquemas.ts';
 import { ok } from '../result.ts';
+import { planSimulado } from '../plan/muestra.ts';
 
 /** A complete, valid pendulum draft quoting `cita`. */
 export function borradorSimulado(cita: string): BorradorPractica {
@@ -77,6 +78,12 @@ export function crearAdaptadoresSimulados(opciones: OpcionesSimulado = {}): Adap
       },
       traducir: {
         traducir: async (texto, a) => ok({ texto: `[borrador ${a}] ${texto}`, lengua: a, revisado: false as const }),
+      },
+      extraerPlan: {
+        extraer: async (_archivos, ctx) => {
+          ctx?.registrarUso({ endpoint: 'simulado/extraer-plan', proposito: 'extraerPlan', tokensEntrada: 0, tokensSalida: 0, costoUsd: 0 });
+          return ok(planSimulado());
+        },
       },
     },
   };

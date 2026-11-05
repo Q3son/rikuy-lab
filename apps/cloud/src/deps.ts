@@ -15,6 +15,8 @@ import {
   type CatalogoDesempenos,
   type CatalogoPracticas,
   type DepsCreador,
+  type DepsPlan,
+  curriculoCneb,
   type Enrutador,
   type EntradaUso,
   type Politica,
@@ -39,6 +41,7 @@ export interface LimitesNube {
 export interface DepsNube {
   modo: 'simulado' | 'real' | 'mixto';
   creador: DepsCreador;
+  plan: DepsPlan;
   enrutador: Enrutador;
   registro: RegistroUsoMemoria;
   presupuesto: Presupuesto;
@@ -69,6 +72,8 @@ export const POLITICAS = {
   pictogramas: politica(['meta']),
   visionTabla: politica(['gemini']),
   traducir: politica(['gemini']),
+  // Reading a whole PDF takes longer than a draft.
+  extraerPlan: { ...politica(['gemini']), timeoutMs: 90_000 },
 };
 
 function crearNucleo(adaptadores: Adaptador[], tope: number, reloj: () => Date, alRegistrar?: (e: EntradaUso) => void) {
@@ -104,6 +109,7 @@ export function crearDepsSimuladas(p: Partial<DepsNube> = {}): DepsNube {
   return {
     modo: 'simulado',
     creador: { enrutador: nucleo.enrutador, catalogo, practicas, nuevoId: nuevoUlid },
+    plan: { enrutador: nucleo.enrutador, curriculo: curriculoCneb() },
     enrutador: nucleo.enrutador,
     registro: nucleo.registro,
     presupuesto: nucleo.presupuesto,
@@ -151,6 +157,7 @@ export function crearDepsDesdeEntorno(env: Env, reportes?: DepsReportes): DepsNu
   return {
     modo: reales === 0 ? 'simulado' : reales === 2 ? 'real' : 'mixto',
     creador: { enrutador: nucleo.enrutador, catalogo, practicas, nuevoId: nuevoUlid },
+    plan: { enrutador: nucleo.enrutador, curriculo: curriculoCneb() },
     enrutador: nucleo.enrutador,
     registro: nucleo.registro,
     presupuesto: nucleo.presupuesto,

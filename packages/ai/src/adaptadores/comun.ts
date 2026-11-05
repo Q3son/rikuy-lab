@@ -106,3 +106,14 @@ export const INSTRUCCIONES_REVISOR = [
 export function contenidoRevision(b: BorradorPractica): string {
   return JSON.stringify(b);
 }
+
+export const INSTRUCCIONES_PLAN = [
+  'Lees la planificación de una docente peruana (programación curricular anual, unidad de aprendizaje o malla), en PDF o en fotos de hojas.',
+  'Responde SOLO con un objeto JSON que cumpla el esquema indicado, sin texto adicional.',
+  'Extrae el grado, el nivel, el área y cada unidad o situación significativa con su periodo (bimestre, trimestre o fechas YYYY-MM-DD si aparecen).',
+  'En cada unidad, lista como items las competencias, capacidades, desempeños, contenidos o temas, evidencias e instrumentos de evaluación.',
+  'Copia el texto de cada item tal como aparece. NO lo mejores, NO lo completes y NO inventes items que no estén escritos.',
+  'En "fuente" pon el número de página (o de foto, empezando en 1) y el fragmento literal donde lo leíste.',
+  'En "confianza" pon de 0 a 1 qué tan seguro estás de haberlo leído bien (letra manuscrita o borrosa: menos de 0.7).',
+  'No copies nombres de estudiantes, teléfonos, correos ni DNI: omítelos.',
+].join('\n');
