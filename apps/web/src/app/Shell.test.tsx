@@ -218,7 +218,7 @@ describe('settings: language, theme and accessibility', () => {
 
 describe('every card has a speak / stop button', () => {
   it('the empty-state cards offer "Escuchar"', async () => {
-    await renderApp('/cerebro', GRUPO);
+    await renderApp('/quipu', GRUPO);
     expect(screen.getAllByRole('button', { name: 'Escuchar' }).length).toBeGreaterThanOrEqual(1);
   });
 });
