@@ -1,8 +1,8 @@
 /**
  * @rikuy/campus: Museo Rikuy domain (Tiled maps, halls, exhibits, collision, BFS, director, presence client,
  * Ayudante del museo). The Canvas renderer lives in `@rikuy/campus/canvas`.
- * Pattern credit: AulaQuipu by paoloose (https://github.com/paoloose/aulaquipu). The hall chat rules
- * (`charla.ts`) are ported from its code with attribution; no art copied (see docs/ATRIBUCIONES.md).
+ * Pattern credit: AulaQuipu (team project) (https://github.com/paoloose/aulaquipu). The hall chat rules
+ * (`charla.ts`) are adapted from it; no third-party art (see docs/ATRIBUCIONES.md).
  */
 export const packageName = '@rikuy/campus' as const;
 export * from './ayudante.ts';

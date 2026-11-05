@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { LARGO_MAXIMO, enmascarar, estanCerca, lectoresCerca, limitarRitmo, prepararMensaje } from './charla.ts';
 
-describe('charla de cerca (ported from AulaQuipu chat-rules)', () => {
+describe('charla de cerca (adapted from AulaQuipu chat-rules)', () => {
   it('masks blocked words, also with accents, capitals and plurals', () => {
     expect(enmascarar('Qué IDIOTAS somos')).toBe('Qué *** somos');
     expect(enmascarar('Estúpido péndulo')).toBe('*** péndulo');

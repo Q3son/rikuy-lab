@@ -2,7 +2,6 @@
  * Judge with a model behind the `ModeloJuez` port: 3 runs, median, "dudoso" on disagreement.
  * A run only counts if its quote is literal ("sin cita literal, el criterio no cuenta"); with fewer than
  * 2 valid runs, or on any failure, the rules decide. The classroom is never left hanging.
- * Aggregation ported from Educacion/web/src/lib/judge/rubric.ts (aggregateRuns).
  */
 import { agregarCorridas } from './agregar.ts';
 import { citaEsLiteral, sanitizarCita } from './cita.ts';

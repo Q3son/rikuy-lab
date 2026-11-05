@@ -1,7 +1,6 @@
 /**
  * Aggregation of several runs of the judge: agreement -> "ok"; disagreement -> median and "dudoso"
- * (the teacher decides). Ported from `aggregateRuns` in Educacion/web/src/lib/judge/rubric.ts
- * (the team's own project). "NO" (not assessable) is ordered below 0 and is never a zero.
+ * (the teacher decides). "NO" (not assessable) is ordered below 0 and is never a zero.
  */
 import type { CorridaModelo, Nivel, VeredictoJuez } from './tipos.ts';
 

@@ -92,8 +92,8 @@ export class ControladorMundo {
   }
 
   /**
-   * Opens what is near the group (E / Enter on desktop). Ported idea from AulaQuipu's `interactRef`
-   * (`apps/web-app/components/campus/world.tsx`, paoloose). Locked exhibits do not open.
+   * Opens what is near the group (E / Enter on desktop). Idea adapted from AulaQuipu's (team project) `interactRef`
+   * (`apps/web-app/components/campus/world.tsx`, team project). Locked exhibits do not open.
    */
   interactuar(): Destino | undefined {
     const d = this.cercano();

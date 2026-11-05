@@ -1,9 +1,8 @@
 /**
  * Rule judge for inquiry (the floor of the AI layer: it always works, offline, on the device).
  *
- * Replaces the reading rubric ("infiere"/"reflexiona") of Educacion/web/src/lib/judge/rubric.ts by an
- * inquiry rubric (variable, prediction, justification, use of the data, coherent conclusion) but keeps
- * its contract: level 0-3 + literal quote + "NO" (not assessable, never a zero).
+ * Inquiry rubric (variable, prediction, justification, use of the data, coherent conclusion) with a
+ * fixed contract: level 0-3 + literal quote + "NO" (not assessable, never a zero).
  * "El juez orienta, la docente confirma": every verdict can be corrected (evidencia.confirmada).
  */
 import type { Indicador } from '@rikuy/contracts';

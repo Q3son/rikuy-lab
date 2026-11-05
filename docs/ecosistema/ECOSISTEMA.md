@@ -76,7 +76,7 @@
 | Holograma | Tres modos del renderer existente: **en pantalla** (por defecto), **pirámide** de acetato (4 vistas) o **cajita** a 45° (Pepper's ghost). La pirámide es opcional (< S/ 3, **no verificado**) |
 | Gestos | Ver 2.3 |
 | Produce / consume | `LearningEvent` de cada paso / `Exhibit` aprobado |
-| Distila | Rikuy Lab original (Edson Subia): `HoloRenderer`, `Morph`, escenas, `physics.ts`, prácticas; Reto 17 (hipótesis, experimento, observación); "predecir antes de" de Fixazo; **Entiendo AI** (un tema en varios formatos: video, audio, diagrama, actividades, quiz); **AulaQuipu** (clave del quiz fuera del navegador del alumno) |
+| Distila | Rikuy Lab original (Edson Subia): `HoloRenderer`, `Morph`, escenas, `physics.ts`, prácticas; Reto 17 (hipótesis, experimento, observación); "predecir antes de"; **Entiendo AI** (un tema en varios formatos: video, audio, diagrama, actividades, quiz); **AulaQuipu** (clave del quiz fuera del navegador del alumno) |
 | Estado | **Demo**: péndulo holográfico + cronómetro + comparación; lactasa visual · Prototipo: acelerómetro · Roadmap: medición por video, sensores baratos, 12+ exhibiciones |
 
 ### 2.3 Gestos de mano
@@ -103,7 +103,7 @@
 | Motores | En el aula: **agente de reglas** en el dispositivo (`rulesAgent.ts`) · Modo laptop/kit: Llama 3.2 3B local (Ollama) · En línea (apagado por defecto): LLM con herramientas (`llm.ts`) |
 | Guardián | Si **Rikuy Guardián** está activo, Rikuy recibe solo un aviso de estado de conducta (p. ej., "atascado en la habilidad X") o el pedido del alumno, y responde con apoyo: ofrece una pista, propone ir más lento o una pausa; nunca comenta el estado emocional del alumno ni cambia su expresión según Guardián |
 | Guardas | Filtro anti-respuesta; aviso cuando la voz del navegador pueda usar la nube, con escritura como alternativa |
-| Distila | Rikuy Lab (`rulesAgent.ts`, `tools.ts`); **AulaQuipu** (director + contrato de honestidad; tutores con voz); **Fixazo** (guarda anti-respuesta, pista de plantilla); **RoboLab** (hasta 3 pistas); ZenZen; Reto 04 |
+| Distila | Rikuy Lab (`rulesAgent.ts`, `tools.ts`); **AulaQuipu** (director + contrato de honestidad; tutores con voz); guarda anti-respuesta y pista de plantilla del equipo; **RoboLab** (hasta 3 pistas); ZenZen; Reto 04 |
 | Estado | **Demo**: reglas + pistas + voz en castellano + 3 audios en quechua grabados (si llegan; si no, etiqueta) · Prototipo: Ollama · Roadmap: repertorio quechua amplio, aimara |
 
 ### 2.5 Cerebro (memoria de aprendizaje)
@@ -120,7 +120,7 @@
 | **Mi Cerebro Rikuy** (vista del alumno, E-19) | **Mapa de conocimiento real**: nodos = conceptos y capacidades CNEB; aristas = relaciones del currículo (p. ej., longitud → periodo; masa ↛ periodo). Cada nodo se enciende **solo con evidencia**: al tocarlo muestra la frase literal del alumno, la exhibición y la fecha. Estados honestos (vocabulario de la IA): **sin explorar** (nodo en contorno) · **explorado** (vio la exhibición) · **razonado** (frase evaluada con cita) · **por revisar** (concepto confundido, con sugerencia de exhibición); "?" marca una pregunta abierta. Equivalencia con la arquitectura ([ARQUITECTURA_ECOSISTEMA.md](ARQUITECTURA_ECOSISTEMA.md) 3.12): `sin_explorar` = sin explorar · `explorado` = explorado · `en_camino` = por revisar · `logrado` = razonado · `pregunta_abierta` = "?". La interfaz y los textos usan los nombres de la IA; los identificadores de código pueden conservar los de la arquitectura Vista 2D por defecto (gama baja); vista 3D opcional. Lema: *"Cada luz de tu cerebro es algo que tú dijiste"* |
 | Diferencia con Entiendo AI | Su "cerebro dinámico" 3D es, según su propio sitio, ilustrativo y no refleja progreso real; Mi Cerebro Rikuy se construye con la memoria del alumno y las competencias CNEB, y es el mismo dato que ve la docente en la malla |
 | Juez | Reglas en el dispositivo; con LLM opcional, 3 corridas y mayoría; desacuerdo = "dudoso" para la docente; sin cita literal, el criterio no cuenta |
-| Distila | **AulaQuipu** (memoria por alumno entre sesiones con AtomicMemory); **Fixazo** (juez con cita literal, "no evaluable", mayoría de corridas); **KoEduko** (no tratar lo no evaluado como cero) |
+| Distila | **AulaQuipu** (memoria por alumno entre sesiones con AtomicMemory); juez del equipo (cita literal, "no evaluable", mayoría de corridas); **KoEduko** (no tratar lo no evaluado como cero) |
 | Estado | **Demo**: memoria de la sesión, una cita recordada y Mi Cerebro Rikuy con los nodos del péndulo encendidos · Prototipo: recuperación entre sesiones · Roadmap: memoria multianual con consentimiento, vista 3D |
 
 ### 2.6 Malla curricular y reportes

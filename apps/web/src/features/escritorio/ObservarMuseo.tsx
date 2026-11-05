@@ -2,7 +2,7 @@
  * Teacher on desktop: the same museum world, to watch the groups move hall by hall, next to the class
  * panel. The teacher is drawn as one marker ("Docente") and can walk too; presence is read-only here
  * (the teacher never sends a group position). Halls are the CNEB areas of @rikuy/campus.
- * Spectator idea from AulaQuipu's campus (paoloose), adapted; credits in docs/ATRIBUCIONES.md.
+ * Spectator idea from AulaQuipu's campus (team project), adapted; credits in docs/ATRIBUCIONES.md.
  */
 import { SALAS_CONTENIDO, estiloSala } from '@rikuy/campus';
 import { type ReactNode, useCallback, useMemo, useState } from 'react';

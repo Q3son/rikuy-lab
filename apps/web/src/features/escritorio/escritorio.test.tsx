@@ -9,7 +9,7 @@ import { destinoDeTema, temasDeEscena } from './guia.ts';
 
 const HOY = { exhibicionId: 'exh-pendulo', salaId: 'sala-fisica' };
 
-describe('Rikuy guide ("llévame", ported from AulaQuipu guides)', () => {
+describe('Rikuy guide ("llévame", adapted from AulaQuipu guides)', () => {
   const museo = construirMuseo();
 
   it('walks to the hall door of today’s exhibit from the vestibule, and to the exhibit inside the hall', () => {
