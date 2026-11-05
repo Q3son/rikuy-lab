@@ -1,3 +1,6 @@
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { ids } from '@rikuy/contracts/fixtures';
 import { createHub, channelOf, type RunningHub } from './server.ts';
@@ -168,6 +171,22 @@ describe('teacher panel, export and HTTP sync', () => {
     const msgs = (await hola.json()) as Array<{ t: string; eventos?: unknown[] }>;
     expect(msgs.map((m) => m.t)).toEqual(['delta', 'ack']);
     expect(msgs[0]!.eventos).toHaveLength(2);
+  });
+
+  it('serves the built web app, including the projector and control pages', async () => {
+    const dist = mkdtempSync(join(tmpdir(), 'rikuy-dist-'));
+    writeFileSync(join(dist, 'index.html'), '<!doctype html><title>Rikuy</title>');
+    writeFileSync(join(dist, 'display.html'), '<!doctype html><title>Proyector</title>');
+    try {
+      const { base } = await start({ webDist: dist });
+      expect(await (await fetch(`${base}/`)).text()).toContain('<title>Rikuy</title>');
+      const display = await fetch(`${base}/display.html?sala=abcde`);
+      expect(display.status).toBe(200);
+      expect(await display.text()).toContain('Proyector');
+      expect((await fetch(`${base}/api/health`)).status).toBe(200);
+    } finally {
+      rmSync(dist, { recursive: true, force: true });
+    }
   });
 
   it('serves discovery with the hub URL as QR', async () => {
