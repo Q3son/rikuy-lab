@@ -4,6 +4,7 @@
  * these are the shapes the AI layer needs from them.
  */
 import type { DesempenoRef, Practica } from '@rikuy/contracts';
+import { subconjunto } from '@rikuy/curriculum-cneb';
 
 export type RefDesempeno = Pick<DesempenoRef, 'nivel' | 'grado' | 'competencia' | 'desempeno'>;
 
@@ -26,13 +27,21 @@ export function crearCatalogoDesempenos(entradas: Record<string, string>): Catal
   };
 }
 
-/**
- * DEVELOPMENT SAMPLE ONLY, until `@rikuy/curriculum-cneb` (F9) exports the real subset.
- * The text must be checked against the official PDF before it is used for anything else.
- */
-export const CATALOGO_DESEMPENOS_MINIMO: Record<string, string> = {
-  'secundaria-2:c1:d1': 'Formula preguntas acerca de las variables que influyen en un hecho, fenómeno u objeto natural o tecnológico.',
-};
+/** Every science and technology performance of the official CNEB subset (F9), keyed by `claveDesempeno`. */
+export function entradasCneb(): Record<string, string> {
+  const entradas: Record<string, string> = {};
+  for (const g of subconjunto.grados)
+    for (const c of g.competencias)
+      c.desempenos.forEach((texto, i) => {
+        entradas[claveDesempeno({ nivel: g.nivel, grado: g.grado, competencia: c.numero, desempeno: i + 1 })] = texto;
+      });
+  return entradas;
+}
+
+/** The Creador catalog over the real CNEB subset of `@rikuy/curriculum-cneb`. */
+export function crearCatalogoCneb(): CatalogoDesempenos {
+  return crearCatalogoDesempenos(entradasCneb());
+}
 
 export interface FiltroPracticas {
   nivel?: DesempenoRef['nivel'];

@@ -1,4 +1,4 @@
-import { SolicitudPractica, ejecutarCadena, aprobarPropuesta, crearAdaptadoresSimulados, crearCatalogoDesempenos, crearCatalogoPracticas, crearEnrutador, Presupuesto, RegistroUsoMemoria, CATALOGO_DESEMPENOS_MINIMO, type PropuestaCreador } from '@rikuy/ai';
+import { SolicitudPractica, ejecutarCadena, aprobarPropuesta, crearAdaptadoresSimulados, crearCatalogoCneb, crearCatalogoPracticas, crearEnrutador, Presupuesto, RegistroUsoMemoria, type PropuestaCreador } from '@rikuy/ai';
 import { Practica } from '@rikuy/contracts';
 import { ejemplos } from '@rikuy/contracts/fixtures';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
@@ -11,7 +11,7 @@ import { reducir, estadoInicial } from './estado.ts';
 function clienteSimulado(sobrescribir: Partial<ClienteNube> = {}, tope = 10): ClienteNube {
   const registro = new RegistroUsoMemoria();
   const presupuesto = new Presupuesto({ registro, topeMensualUsd: tope });
-  const catalogo = crearCatalogoDesempenos(CATALOGO_DESEMPENOS_MINIMO);
+  const catalogo = crearCatalogoCneb();
   const politica = { orden: ['gemini', 'meta'] as ('gemini' | 'meta')[], timeoutMs: 1000, privacidad: 'solo-docente' as const };
   const enrutador = crearEnrutador({
     adaptadores: crearAdaptadoresSimulados(),

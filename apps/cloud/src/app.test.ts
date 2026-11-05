@@ -35,7 +35,9 @@ describe('/ia in mock mode (no keys)', () => {
   it('lists the performances available to the picker', async () => {
     const { app } = montar();
     const j = await (await app.request('/ia/desempenos', { headers: H })).json();
-    expect(j.desempenos[0]).toMatchObject({ ref: { grado: 2, competencia: 1 } });
+    // The real CNEB science subset (F9): every grade from 1.º primaria to 5.º secundaria.
+    expect(j.desempenos.length).toBeGreaterThan(100);
+    expect(j.desempenos).toContainEqual(expect.objectContaining({ ref: { nivel: 'secundaria', grado: 2, competencia: 1, desempeno: 1 } }));
   });
 
   it('requires a valid school id', async () => {

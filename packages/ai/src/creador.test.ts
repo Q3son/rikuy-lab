@@ -1,7 +1,7 @@
 import { Paquete, PaqueteValidado, Practica } from '@rikuy/contracts';
 import { describe, expect, it } from 'vitest';
 import { crearAdaptadoresSimulados, borradorSimulado } from './adaptadores/simulado.ts';
-import { crearCatalogoDesempenos, crearCatalogoPracticas, CATALOGO_DESEMPENOS_MINIMO } from './catalogo.ts';
+import { crearCatalogoCneb, crearCatalogoPracticas } from './catalogo.ts';
 import { aprobarPropuesta, ejecutarCadena, type DepsCreador } from './creador.ts';
 import { crearEnrutador, type Adaptador, type Politica } from './enrutador.ts';
 import { firmarPaquete, generarParClaves, paquetePractica, exportarClavePublica, verificarPaquete } from './firma.ts';
@@ -11,7 +11,7 @@ import { CITA, refDesempeno } from './pruebas-util.ts';
 import { SolicitudPractica } from './esquemas.ts';
 import { ejemplos } from '@rikuy/contracts/fixtures';
 
-const catalogo = crearCatalogoDesempenos(CATALOGO_DESEMPENOS_MINIMO);
+const catalogo = crearCatalogoCneb();
 const solicitud = SolicitudPractica.parse({ desempeno: refDesempeno, recursos: { quiz: true, diagrama: true, guionVideo: true, pictogramas: true } });
 const politica: Politica = { orden: ['gemini', 'meta'], timeoutMs: 200, privacidad: 'solo-docente' };
 const politicaMeta: Politica = { orden: ['meta'], timeoutMs: 200, privacidad: 'solo-docente' };

@@ -3,13 +3,12 @@
  * with no keys every provider is replaced by its deterministic stand-in (mock mode, 4.5).
  */
 import {
-  CATALOGO_DESEMPENOS_MINIMO,
   Presupuesto,
   RegistroUsoMemoria,
   TOPE_MENSUAL_POR_DEFECTO_USD,
   crearAdaptadorOpenAICompat,
   crearAdaptadoresSimulados,
-  crearCatalogoDesempenos,
+  crearCatalogoCneb,
   crearCatalogoPracticas,
   crearEnrutador,
   type Adaptador,
@@ -99,7 +98,7 @@ export function cargarCatalogoPracticas(dir: string | undefined): CatalogoPracti
 export function crearDepsSimuladas(p: Partial<DepsNube> = {}): DepsNube {
   const reloj = p.reloj ?? (() => new Date());
   const tope = p.topeMensualUsd ?? TOPE_MENSUAL_POR_DEFECTO_USD;
-  const catalogo = p.catalogo ?? crearCatalogoDesempenos(CATALOGO_DESEMPENOS_MINIMO);
+  const catalogo = p.catalogo ?? crearCatalogoCneb();
   const practicas = p.practicas ?? cargarCatalogoPracticas(undefined);
   const nucleo = crearNucleo(crearAdaptadoresSimulados(), tope, reloj);
   return {
@@ -146,7 +145,7 @@ export function crearDepsDesdeEntorno(env: Env, reportes?: DepsReportes): DepsNu
 
   const alRegistrar = env.USO_LOG_PATH ? (e: EntradaUso) => appendFileSync(env.USO_LOG_PATH!, `${JSON.stringify(e)}\n`) : undefined;
   const nucleo = crearNucleo(adaptadores, tope, reloj, alRegistrar);
-  const catalogo = crearCatalogoDesempenos(CATALOGO_DESEMPENOS_MINIMO);
+  const catalogo = crearCatalogoCneb();
   const practicas = cargarCatalogoPracticas(env.CATALOGO_DIR ?? join(process.cwd(), 'content', 'practicas'));
   const reales = Number(usaGemini) + Number(usaMeta);
   return {
