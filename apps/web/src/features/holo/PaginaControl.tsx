@@ -7,8 +7,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { actionLabel, actionToMessage, type ViewerAction } from '@rikuy/holo';
-import { listenOnce, recognitionSupported } from '../../platform/voz/speech.ts';
-import { parseVoiceCommand } from '../../platform/voz/parse.ts';
+import { ConversacionRikuy } from './ConversacionRikuy.tsx';
 import { BotonesTactiles, CamaraActiva, ControlesPendulo, EstadoCamara, GestoReconocido, GuiaGestos, PadTactil } from './componentes.tsx';
 import { ACK_PREFIX, ActionCoalescer, ConfirmationTracker, DiscreteGate, normalizeRoomCode, type Confirmation } from './sala/room.ts';
 import { RoomChannel } from './sala/RoomChannel.ts';
@@ -27,7 +26,6 @@ export function PaginaControl({ crearCanal = defaultCanal, usarGestos = useGesto
   const [enLinea, setEnLinea] = useState(false);
   const [confirmacion, setConfirmacion] = useState<Confirmation | null>(null);
   const [ultimo, setUltimo] = useState<string | null>(null);
-  const [voz, setVoz] = useState<string | null>(null);
   const tracker = useRef(new ConfirmationTracker());
   const coalescer = useRef<ActionCoalescer | null>(null);
   const gate = useRef(new DiscreteGate());
@@ -91,14 +89,6 @@ export function PaginaControl({ crearCanal = defaultCanal, usarGestos = useGesto
   const gestos = usarGestos(desdeGesto);
   const camaraEncendida = gestos.status === 'active' || gestos.status === 'slow' || gestos.status === 'loading';
 
-  async function hablar() {
-    setVoz('Escuchando…');
-    const texto = await listenOnce().result;
-    const accion = texto ? parseVoiceCommand(texto) : null;
-    if (accion) enviar(accion);
-    setVoz(texto ? (accion ? `“${texto}”` : `No entendí “${texto}”. Prueba: gira, acerca, pausa, suelta.`) : 'No te escuché. Usa los botones.');
-  }
-
   if (!sala) {
     return (
       <main className="mx-auto max-w-md p-4">
@@ -126,6 +116,8 @@ export function PaginaControl({ crearCanal = defaultCanal, usarGestos = useGesto
         {confirmacion ? `✓ El proyector hizo: ${confirmacion.label} · ${confirmacion.latencyMs} ms` : ultimo ? `Enviado: ${ultimo}` : 'Aún no envías órdenes.'}
       </output>
 
+      <ConversacionRikuy practica="pendulo" enviar={enviar} />
+
       {!camaraEncendida && gestos.status !== 'blocked' && (
         <button type="button" onClick={() => void gestos.start()} className="h-14 rounded-xl border-2 border-[#04474F] bg-[#075E6C] text-lg font-bold text-white">
           ✋ Activar cámara de manos
@@ -139,14 +131,6 @@ export function PaginaControl({ crearCanal = defaultCanal, usarGestos = useGesto
       <ControlesPendulo enviar={enviar} longitud={longitud} amortiguacion={amortiguacion} />
       <PadTactil enviar={enviar} />
 
-      {recognitionSupported() && (
-        <div className="flex flex-col gap-1">
-          <button type="button" onClick={() => void hablar()} className="h-12 rounded-xl border-2 border-[#6A7568] bg-white font-semibold">
-            🎙 Decir una orden
-          </button>
-          <p className="text-xs text-[#4D6368]">La voz del navegador puede usar internet. {voz}</p>
-        </div>
-      )}
     </main>
   );
 }
