@@ -60,3 +60,13 @@ export function chunksVisibles(camara: Punto, vista: Tam, mapa: Tam): [number, n
   for (let cy = cy0; cy <= cy1; cy++) for (let cx = cx0; cx <= cx1; cx++) out.push([cx, cy]);
   return out;
 }
+
+/**
+ * Zoom that frames the whole map in a CSS viewport (desktop stage), clamped so small halls do not turn
+ * into giant tiles and big halls stay readable. `tileCss` is the renderer's tile size at zoom 1.
+ */
+export function zoomQueEncuadra(mapa: Tam, vistaCss: Tam, tileCss: number, min = 1, max = 2.5): number {
+  if (mapa.ancho <= 0 || mapa.alto <= 0 || vistaCss.ancho <= 0 || vistaCss.alto <= 0) return 1;
+  const z = Math.min(vistaCss.ancho / (mapa.ancho * tileCss), vistaCss.alto / (mapa.alto * tileCss));
+  return Math.round(Math.min(max, Math.max(min, z)) * 100) / 100;
+}

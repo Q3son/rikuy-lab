@@ -87,3 +87,8 @@ export function rutaSinMarco(ruta: string): boolean {
 }
 
 export const INICIO_POR_ROL: Record<Rol, string> = { docente: '/docente', grupo: '/museo' };
+
+/** Routes that fill the desktop width edge to edge (the walkable museum). */
+export function rutaAPantallaCompleta(pathname: string): boolean {
+  return /^\/museo(\/sala-[\w-]+)?\/?$/.test(pathname);
+}

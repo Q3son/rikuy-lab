@@ -248,7 +248,7 @@ export function crearRenderizadorCanvas(canvas: HTMLCanvasElement, opciones: Opc
   const ctx = canvas.getContext('2d', { alpha: false });
   if (!ctx) throw new Error('Canvas 2D is not available');
   const dpr = Math.min(opciones.dpr ?? (typeof devicePixelRatio === 'number' ? devicePixelRatio : 1), DPR_MAX);
-  const tile = TILE_CSS * dpr;
+  let tile = TILE_CSS * dpr;
   let vista = { ancho: 11, alto: 14 };
   let cacheEscena: Escena | null = null;
   let cacheRejaAbierta = false;
@@ -278,12 +278,17 @@ export function crearRenderizadorCanvas(canvas: HTMLCanvasElement, opciones: Opc
   }
 
   return {
-    redimensionar(anchoCss, altoCss) {
+    redimensionar(anchoCss, altoCss, zoom = 1) {
       canvas.width = Math.round(anchoCss * dpr);
       canvas.height = Math.round(altoCss * dpr);
       canvas.style.width = `${anchoCss}px`;
       canvas.style.height = `${altoCss}px`;
-      vista = { ancho: anchoCss / TILE_CSS, alto: altoCss / TILE_CSS };
+      const nuevo = TILE_CSS * dpr * zoom;
+      if (nuevo !== tile) {
+        tile = nuevo;
+        chunks = new Map(); // chunks are cached at the tile size
+      }
+      vista = { ancho: anchoCss / (TILE_CSS * zoom), alto: altoCss / (TILE_CSS * zoom) };
       return vista;
     },
     dibujar(e: EstadoRender) {
