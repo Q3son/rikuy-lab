@@ -2,7 +2,7 @@ import { Apodo, Clase, RUTAS } from '@rikuy/contracts';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { mapearUrlVieja } from '../app/urlVieja.ts';
 import { FLAGS_POR_DEFECTO, leerFlags } from '../app/flags.ts';
-import { TABS_DOCENTE, TABS_ESTUDIANTE, tabActivo, rutaSinMarco } from './navegacion.ts';
+import { ALIAS_DOCENTE, TABS_DOCENTE, TABS_ESTUDIANTE, tabActivo, rutaSinMarco } from './navegacion.ts';
 import { efectosDeNivel } from './nivel.ts';
 import { APODOS, normalizarCodigo, validarUnirse } from './unirse.ts';
 import { estadoDeRed, useRed } from './estado.ts';
@@ -21,8 +21,10 @@ describe('tab sets per role', () => {
     const rutas = Object.fromEntries([...TABS_ESTUDIANTE, ...TABS_DOCENTE].map((t) => [t.id, t.ruta]));
     expect(rutas.museo).toBe(RUTAS.museo);
     expect(rutas.cerebro).toBe(RUTAS.cerebro);
-    expect(rutas.clase).toBe(RUTAS.clase);
-    expect(rutas.ajustes).toBe(RUTAS.ajustes);
+    expect(rutas.hoy).toBe(RUTAS.docente);
+    // The contract paths /clase and /ajustes stay valid: they redirect to the F6 panel the tab opens.
+    expect(ALIAS_DOCENTE[RUTAS.clase.slice(1)]).toBe(rutas.clase);
+    expect(ALIAS_DOCENTE[RUTAS.ajustes.slice(1)]).toBe(rutas.ajustes);
   });
 
   it('highlights the tab that owns the current route, including nested routes of other fronts', () => {
@@ -37,6 +39,10 @@ describe('tab sets per role', () => {
     expect(tabActivo('/creador', 'docente')).toBe('clase');
     expect(tabActivo('/relevo', 'docente')).toBe('evidencia');
     expect(tabActivo('/docente/evidencias', 'docente')).toBe('evidencia');
+    expect(tabActivo('/docente', 'docente')).toBe('hoy');
+    expect(tabActivo('/docente/clase/ayudas', 'docente')).toBe('clase');
+    expect(tabActivo('/docente/reportes/envios', 'docente')).toBe('reportes');
+    expect(tabActivo('/docente/ajustes', 'docente')).toBe('ajustes');
     expect(tabActivo('/holo', 'docente')).toBeNull();
   });
 
@@ -154,7 +160,7 @@ describe('old URLs redirect to the hash router', () => {
 
 describe('feature flags', () => {
   it('start all off: senales, gestos, webrtc, iaLocal, iaNube', () => {
-    expect(FLAGS_POR_DEFECTO).toEqual({ senales: false, gestos: false, webrtc: false, iaLocal: false, iaNube: false });
+    expect(FLAGS_POR_DEFECTO).toEqual({ senales: false, gestos: false, webrtc: false, iaLocal: false, iaNube: false, guardianNivel2: false });
   });
 
   it('can be switched on from storage for development, ignoring junk', () => {

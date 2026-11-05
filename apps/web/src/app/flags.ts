@@ -9,9 +9,11 @@ export interface Flags {
   webrtc: boolean;
   iaLocal: boolean;
   iaNube: boolean;
+  /** Guardián level 2 (FUNCIONES_EXTRA): off until the school signs the consent and the protocol. */
+  guardianNivel2: boolean;
 }
 
-export const FLAGS_POR_DEFECTO: Flags = { senales: false, gestos: false, webrtc: false, iaLocal: false, iaNube: false };
+export const FLAGS_POR_DEFECTO: Flags = { senales: false, gestos: false, webrtc: false, iaLocal: false, iaNube: false, guardianNivel2: false };
 
 export function leerFlags(json: string | null): Flags {
   if (!json) return { ...FLAGS_POR_DEFECTO };

@@ -3,7 +3,9 @@
 
 .dc-app { min-height: 100dvh; background: var(--rk-bg); color: var(--rk-ink); font-family: var(--rk-font-sans); font-size: var(--rk-fs-body); line-height: var(--rk-lh-body); padding-bottom: calc(var(--rk-tabbar) + 16px); }
 .dc-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 64px; padding: 8px 16px; background: var(--rk-surface); border-bottom: 2px solid var(--rk-border); position: sticky; top: 0; z-index: 5; }
-.dc-top h1 { font-size: 19px; line-height: 24px; font-weight: 800; margin: 0; }
+.dc-top h1, .dc-titulo { font-size: 19px; line-height: 24px; font-weight: 800; margin: 0; }
+.dc-app--en-shell { min-height: 0; padding-bottom: 0; background: transparent; }
+.dc-top--en-shell { position: static; min-height: 0; padding: 0 0 8px; background: transparent; border-bottom: 0; flex-wrap: wrap; }
 .dc-main { max-width: var(--rk-w-tablet); margin: 0 auto; padding: 16px; display: grid; gap: 16px; }
 .dc-tabs { position: fixed; inset: auto 0 0 0; height: var(--rk-tabbar); display: grid; grid-template-columns: repeat(5, 1fr); background: var(--rk-surface); border-top: 2px solid var(--rk-border); z-index: 10; }
 .dc-tabs a { display: grid; place-items: center; align-content: center; gap: 2px; font-size: 13px; color: var(--rk-ink-2); text-decoration: none; min-height: 48px; }

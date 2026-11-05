@@ -107,6 +107,11 @@ export const es: CatalogoLengua = {
     'yo.clase': 'Clase {codigo}',
     'yo.salir': 'Salir de la clase',
     'yo.red': 'Red y pendientes',
+    'yo.mas': 'Más para el grupo',
+    'yo.checkin': '¿Cómo vamos? Contarle a Rikuy',
+    'yo.dudas': 'Tengo una duda',
+    'yo.frases': 'Armar una frase con pictogramas',
+    'yo.accesibilidad': 'Accesibilidad',
 
     'clase.titulo': 'Clase',
     'clase.segmentos': 'Parte de la clase',

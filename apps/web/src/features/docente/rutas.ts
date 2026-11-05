@@ -1,5 +1,7 @@
 import type { RouteObject } from 'react-router';
 import { ParaLlevar } from '../familia/ParaLlevar.tsx';
+import { DelCursoPagina, ParaAcercarsePagina } from '../guardian/paginas.tsx';
+import { DudasDocentePagina } from '../reportes/paginas.tsx';
 import { PanelDocente } from './PanelDocente.tsx';
 import { Ajustes } from './vistas/Ajustes.tsx';
 import { Ayudas } from './vistas/Ayudas.tsx';
@@ -28,6 +30,7 @@ export const rutas: RouteObject[] = [
           { index: true, Component: Preparar },
           { path: 'museo', Component: Museo },
           { path: 'ayudas', Component: Ayudas },
+          { path: 'acercarse', Component: ParaAcercarsePagina },
           { path: 'llevar', Component: ParaLlevar },
         ],
       },
@@ -45,6 +48,8 @@ export const rutas: RouteObject[] = [
         Component: LayoutReportes,
         children: [
           { index: true, Component: ReporteCompetencia },
+          { path: 'dudas', Component: DudasDocentePagina },
+          { path: 'curso', Component: DelCursoPagina },
           { path: 'envios', Component: Envios },
         ],
       },

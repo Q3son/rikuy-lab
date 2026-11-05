@@ -8,37 +8,26 @@ export function ChipRed() {
   return <span className="dc-chip dc-chip--off">{enLinea ? 'En línea' : 'Sin red · todo funciona'}</span>;
 }
 
-const TABS = [
-  { a: '/docente', t: 'Hoy', fin: true },
-  { a: '/docente/clase', t: 'Clase' },
-  { a: '/docente/evidencia', t: 'Evidencia' },
-  { a: '/docente/reportes', t: 'Reportes' },
-  { a: '/docente/ajustes', t: 'Ajustes' },
-] as const;
-
+/**
+ * Inside the app shell: the shell owns the top bar (the one h1) and the teacher tab bar, which point at
+ * these routes. The panel only adds the class line and its status chips.
+ */
 function Marco() {
   const { p } = useProyeccion();
   const esDemo = useClase((s) => s.esDemo);
   const etiqueta = p.clase ? `${p.clase.grado}.º ${p.clase.seccion} · Ciencia y Tec.` : 'Mi clase de hoy';
   return (
-    <div className="dc-app">
-      <header className="dc-top">
-        <h1>{etiqueta}</h1>
+    <div className="dc-app dc-app--en-shell">
+      <div className="dc-top dc-top--en-shell">
+        <p className="dc-titulo">{etiqueta}</p>
         <span className="dc-row">
           {esDemo ? <span className="dc-chip dc-chip--warn">Datos de ejemplo</span> : null}
           <ChipRed />
         </span>
-      </header>
-      <main className="dc-main">
+      </div>
+      <div className="dc-main">
         <Outlet />
-      </main>
-      <nav className="dc-tabs" aria-label="Secciones">
-        {TABS.map((x) => (
-          <NavLink key={x.a} to={x.a} end={'fin' in x}>
-            {x.t}
-          </NavLink>
-        ))}
-      </nav>
+      </div>
     </div>
   );
 }

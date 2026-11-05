@@ -3,7 +3,7 @@ import { rutas, rutasDeFeatures } from './rutas.tsx';
 
 describe('app routes', () => {
   it('wires one route file per feature', () => {
-    expect(Object.keys(rutasDeFeatures).sort()).toEqual(['cerebro', 'creador', 'docente', 'familia', 'grupo', 'holo', 'lab', 'mundo', 'relevo', 'retos', 'tutor']);
+    expect(Object.keys(rutasDeFeatures).sort()).toEqual(['cerebro', 'creador', 'docente', 'familia', 'grupo', 'guardian', 'holo', 'lab', 'mundo', 'relevo', 'retos', 'tutor']);
   });
 
   it('puts the routes of the other fronts before the shell placeholders, so a front overrides a tab root by registering it', () => {

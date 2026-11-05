@@ -5,7 +5,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { useVersion } from '../platform/pwa/actualizacion.ts';
 import { useAjustesA11y } from '../shell/accesibilidad/ajustes.ts';
 import { useCamara, useRed, useUi } from '../shell/estado.ts';
-import { useJornada } from '../shell/jornada.ts';
 import { useSesion } from '../shell/sesion.ts';
 import { renderApp } from '../test-utils.tsx';
 
@@ -103,28 +102,28 @@ describe('student tabs', () => {
   });
 });
 
-describe('Mi clase de hoy', () => {
-  it('shows the four-stage stepper and the empty state when there is no class', async () => {
-    useJornada.getState().cerrar();
-    await renderApp('/hoy', { rol: 'docente' });
-    const pasos = screen.getByRole('list', { name: 'Los cuatro tramos de tu clase' });
-    expect(within(pasos).getAllByRole('listitem')).toHaveLength(4);
-    expect(within(pasos).getByRole('link', { name: /Preparar/ })).toHaveAttribute('aria-current', 'step');
-    expect(within(pasos).getByRole('link', { name: /Museo/ }).textContent).toContain('después');
-    expect(screen.getByText('Aún no hay una clase abierta')).toBeInTheDocument();
+describe('Mi clase de hoy (the F6 teacher panel behind the Hoy tab)', () => {
+  it('the short path /hoy opens the panel with the empty state and the Hoy tab selected', async () => {
+    const { router } = await renderApp('/hoy', { rol: 'docente' });
+    await waitFor(() => expect(router.state.location.pathname).toBe('/docente'));
+    expect(await screen.findByText('Aún no tienes una clase hoy')).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Hoy' })).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('with an open class it shows the code, the groups and one main action', async () => {
-    await renderApp('/hoy', { rol: 'docente' });
-    act(() => useJornada.getState().abrir({ titulo: 'Péndulo: ¿de qué depende lo que tarda?', codigo: 'CYT2B4', grupos: 6, tramo: 'museo' }));
-    expect(await screen.findByText('Péndulo: ¿de qué depende lo que tarda?')).toBeInTheDocument();
-    expect(screen.getByText('Código de la clase: CYT2B4')).toBeInTheDocument();
-    expect(screen.getByText('6 grupos')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Abrir el museo' })).toBeInTheDocument();
-    const pasos = screen.getByRole('list', { name: 'Los cuatro tramos de tu clase' });
-    expect(within(pasos).getByRole('link', { name: /Museo/ })).toHaveAttribute('aria-current', 'step');
-    expect(within(pasos).getByRole('link', { name: /Preparar/ }).textContent).toContain('lista');
-    act(() => useJornada.getState().cerrar());
+  it('with the example class it shows one main action', async () => {
+    await renderApp('/docente', { rol: 'docente' });
+    await userEvent.click(await screen.findByRole('button', { name: 'Usar la clase de ejemplo' }));
+    expect(await screen.findByRole('link', { name: /Recibir evidencia|Abrir el museo/ })).toBeInTheDocument();
+    expect(screen.getByText('Datos de ejemplo')).toBeInTheDocument();
+  });
+
+  it('every teacher tab opens its F6 screen', async () => {
+    const { router } = await renderApp('/docente', { rol: 'docente' });
+    for (const [tab, ruta] of [['Clase', '/docente/clase'], ['Evidencia', '/docente/evidencia'], ['Reportes', '/docente/reportes'], ['Ajustes', '/docente/ajustes']] as const) {
+      await userEvent.click(screen.getByRole('tab', { name: tab }));
+      await waitFor(() => expect(router.state.location.pathname).toBe(ruta));
+      expect(screen.getByRole('tab', { name: tab })).toHaveAttribute('aria-selected', 'true');
+    }
   });
 });
 

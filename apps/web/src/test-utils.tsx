@@ -2,6 +2,8 @@ import type { Lengua } from '@rikuy/contracts';
 import { render } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router';
 import { Proveedores } from './app/Proveedores.tsx';
+import { almacenDocente } from './features/docente/Proveedor.tsx';
+import { useBandejaGuardian } from './features/guardian/bandeja.ts';
 import { rutas } from './app/rutas.tsx';
 import { crearI18n } from './platform/i18n/i18n.ts';
 import { AJUSTES_POR_DEFECTO, useAjustesA11y } from './shell/accesibilidad/ajustes.ts';
@@ -27,6 +29,8 @@ export async function renderApp(ruta: string, opciones: OpcionesApp = {}) {
   useRed.setState({ enLinea: true, pendientes: 0, enviando: false, error: false });
   useCamara.setState({ activa: false, apagar: null });
   useVersion.setState({ nueva: false, descartada: false, listaOffline: false, aplicar: null });
+  almacenDocente().getState().reiniciar();
+  useBandejaGuardian.getState().vaciar();
   if (opciones.rol) useSesion.getState().elegirRol(opciones.rol);
   if (opciones.codigo && opciones.apodo) useSesion.getState().unirse({ codigo: opciones.codigo, apodo: opciones.apodo, nivel: 'normal' });
 

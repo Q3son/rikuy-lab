@@ -9,7 +9,7 @@ const GRUPO = { rol: 'grupo', codigo: 'ABC123', apodo: 'Puma' } as const;
 
 describe('Lab: pictogram sentence builder (level of support)', () => {
   it('lets a group say a prediction by tapping pictograms, and shows it as text', async () => {
-    await renderApp('/lab', GRUPO);
+    await renderApp('/lab/inicio', GRUPO);
     for (const nombre of ['creo que', 'la cuerda', 'larga', 'tarda', 'más']) await userEvent.click(screen.getByRole('button', { name: nombre }));
     expect(screen.getByTestId('frase-texto')).toHaveTextContent('creo que la cuerda larga tarda más');
     await userEvent.click(screen.getByRole('button', { name: 'Usar esta frase' }));
@@ -18,26 +18,26 @@ describe('Lab: pictogram sentence builder (level of support)', () => {
   });
 
   it('every pictogram carries its word and the sentence can be read aloud', async () => {
-    await renderApp('/lab', GRUPO);
+    await renderApp('/lab/inicio', GRUPO);
     const paleta = screen.getByRole('group', { name: 'Pictogramas para elegir' });
     expect(within(paleta).getAllByRole('button')).toHaveLength(11);
     expect(within(screen.getByRole('region', { name: 'Arma una frase' })).getAllByRole('button', { name: 'Escuchar' }).length).toBeGreaterThanOrEqual(1);
   });
 
   it('with the level "con apoyo" the builder comes before everything else', async () => {
-    await renderApp('/lab', GRUPO);
+    await renderApp('/lab/inicio', GRUPO);
     act(() => useSesion.getState().fijarNivel('apoyo'));
     await waitFor(() => expect(screen.getAllByRole('heading', { level: 2 })[0]).toHaveTextContent('Arma una frase'));
   });
 
   it('without support the builder is below the continue card', async () => {
-    await renderApp('/lab', GRUPO);
+    await renderApp('/lab/inicio', GRUPO);
     const encabezados = screen.getAllByRole('heading', { level: 2 });
     expect(encabezados[0]).toHaveTextContent('Aún no empiezas una exhibición');
   });
 
   it('has no serious accessibility violations', async () => {
-    const { container } = await renderApp('/lab', GRUPO);
+    const { container } = await renderApp('/lab/inicio', GRUPO);
     await userEvent.click(screen.getByRole('button', { name: 'creo que' }));
     await expectSinViolacionesGraves(container);
   });

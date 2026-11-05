@@ -7,6 +7,7 @@ import {
   type PedidoDeAyuda,
 } from '@rikuy/senales';
 import type { AutorreporteMomento } from '@rikuy/contracts';
+import { hlcAhora, nuevoIdGuardian } from './bandeja.ts';
 import { CheckInMomento, type SalidaCheckIn } from './CheckInMomento.tsx';
 import { IndicadorGuardian } from './IndicadorGuardian.tsx';
 import { NecesitoHablar, type SolicitudHablar } from './NecesitoHablar.tsx';
@@ -25,44 +26,45 @@ type Vista = 'checkin' | 'hablar' | 'pulso' | 'fin';
 export interface GuardianDemoProps {
   onAutorreporte?(a: AutorreporteMomento): void;
   onPedido?(p: PedidoDeAyuda): void;
+  /** Pseudonymous ids of the group and class of this device; without them the demo ids are used. */
+  identidad?: { estudianteId: string; claseId: string };
 }
 
-let contador = 0;
-const nuevoId = () => `01JC${'0'.repeat(18)}D${String(++contador).padStart(3, '0')}`.slice(0, 26).padEnd(26, '0');
-const hlcAhora = () => `${String(Date.now()).padStart(13, '0')}-0000-demo0001`;
+const nuevoId = nuevoIdGuardian;
 
 /** Container: wires the pure Guardián logic (@rikuy/senales) to the presentational components. */
-export function GuardianDemo({ onAutorreporte, onPedido }: GuardianDemoProps) {
+export function GuardianDemo({ onAutorreporte, onPedido, identidad }: GuardianDemoProps) {
+  const ids = identidad ?? MOCK;
   const control = useMemo(() => crearControlCheckIn({ ventanaMs: 90_000 }), []);
   const [vista, setVista] = useState<Vista>('checkin');
-  const [aviso, setAviso] = useState(() => control.requiereAviso(MOCK.estudianteId));
+  const [aviso, setAviso] = useState(() => control.requiereAviso(ids.estudianteId));
   const [activo, setActivo] = useState(true);
 
   const resultado = (r: SalidaCheckIn) => {
     control.registrarResultado(MOCK.sesion, 'medir', { tipo: r.tipo });
     if (r.tipo === 'respuesta') {
       onAutorreporte?.(
-        construirAutorreporte({ id: nuevoId(), estudianteId: MOCK.estudianteId, claseId: MOCK.claseId, pasoId: 'medir', hlc: hlcAhora(), ...r.datos }),
+        construirAutorreporte({ id: nuevoId(), estudianteId: ids.estudianteId, claseId: ids.claseId, pasoId: 'medir', hlc: hlcAhora(), ...r.datos }),
       );
     }
     setVista('pulso');
   };
   const pedir = (s: SolicitudHablar) => {
-    onPedido?.(construirPedidoDeAyuda({ id: nuevoId(), estudianteId: MOCK.estudianteId, claseId: MOCK.claseId, hlc: hlcAhora(), ...s }));
+    onPedido?.(construirPedidoDeAyuda({ id: nuevoId(), estudianteId: ids.estudianteId, claseId: ids.claseId, hlc: hlcAhora(), ...s }));
     setVista('fin');
   };
 
   if (!activo) return <p>Rikuy Guardián está apagado. Todo funciona igual.</p>;
   return (
-    <main style={{ display: 'grid', gap: 12, padding: 16 }}>
+    <div style={{ display: 'grid', gap: 12 }}>
       <IndicadorGuardian activo={activo} onApagar={() => setActivo(false)} />
-      <span className="rk-gd-chip">Prototipo · datos de ejemplo</span>
+      {identidad ? null : <span className="rk-gd-chip">Prototipo · datos de ejemplo</span>}
       {vista === 'checkin' && (
         <CheckInMomento
           pasoEtiqueta="medir 10 oscilaciones"
           requiereAviso={aviso}
           onAvisoVisto={() => {
-            control.confirmarAviso(MOCK.estudianteId);
+            control.confirmarAviso(ids.estudianteId);
             setAviso(false);
           }}
           onResultado={resultado}
@@ -70,8 +72,8 @@ export function GuardianDemo({ onAutorreporte, onPedido }: GuardianDemoProps) {
         />
       )}
       {vista === 'hablar' && <NecesitoHablar onPedir={pedir} onCancelar={() => setVista('checkin')} />}
-      {vista === 'pulso' && <PulsoDelCurso items={itemsDelPulso(MOCK.semana, MOCK.estudianteId)} onEnviar={() => setVista('fin')} />}
+      {vista === 'pulso' && <PulsoDelCurso items={itemsDelPulso(MOCK.semana, ids.estudianteId)} onEnviar={() => setVista('fin')} />}
       {vista === 'fin' && <p>Listo. Gracias.</p>}
-    </main>
+    </div>
   );
 }

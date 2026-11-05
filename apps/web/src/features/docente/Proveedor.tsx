@@ -27,6 +27,11 @@ function valorGlobal(): Valor {
   return global;
 }
 
+/** The class store of this teacher phone (the app's demo loader and the test helper reach it here). */
+export function almacenDocente(): StoreApi<EstadoClase> {
+  return valorGlobal().almacen;
+}
+
 export function ProveedorDocente({ valor, children }: { valor?: Valor; children: ReactNode }) {
   return <Ctx.Provider value={valor ?? valorGlobal()}>{children}</Ctx.Provider>;
 }

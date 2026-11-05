@@ -18,19 +18,29 @@ export interface TabDef<T extends string> {
 
 export const TABS_ESTUDIANTE: TabDef<TabEstudiante>[] = [
   { id: 'museo', ruta: RUTAS.museo, clave: 'tabs.museo' },
-  { id: 'lab', ruta: '/lab', clave: 'tabs.lab' },
+  { id: 'lab', ruta: '/lab/pendulo', clave: 'tabs.lab' },
   { id: 'cerebro', ruta: RUTAS.cerebro, clave: 'tabs.cerebro' },
   { id: 'quipu', ruta: '/quipu', clave: 'tabs.quipu' },
   { id: 'yo', ruta: '/yo', clave: 'tabs.yo' },
 ];
 
+/** The teacher tabs open the F6 panel (`/docente/...`); the short paths (/hoy, /clase...) redirect there. */
 export const TABS_DOCENTE: TabDef<TabDocente>[] = [
-  { id: 'hoy', ruta: '/hoy', clave: 'tabs.hoy' },
-  { id: 'clase', ruta: RUTAS.clase, clave: 'tabs.clase' },
-  { id: 'evidencia', ruta: '/evidencia', clave: 'tabs.evidencia' },
-  { id: 'reportes', ruta: '/reportes', clave: 'tabs.reportes' },
-  { id: 'ajustes', ruta: RUTAS.ajustes, clave: 'tabs.ajustes' },
+  { id: 'hoy', ruta: '/docente', clave: 'tabs.hoy' },
+  { id: 'clase', ruta: '/docente/clase', clave: 'tabs.clase' },
+  { id: 'evidencia', ruta: '/docente/evidencia', clave: 'tabs.evidencia' },
+  { id: 'reportes', ruta: '/docente/reportes', clave: 'tabs.reportes' },
+  { id: 'ajustes', ruta: '/docente/ajustes', clave: 'tabs.ajustes' },
 ];
+
+/** Short teacher paths of the shell and the F6 panel route each one opens. */
+export const ALIAS_DOCENTE: Record<string, string> = {
+  hoy: '/docente',
+  clase: '/docente/clase',
+  evidencia: '/docente/evidencia',
+  reportes: '/docente/reportes',
+  ajustes: '/docente/ajustes',
+};
 
 /** First match wins, so longer prefixes come first. Routes owned by other fronts map to a tab. */
 const PREFIJOS: Record<Rol, [string, string][]> = {
@@ -43,13 +53,17 @@ const PREFIJOS: Record<Rol, [string, string][]> = {
     ['/quipu', 'quipu'],
     ['/yo', 'yo'],
     ['/relevo', 'yo'],
+    ['/tutor', 'lab'],
   ],
   docente: [
     ['/hoy', 'hoy'],
     ['/clase', 'clase'],
     ['/creador', 'clase'],
+    ['/docente/clase', 'clase'],
     ['/docente/evidencias', 'evidencia'],
     ['/docente/evidencia', 'evidencia'],
+    ['/docente/reportes', 'reportes'],
+    ['/docente/ajustes', 'ajustes'],
     ['/evidencia', 'evidencia'],
     ['/relevo', 'evidencia'],
     ['/docente', 'hoy'],
@@ -72,4 +86,4 @@ export function rutaSinMarco(ruta: string): boolean {
   return ruta === '/' || ruta === '/entrar' || coincide(ruta, '/p') || coincide(ruta, '/holo') || RUTAS_VIEJAS.includes(ruta);
 }
 
-export const INICIO_POR_ROL: Record<Rol, string> = { docente: '/hoy', grupo: '/museo' };
+export const INICIO_POR_ROL: Record<Rol, string> = { docente: '/docente', grupo: '/museo' };

@@ -10,6 +10,7 @@ export function LayoutClase() {
           { a: '/docente/clase', t: 'Preparar', fin: true },
           { a: '/docente/clase/museo', t: 'Museo' },
           { a: '/docente/clase/ayudas', t: 'Ayudas' },
+          { a: '/docente/clase/acercarse', t: 'Acercarse' },
           { a: '/docente/clase/llevar', t: 'Para llevar' },
         ]}
       />
@@ -39,6 +40,8 @@ export function LayoutReportes() {
       <Segmentos
         items={[
           { a: '/docente/reportes', t: 'Competencia', fin: true },
+          { a: '/docente/reportes/dudas', t: 'Dudas' },
+          { a: '/docente/reportes/curso', t: 'Del curso' },
           { a: '/docente/reportes/envios', t: 'Envíos' },
         ]}
       />

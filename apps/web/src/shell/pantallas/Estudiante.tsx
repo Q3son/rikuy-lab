@@ -1,4 +1,4 @@
-import { Button, Chip, HallSign, KnotIcon, Mascot, type SalaId } from '@rikuy/ui';
+import { Button, Chip, KnotIcon } from '@rikuy/ui';
 import { QrCode } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
@@ -8,28 +8,7 @@ import { TarjetaNarrable } from '../TarjetaNarrable.tsx';
 import { useSesion } from '../sesion.ts';
 import { AjustesGenerales } from './AjustesGenerales.tsx';
 
-const SALAS: SalaId[] = ['fisica', 'bio', 'quim', 'tierra'];
-
-/** E-01 vestibule (placeholder until F5 draws the 2D map): hall signs and the closed-door message. */
-export function Museo() {
-  const { t } = useTranslation();
-  return (
-    <>
-      <div className="flex items-center gap-3">
-        <Mascot estado="curiosa" size={64} />
-        <p className="m-0 text-body-lg font-semibold">{t('museo.vestibulo')}</p>
-      </div>
-      <section aria-label={t('museo.salas')} className="flex flex-col gap-3">
-        {SALAS.map((sala) => (
-          <HallSign key={sala} sala={sala} nombre={t(`salas.${sala}`)} contador={sala === 'fisica' ? undefined : t('museo.cerrado')} />
-        ))}
-      </section>
-      <TarjetaNarrable id="museo-cerrado" texto={t('museo.cerrado')} />
-    </>
-  );
-}
-
-/** E-22 Lab home: continue the exhibit in progress. Empty until F3 reports one. */
+/** E-22 Lab home (/lab/inicio): continue the exhibit in progress, and the pictogram sentence builder. */
 export function Lab() {
   const { t } = useTranslation();
   const conApoyo = efectosDeNivel(useSesion((s) => s.nivel)).pictogramas;
@@ -59,17 +38,6 @@ export function Lab() {
       {inicio}
       {frases}
     </>
-  );
-}
-
-/** E-19 Mi Cerebro Rikuy: empty state. A node lights only from real evidence (F10 draws the map). */
-export function Cerebro() {
-  const { t } = useTranslation();
-  return (
-    <div className="flex flex-col items-center gap-3">
-      <Mascot estado="piensa" size={96} />
-      <TarjetaNarrable id="cerebro-vacio" texto={t('cerebro.vacio')} className="w-full" />
-    </div>
   );
 }
 
@@ -116,6 +84,20 @@ export function Yo() {
           </Link>
         </Button>
       </TarjetaNarrable>
+      <nav aria-label={t('yo.mas')} className="flex flex-col gap-2">
+        {(
+          [
+            ['/yo/checkin', 'yo.checkin'],
+            ['/yo/dudas', 'yo.dudas'],
+            ['/lab/inicio', 'yo.frases'],
+            ['/yo/accesibilidad', 'yo.accesibilidad'],
+          ] as const
+        ).map(([ruta, clave]) => (
+          <Button key={ruta} asChild variant="tonal" className="w-full">
+            <Link to={ruta}>{t(clave)}</Link>
+          </Button>
+        ))}
+      </nav>
       <AjustesGenerales />
       <Button variant="danger" onClick={salirDeLaClase}>
         {t('yo.salir')}
