@@ -2,6 +2,7 @@
 import { useMemo } from 'react';
 import { Link, useParams } from 'react-router';
 import { ViewerChannel, VisorExhibicion } from '@rikuy/holo';
+import { practicaDeEscena } from '../mundo/catalogo.ts';
 import { BotonesTactiles, CamaraActiva, EstadoCamara, GuiaGestos } from './componentes.tsx';
 import { useGestosMano } from './useGestosMano.ts';
 
@@ -16,7 +17,7 @@ export function PaginaUnCelular() {
         <Link to="/holo" className="grid h-12 place-items-center underline">‹ Volver</Link>
         {encendida && <CamaraActiva onApagar={gestos.stop} />}
       </header>
-      <VisorExhibicion escena={escena} modo="pantalla" canal={canal} practica={{ titulo: 'Péndulo simple', pistas: [], variables: [] }} />
+      <VisorExhibicion escena={escena} modo="pantalla" canal={canal} practica={practicaDeEscena(escena)} />
       {!encendida && gestos.status !== 'blocked' && (
         <button type="button" onClick={() => void gestos.start()} className="h-14 rounded-xl bg-[#075E6C] text-lg font-bold text-white">
           ✋ Activar cámara de manos

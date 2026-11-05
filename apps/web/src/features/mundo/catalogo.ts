@@ -52,3 +52,15 @@ export function construirMuseo(opciones: { retos?: RetoResumen[]; rejasAbiertas?
     ...(opciones.rejasAbiertas ? { rejasAbiertas: opciones.rejasAbiertas } : {}),
   });
 }
+
+/** Scene id the exhibit opens at `/holo/ver/<escena>`: the one its practice declares, else its slug. */
+export function escenaHoloDeExhibicion(exhibicionId: string): string | undefined {
+  const slug = SLUG_DE_EXHIBICION[exhibicionId];
+  const practica = slug ? PRACTICAS[slug] : undefined;
+  return practica ? (practica.escenaHolo ?? slug) : undefined;
+}
+
+/** The practice a hologram scene belongs to (its title and hints go to the viewer), if any. */
+export function practicaDeEscena(escena: string) {
+  return Object.entries(PRACTICAS).find(([slug, p]) => (p.escenaHolo ?? slug) === escena)?.[1];
+}
