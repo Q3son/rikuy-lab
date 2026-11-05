@@ -23,7 +23,9 @@ export function BarridoActivo({ intervaloMs, etiquetas, onSalir, alMover }: { in
   const motor = useRef<Barrido | null>(null);
   const seleccionando = useRef(false);
   const alMoverRef = useRef(alMover);
-  alMoverRef.current = alMover;
+  useEffect(() => {
+    alMoverRef.current = alMover;
+  }, [alMover]);
 
   useEffect(() => {
     const barrido = crearBarrido({

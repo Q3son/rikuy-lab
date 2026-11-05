@@ -18,7 +18,7 @@ export interface Paso {
  */
 export function Stepper({ pasos, ariaLabel, className }: { pasos: Paso[]; ariaLabel: string; className?: string }) {
   return (
-    <ol aria-label={ariaLabel} className={cn('m-0 grid list-none grid-cols-4 gap-2 p-0', className)}>
+    <ol aria-label={ariaLabel} className={cn('m-0 grid list-none grid-cols-2 gap-2 p-0 min-[460px]:grid-cols-4', className)}>
       {pasos.map((paso, i) => (
         <li key={paso.id} className="min-w-0">
           <a

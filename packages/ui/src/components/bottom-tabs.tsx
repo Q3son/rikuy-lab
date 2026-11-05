@@ -14,7 +14,7 @@ export interface TabItem {
  * items are real links, so the hash router and the browser history keep working. The caller decides
  * the item set per role. Labels may ellipsize as a last resort (Quechua is longer).
  */
-export function BottomTabs({ items, activeId, ariaLabel, className }: { items: TabItem[]; activeId: string | null; ariaLabel: string; className?: string }) {
+export function BottomTabs({ items, activeId, ariaLabel, className, onSelect }: { items: TabItem[]; activeId: string | null; ariaLabel: string; className?: string; onSelect?: (item: TabItem) => void }) {
   const refs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   const onKeyDown = (e: KeyboardEvent<HTMLAnchorElement>, index: number) => {
@@ -42,6 +42,11 @@ export function BottomTabs({ items, activeId, ariaLabel, className }: { items: T
               aria-selected={selected}
               aria-current={selected ? 'page' : undefined}
               onKeyDown={(e) => onKeyDown(e, i)}
+              onClick={(e) => {
+                if (!onSelect || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+                e.preventDefault();
+                onSelect(item);
+              }}
               className={cn(
                 'relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[0.8125rem] leading-4 no-underline',
                 selected ? 'font-extrabold text-ink' : 'font-medium text-ink-2',
