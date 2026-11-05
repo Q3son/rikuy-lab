@@ -27,6 +27,8 @@ de este repositorio es la evidencia.
 - Ecosistema Museo Rikuy: shell React, entrada de docente y grupos, panel "Mi clase", tutor con juez de razonamiento y memoria por alumno, Creador de prácticas alineadas al CNEB, hub local y más de 1 800 pruebas.
 - Mejoras del holograma: calibración, pantalla completa, gestos con aviso visible y péndulo simulado.
 - Correcciones de CI para publicar en GitHub Pages; sección de uso de IA y ética en el README.
+- Conversación socrática con memoria del paso (`packages/tutor/src/dialogo`): guiones del péndulo y la lactasa, pistas graduales con "no sé", respuestas en partes, definiciones y órdenes de voz al holograma, sin bucles. Integrada al control del holograma.
+- Evolución: la versión clásica del 4 de noviembre (`clasico.html`) deja la pantalla de inicio y queda como respaldo, accesible por su URL.
 
 - Pruebas en aula simulada con los celulares del equipo.
 - Video de 3 minutos y presentación de 5 minutos.
