@@ -8,3 +8,6 @@ export * from './esquemas.ts';
 export * from './puertos.ts';
 export * from './texto.ts';
 export * from './verificador.ts';
+export * from './reintentos.ts';
+export * from './presupuesto.ts';
+export * from './enrutador.ts';
