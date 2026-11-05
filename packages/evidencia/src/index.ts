@@ -11,3 +11,4 @@ export * from './evidencias.ts';
 export * from './avance.ts';
 export * from './cobertura.ts';
 export * from './resumen.ts';
+export * from './demo/escenario.ts';

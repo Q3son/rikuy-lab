@@ -224,3 +224,23 @@ export function construirEscenario(opciones: OpcionesEscenario = {}): Escenario 
 
   return { clase, practica, eventos, grupoIds, evidenciaIds, estudianteIds };
 }
+
+export interface EscenarioPartido {
+  /** What the teacher phone has before any group delivers: the class and the pseudonymous roster. */
+  base: Evento[];
+  /** What each group phone would show as RK1 `E` frames at the closing, keyed by group nickname. */
+  porGrupo: Record<string, Evento[]>;
+}
+
+/** Splits the demo scenario so the closing by QR can be rehearsed group by group (T-08). */
+export function partirEscenario(e: Escenario = construirEscenario()): EscenarioPartido {
+  const nombres = Object.fromEntries(Object.entries(e.grupoIds).map(([apodo, id]) => [id, apodo]));
+  const porGrupo: Record<string, Evento[]> = {};
+  const base: Evento[] = [];
+  for (const ev of e.eventos) {
+    const g = ev.autor.grupoId;
+    if (g) (porGrupo[nombres[g]] ??= []).push(ev);
+    else if (ev.tipo !== 'evidencia.confirmada') base.push(ev);
+  }
+  return { base, porGrupo };
+}

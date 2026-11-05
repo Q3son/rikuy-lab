@@ -1,6 +1,6 @@
 import { EventoValidado } from '@rikuy/contracts';
 import { describe, expect, it } from 'vitest';
-import { construirEscenario, GRUPOS_DEMO } from './escenario.ts';
+import { construirEscenario, GRUPOS_DEMO, partirEscenario } from './escenario.ts';
 
 describe('demo scenario', () => {
   it('only emits contract-valid events', () => {
@@ -20,5 +20,16 @@ describe('demo scenario', () => {
     const porDisp = new Map<string, number[]>();
     for (const e of eventos) porDisp.set(e.dispositivo, [...(porDisp.get(e.dispositivo) ?? []), e.seq]);
     for (const seqs of porDisp.values()) expect(seqs).toEqual(seqs.map((_, i) => i + 1));
+  });
+});
+
+describe('partirEscenario', () => {
+  it('keeps every event exactly once, except the teacher confirmations', () => {
+    const e = construirEscenario();
+    const { base, porGrupo } = partirEscenario(e);
+    const todos = [...base, ...Object.values(porGrupo).flat()];
+    expect(new Set(todos.map((x) => x.id)).size).toBe(todos.length);
+    expect(todos.length).toBe(e.eventos.length - 2);
+    expect(Object.keys(porGrupo)).toEqual(['Condor', 'Vizcacha', 'Puma', 'Kantu']);
   });
 });
