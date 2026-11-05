@@ -1,7 +1,6 @@
 /**
- * Rubric-anchored prompt for an LLM judge (used by @rikuy/ai adapters). Same shape as
- * `buildJudgePrompt` of Educacion/web/src/lib/judge/rubric.ts: every level, two examples per level,
- * a literal quote, and "NO" for what cannot be assessed. The LLM only proposes; the code validates.
+ * Rubric-anchored prompt for an LLM judge (used by @rikuy/ai adapters): every level, two examples
+ * per level, a literal quote, and "NO" for what cannot be assessed. The LLM only proposes; the code validates.
  */
 import type { Indicador } from '@rikuy/contracts';
 import type { SolicitudJuez } from './tipos.ts';

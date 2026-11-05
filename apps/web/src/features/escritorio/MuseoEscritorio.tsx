@@ -1,7 +1,7 @@
 /**
  * Desktop museum (>= 1024 px): the world large and central, with side panels instead of the tab bar.
  *
- * Layout and HUD ported from AulaQuipu by paoloose (https://github.com/paoloose/aulaquipu),
+ * Layout and HUD adapted from AulaQuipu (team project) (https://github.com/paoloose/aulaquipu),
  * `apps/web-app/components/campus/campus-shell.tsx` (hackathon MVP, reuse agreed with its team; credits in
  * docs/ATRIBUCIONES.md): the current-space badge, the "press a key near something" prompt, the guide that
  * walks you with a trail ("Sigue las huellas") and its cancel button. Adapted: rooms are CNEB halls, the

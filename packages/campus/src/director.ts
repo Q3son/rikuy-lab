@@ -1,5 +1,5 @@
 /**
- * Rikuy's scene director: deterministic rules, no AI (the director pattern of AulaQuipu, paoloose,
+ * Rikuy's scene director: deterministic rules, no AI (the director pattern of AulaQuipu, team project,
  * reduced to pure rules). Expressions are driven only by app events (DESIGN.md 6), never by the camera.
  */
 

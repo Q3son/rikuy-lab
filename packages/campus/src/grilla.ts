@@ -1,6 +1,6 @@
 /**
  * Collision grid, BFS pathfinding and proximity helpers. Pure and testable in Node (1.3).
- * Pattern credit: AulaQuipu by paoloose (https://github.com/paoloose/aulaquipu,
+ * Pattern credit: AulaQuipu (team project) (https://github.com/paoloose/aulaquipu,
  * `apps/web-app/lib/campus/map.ts`): boolean collision grid, BFS to the first tile that satisfies a goal,
  * `distToRect` proximity. Reimplemented here (no code copied), with typed arrays and an index queue.
  */

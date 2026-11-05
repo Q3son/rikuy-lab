@@ -1,6 +1,6 @@
 /**
  * "Charla de cerca": short messages that only the groups near you in this hall read. The rules (clean,
- * mask, no links or phone numbers, rate limit, radius) are AulaQuipu's proximity chat ported to
+ * mask, no links or phone numbers, rate limit, radius) are AulaQuipu's proximity chat (team project) adapted to
  * @rikuy/campus `charla.ts`. Without the hub the messages stay on this device; the panel says so.
  */
 import { type AvatarRender, LARGO_MAXIMO, TAM_HISTORIAL, lectoresCerca, limitarRitmo, prepararMensaje } from '@rikuy/campus';
