@@ -64,16 +64,17 @@ describe('outbox screen (T-22)', () => {
       (d as HTMLDetailsElement).open = true;
       fireEvent(d, new Event('toggle'));
     }
+    // Opening a preview is recorded asynchronously: approve in batch only once all three are marked as seen.
+    for (const t of await screen.findAllByRole('article')) await waitFor(() => expect((within(t).getByRole('button', { name: 'Aprobar' }) as HTMLButtonElement).disabled).toBe(false));
     fireEvent.click(await screen.findByRole('button', { name: 'Aprobar los que ya vi' }));
-    // The approval runs through the persistent outbox: give it room under a loaded test run.
-    await waitFor(() => expect(screen.getAllByText('En cola · se envía al sincronizar').length).toBe(3), { timeout: 5000 });
+    await waitFor(() => expect(screen.getAllByText('En cola · se envía al sincronizar').length).toBe(3));
 
     m.sincronizar(false);
     await new Promise((r) => setTimeout(r, 30));
     expect(screen.getAllByText('En cola · se envía al sincronizar').length).toBe(3);
 
     m.sincronizar(true);
-    await waitFor(() => expect(screen.getAllByText('Entregado').length).toBe(3), { timeout: 5000 });
+    await waitFor(() => expect(screen.getAllByText('Entregado').length).toBe(3));
   });
 
   it('never shows an address in the visible list of messages', async () => {
