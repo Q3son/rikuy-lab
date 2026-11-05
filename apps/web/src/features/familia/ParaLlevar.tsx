@@ -1,5 +1,4 @@
-import type { Practica } from '@rikuy/contracts';
-import { renderFamilia, type PictoId } from '@rikuy/evidencia';
+import { renderFamilia } from '@rikuy/evidencia';
 import { useMemo, useState } from 'react';
 import { QrAnimado } from '../docente/componentes/QrAnimado.tsx';
 import { fraseLocal } from '../docente/estado/contexto.ts';
@@ -8,33 +7,13 @@ import { compartirPorWhatsApp, depsDelNavegador, type DepsCompartir, type Result
 import { urlDeFamilia } from './enlace.ts';
 import { construirHoja } from './hoja.ts';
 import { HojaA4 } from './HojaA4.tsx';
-import { pictogramaDeMaterial } from '@rikuy/evidencia';
+import { entradaFamilia } from './mensajeFamilia.ts';
 
 const ESTADOS: Record<ResultadoCompartir, string> = {
   compartido: 'Preparado en WhatsApp. Cuando lo envíes, avísale a las familias que lo busquen.',
   cancelado: 'No se envió. Puedes intentarlo otra vez.',
   enlace_wame: 'Se abrió WhatsApp con el mensaje listo. Tú tocas «Enviar».',
 };
-
-const FECHA = (ms: number) => new Date(ms).toISOString().slice(0, 10);
-
-function datosDeMensaje(practica: Practica, url: string, hoy: number, local: string | null) {
-  const corto = (practica.titulo.split(':')[0] ?? practica.titulo).trim();
-  const pictogramas = [...new Set(practica.materiales.map((m) => pictogramaDeMaterial(m.nombre)))].slice(0, 3) as PictoId[];
-  const lunes = hoy - ((new Date(hoy).getUTCDay() + 6) % 7) * 86_400_000;
-  return {
-    variante: 'A' as const,
-    fechaIni: FECHA(lunes),
-    fechaFin: FECHA(lunes + 4 * 86_400_000),
-    verbo: 'trabajaron con',
-    exhibicionCorta: corto.charAt(0).toLowerCase() + corto.slice(1),
-    preguntaCasa: practica.preguntaGuia,
-    lengua: 'es' as const,
-    enlaceLigero: url,
-    pictogramas,
-    ...(local ? { fraseLocal: local } : {}),
-  };
-}
 
 /** T-14, T-15, T-16: take-home package by QR, WhatsApp and a printable A4 sheet. */
 export function ParaLlevar({ deps, base }: { deps?: DepsCompartir; base?: string }) {
@@ -57,7 +36,7 @@ export function ParaLlevar({ deps, base }: { deps?: DepsCompartir; base?: string
 
   if (!clase || !practica || !paquete) return <p className="dc-card">Primero crea una clase en «Hoy».</p>;
 
-  const mensaje = renderFamilia(datosDeMensaje(practica, url, srv.ahora(), fraseLocal(contexto)));
+  const mensaje = renderFamilia(entradaFamilia(practica, url, srv.ahora(), fraseLocal(contexto)));
   const hoja = construirHoja(practica, { lengua, codigoClase: clase.codigo });
   const hayQuechua = practica.textos?.quy?.revisado === true;
 
