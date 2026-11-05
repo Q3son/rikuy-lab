@@ -4,13 +4,16 @@
  */
 import { type Destino, type Escena, SALAS_CONTENIDO, dirigir, estiloSala } from '@rikuy/campus';
 import { RUTAS } from '@rikuy/contracts';
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { EXHIBICION_DEL_DIA, EXHIBICIONES_DEMO, TITULOS_DEMO, construirMuseo } from './catalogo.ts';
 import { ControladorMundo } from './controlador.ts';
+import { registroMuseo, visita } from './eventos.ts';
 import { GRUPO_DEMO } from './grupo.ts';
 import { Glifo, Rikuy } from './Iconos.tsx';
 import { colorDeSala } from './paleta.ts';
+import { Reacciones } from './presencia/Reacciones.tsx';
+import { usePresencia } from './presencia/usePresencia.ts';
 import { VistaMundo } from './VistaMundo.tsx';
 import './mundo.css';
 
@@ -21,6 +24,12 @@ function textoBloqueo(d: Destino): string | null {
   }
   if (d.trasReja) return 'Detrás de la reja: responde la pregunta del curador';
   return null;
+}
+
+/** Opens a destination: records the exhibit visit (no positions) and goes to its route. */
+function abrirDestino(d: Destino, navegar: (ruta: string) => void) {
+  if (d.exhibicionId && d.salaId) registroMuseo.registrar(visita(d.salaId, GRUPO_DEMO.id, d.exhibicionId));
+  navegar(d.destino);
 }
 
 function primeraVisita(): boolean {
@@ -38,16 +47,27 @@ export function MuseoPagina() {
   const navegar = useNavigate();
   const museo = useMemo(() => construirMuseo(), []);
   const escena: Escena | undefined = salaId ? museo.salas[salaId] : museo.vestibulo;
+  const [parametros] = useSearchParams();
+  const sim = parametros.get('sim');
+  const simulados = sim !== null && /^\d{1,3}$/.test(sim) ? Number(sim) : null;
   const [saludo] = useState(primeraVisita);
+  const presencia = usePresencia(museo, escena?.id ?? 'vestibulo', simulados);
   const animado = useRef(false);
   const alActivar = useCallback((activo: boolean) => {
     animado.current = activo;
   }, []);
 
   const controlador = useMemo(
-    () => (escena ? new ControladorMundo(escena, (d) => navegar(d.destino)) : null),
+    () =>
+      escena
+        ? new ControladorMundo(escena, (d) => abrirDestino(d, navegar))
+        : null,
     [escena, navegar],
   );
+
+  useEffect(() => {
+    if (escena && escena.id !== 'vestibulo') registroMuseo.registrar(visita(escena.id, GRUPO_DEMO.id));
+  }, [escena]);
 
   if (!escena || !controlador) {
     return (
@@ -70,7 +90,7 @@ export function MuseoPagina() {
   const direccion = dirigir({
     escenaId: escena.id,
     primeraVisita: saludo,
-    gruposEnSala: 0,
+    gruposEnSala: presencia.gruposEnSala,
     sinRed: typeof navigator !== 'undefined' && navigator.onLine === false,
     ...(hoyExh && hoySala
       ? { hoy: { exhibicionId: hoyExh.id, salaId: hoyExh.salaId, titulo: TITULOS_DEMO[hoyExh.id] ?? hoyExh.id, sala: estiloSala(hoySala).nombre } }
@@ -81,7 +101,7 @@ export function MuseoPagina() {
   const ir = (d: Destino) => {
     if (textoBloqueo(d)) return;
     // Without the animated world (no canvas) the door opens at once; otherwise the group walks there.
-    if (!animado.current || !controlador.irA(d.id)) navegar(d.destino);
+    if (!animado.current || !controlador.irA(d.id)) abrirDestino(d, navegar);
   };
 
   return (
@@ -116,7 +136,8 @@ export function MuseoPagina() {
             integrantes: GRUPO_DEMO.integrantes,
             propio: true,
           }),
-          otros: () => [],
+          otros: presencia.otros,
+          alPaso: () => presencia.actualizar(controlador.pos.x, controlador.pos.y, controlador.dir),
           resaltado: () => direccion.senalar,
           sugerencia: () => sugerencia,
         }}
@@ -157,6 +178,8 @@ export function MuseoPagina() {
           </li>
         </ul>
       </nav>
+
+      <Reacciones alReaccionar={presencia.reaccionar} />
     </main>
   );
 }
