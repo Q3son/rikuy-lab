@@ -76,7 +76,7 @@ describe('student tabs', () => {
   it('lists every tab with its screen', async () => {
     await renderApp('/museo', GRUPO);
     expect(screen.getByRole('tab', { name: 'Museo' })).toHaveAttribute('aria-selected', 'true');
-    expect(screen.getAllByTestId('hall-sign')).toHaveLength(4);
+    expect(await screen.findByRole('heading', { name: 'Vestíbulo del Museo Rikuy' })).toBeInTheDocument();
     for (const [tab, titulo] of [['Lab', 'Lab'], ['Cerebro', 'Mi Cerebro Rikuy'], ['Quipu', 'Quipu de logros'], ['Yo', 'Yo']] as const) {
       await userEvent.click(screen.getByRole('tab', { name: tab }));
       expect(await screen.findByRole('heading', { level: 1, name: titulo })).toBeInTheDocument();
