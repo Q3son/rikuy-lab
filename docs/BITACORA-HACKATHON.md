@@ -24,6 +24,10 @@ de este repositorio es la evidencia.
 
 ## 5 de noviembre
 
+- Ecosistema Museo Rikuy: shell React, entrada de docente y grupos, panel "Mi clase", tutor con juez de razonamiento y memoria por alumno, Creador de prácticas alineadas al CNEB, hub local y más de 1 800 pruebas.
+- Mejoras del holograma: calibración, pantalla completa, gestos con aviso visible y péndulo simulado.
+- Correcciones de CI para publicar en GitHub Pages; sección de uso de IA y ética en el README.
+
 - Pruebas en aula simulada con los celulares del equipo.
 - Video de 3 minutos y presentación de 5 minutos.
 - Entrega antes de las 23:59.
