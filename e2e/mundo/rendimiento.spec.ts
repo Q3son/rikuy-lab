@@ -1,5 +1,12 @@
 import { expect, test } from '../_arnes/avion.ts';
 
+/** Debug hook exposed by apps/web/src/features/mundo/VistaMundo.tsx. */
+declare global {
+  interface Window {
+    __rikuyMundo?: { fps: () => number; avatares: () => number };
+  }
+}
+
 /**
  * Gate 5.4 F5: >= 30 fps with CPU x4 and 40 simulated avatars. The loop is capped at 30 fps, so the
  * measured drawn-frame rate is compared with that cap (one frame of tolerance for vsync phase).
