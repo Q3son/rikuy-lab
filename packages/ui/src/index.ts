@@ -1,13 +1,14 @@
 /**
- * @rikuy/ui: shadcn/ui components, tokens and presentational components (props only, no domain).
- * Sprint 0 skeleton; owned by F1.
+ * @rikuy/ui: shadcn/ui components, "Luz de Puna" tokens and presentational components
+ * (props only, no domain, no i18n: labels arrive as props). Owned by F1.
+ * Styles: import `@rikuy/ui/theme.css` in the app stylesheet.
  */
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
 export const packageName = '@rikuy/ui' as const;
 
-/** shadcn/ui class merge helper. */
-export function cn(...inputs: ClassValue[]): string {
-  return twMerge(clsx(inputs));
-}
+export { cn } from './lib/cn.ts';
+export { Button, buttonVariants, type ButtonProps } from './components/ui/button.tsx';
+export { Card, CardDescription, CardTitle, type CardProps } from './components/ui/card.tsx';
+export { Chip, type ChipProps } from './components/ui/chip.tsx';
+export { Field, SelectField, type SelectOption } from './components/ui/field.tsx';
+export { Switch, type SwitchProps } from './components/ui/switch.tsx';
+export { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs.tsx';
