@@ -43,7 +43,7 @@ export function BottomTabs({ items, activeId, ariaLabel, className }: { items: T
               aria-current={selected ? 'page' : undefined}
               onKeyDown={(e) => onKeyDown(e, i)}
               className={cn(
-                'relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[13px] leading-4 no-underline',
+                'relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[0.8125rem] leading-4 no-underline',
                 selected ? 'font-extrabold text-ink' : 'font-medium text-ink-2',
               )}
             >

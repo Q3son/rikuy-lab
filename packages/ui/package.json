@@ -11,7 +11,8 @@
     "./theme.css": "./src/styles/theme.css",
     "./tokens.css": "./tokens/tokens.css",
     "./tokens.json": "./tokens/tokens.json",
-    "./assets/*": "./assets/*"
+    "./assets/*": "./assets/*",
+    "./testing": "./src/testing/axe.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",

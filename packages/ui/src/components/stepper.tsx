@@ -26,7 +26,7 @@ export function Stepper({ pasos, ariaLabel, className }: { pasos: Paso[]; ariaLa
             aria-current={paso.estado === 'ahora' ? 'step' : undefined}
             data-estado={paso.estado}
             className={cn(
-              'flex h-full min-h-[84px] flex-col gap-1 rounded-card border-2 p-2 no-underline',
+              'flex h-full min-h-[5.25rem] flex-col gap-1 rounded-card border-2 p-2 no-underline',
               paso.estado === 'ahora' ? 'border-primary bg-primary-tint text-ink' : 'border-line bg-surface text-ink',
               paso.estado === 'hecho' && 'border-ichu',
             )}

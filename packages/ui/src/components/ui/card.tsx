@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { HTMLAttributes } from 'react';
 import { cn } from '../../lib/cn.ts';
+import { SpeakButton, type Narracion } from '../speak-button.tsx';
 
 /** One idea per card, never nested. 2 px border, 16 px radius, 16 px padding (DESIGN.md 11). */
 const cardVariants = cva('rounded-card border-2 p-4 shadow-card', {
@@ -18,10 +19,22 @@ const cardVariants = cva('rounded-card border-2 p-4 shadow-card', {
   defaultVariants: { tone: 'default' },
 });
 
-export interface CardProps extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {}
+export interface CardProps extends HTMLAttributes<HTMLDivElement>, VariantProps<typeof cardVariants> {
+  /** Offers the speak / stop button of the audio mode on this card. */
+  narracion?: Narracion;
+}
 
-export function Card({ className, tone, ...props }: CardProps) {
-  return <div data-tone={tone ?? 'default'} className={cn(cardVariants({ tone }), className)} {...props} />;
+export function Card({ className, tone, narracion, children, ...props }: CardProps) {
+  return (
+    <div data-tone={tone ?? 'default'} className={cn(cardVariants({ tone }), className)} {...props}>
+      {children}
+      {narracion ? (
+        <div className="mt-2 flex justify-end">
+          <SpeakButton {...narracion} />
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 export function CardTitle({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) {

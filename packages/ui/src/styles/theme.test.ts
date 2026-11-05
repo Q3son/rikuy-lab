@@ -36,4 +36,20 @@ describe('Luz de Puna theme', () => {
     expect(themeCss).toContain('--color-background:');
     expect(themeCss).toContain('--color-destructive:');
   });
+
+  it('scales text with the user setting up to 200 % (rem based, no fixed px text tokens)', () => {
+    expect(themeCss).toMatch(/--text-body:\s*1\.0625rem/);
+    expect(themeCss).not.toMatch(/--text-[a-z-]+:\s*\d+px/);
+    expect(themeCss).toMatch(/font-size:\s*calc\(100% \* var\(--rk-text-scale, 1\)\)/);
+  });
+
+  it('honours the reduced-motion setting of the app, not only the system one', () => {
+    expect(themeCss).toMatch(/\[data-motion="reduce"\]/);
+    expect(themeCss).toMatch(/prefers-reduced-motion/);
+  });
+
+  it('has a high-contrast switch that strengthens borders and secondary text', () => {
+    expect(themeCss).toMatch(/\[data-contrast="high"\]/);
+    expect(themeCss).toMatch(/--rk-border:\s*var\(--rk-border-strong\)/);
+  });
 });

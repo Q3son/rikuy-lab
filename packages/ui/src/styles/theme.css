@@ -87,24 +87,24 @@
   /* Type */
   --font-sans: var(--rk-font-sans);
   --font-mono: var(--rk-font-mono);
-  --text-caption: 14px;
-  --text-caption--line-height: 20px;
-  --text-small: 15px;
-  --text-small--line-height: 22px;
-  --text-body: 17px;
-  --text-body--line-height: 26px;
-  --text-body-lg: 19px;
-  --text-body-lg--line-height: 28px;
-  --text-title-sm: 20px;
-  --text-title-sm--line-height: 26px;
-  --text-title: 24px;
-  --text-title--line-height: 30px;
-  --text-headline: 30px;
-  --text-headline--line-height: 36px;
-  --text-display: 40px;
-  --text-display--line-height: 44px;
-  --text-numeral: 56px;
-  --text-numeral--line-height: 56px;
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.25rem;
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.375rem;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.625rem;
+  --text-body-lg: 1.1875rem;
+  --text-body-lg--line-height: 1.75rem;
+  --text-title-sm: 1.25rem;
+  --text-title-sm--line-height: 1.625rem;
+  --text-title: 1.5rem;
+  --text-title--line-height: 1.875rem;
+  --text-headline: 1.875rem;
+  --text-headline--line-height: 2.25rem;
+  --text-display: 2.5rem;
+  --text-display--line-height: 2.75rem;
+  --text-numeral: 3.5rem;
+  --text-numeral--line-height: 3.5rem;
 
   /* One radius per nesting level */
   --radius-ctl: var(--rk-r-ctl);
@@ -122,16 +122,18 @@
 }
 
 @layer base {
+  /* User text size: 100 % to 200 % (WCAG 1.4.4). Everything is rem based, so targets and text grow together. */
   html {
     background: var(--rk-bg);
     color: var(--rk-ink);
     font-family: var(--rk-font-sans);
-    font-size: var(--rk-fs-body);
-    line-height: var(--rk-lh-body);
+    font-size: calc(100% * var(--rk-text-scale, 1));
     -webkit-text-size-adjust: 100%;
   }
   body {
     margin: 0;
+    font-size: 1.0625rem;
+    line-height: 1.625rem;
     min-height: 100dvh;
     background: var(--rk-bg);
     color: var(--rk-ink);
@@ -146,8 +148,8 @@
   [role="tab"],
   [role="switch"],
   a.rk-hit {
-    min-height: var(--rk-hit);
-    min-width: var(--rk-hit);
+    min-height: 3rem;
+    min-width: 3rem;
   }
   :focus-visible {
     outline: 3px solid var(--rk-focus);
@@ -198,4 +200,28 @@
   to {
     transform: rotate(3deg);
   }
+}
+
+/* App-level reduced motion (the setting), on top of the system preference handled in tokens.css */
+[data-motion="reduce"] *,
+[data-motion="reduce"] *::before,
+[data-motion="reduce"] *::after {
+  animation: none !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+[data-motion="reduce"] {
+  --rk-dur-fast: 0.01ms;
+  --rk-dur: 0.01ms;
+  --rk-dur-slow: 0.01ms;
+  --rk-dur-swing: 0.01ms;
+}
+
+/* High contrast (setting): visible control edges everywhere and no muted-only text */
+[data-contrast="high"] {
+  --rk-border: var(--rk-border-strong);
+  --rk-muted: var(--rk-ink-2);
+}
+[data-contrast="high"] :where(button, input, select, textarea, [role="tab"], a.rk-hit) {
+  border-color: var(--rk-border-strong);
 }

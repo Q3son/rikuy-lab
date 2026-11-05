@@ -4,6 +4,7 @@ import { cn } from '../lib/cn.ts';
 import { Button } from './ui/button.tsx';
 import { Chip } from './ui/chip.tsx';
 import type { SalaId } from './icons.tsx';
+import { SpeakButton, type Narracion } from './speak-button.tsx';
 
 export type FormatoExhibicion = 'video' | 'audio' | 'diagrama' | 'holograma' | 'quiz';
 export type EstadoDescarga = 'guardado' | 'en-clase' | 'descargando';
@@ -96,6 +97,7 @@ export interface ExhibitCardProps {
   onAccion?: () => void;
   sala?: SalaId;
   className?: string;
+  narracion?: Narracion;
 }
 
 /**
@@ -103,7 +105,7 @@ export interface ExhibitCardProps {
  * (icon + word) top-left, title, one-line description, size chip, download state and action.
  * The hologram format always paints in the holo theme (black ground, line work).
  */
-export function ExhibitCard({ formato, formatoLabel, titulo, descripcion, tamano, estado, estadoLabel, accion, onAccion, sala, className }: ExhibitCardProps) {
+export function ExhibitCard({ formato, formatoLabel, titulo, descripcion, tamano, estado, estadoLabel, accion, onAccion, sala, className, narracion }: ExhibitCardProps) {
   return (
     <article
       data-testid="exhibit-card"
@@ -114,7 +116,7 @@ export function ExhibitCard({ formato, formatoLabel, titulo, descripcion, tamano
       <div
         data-testid="exhibit-art"
         {...(formato === 'holograma' ? { 'data-theme': 'holo' } : {})}
-        className={cn('relative h-[132px]', formato === 'holograma' ? 'bg-bg' : 'bg-hall-tint')}
+        className={cn('relative h-[8.25rem]', formato === 'holograma' ? 'bg-bg' : 'bg-hall-tint')}
       >
         <Chip className="absolute left-2 top-2 z-10" icon={BADGE_ICON[formato]}>
           {formatoLabel}
@@ -130,9 +132,12 @@ export function ExhibitCard({ formato, formatoLabel, titulo, descripcion, tamano
             {estadoLabel}
           </Chip>
         </div>
-        <Button variant="tonal" onClick={onAccion}>
-          {accion}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="tonal" onClick={onAccion} className="flex-1">
+            {accion}
+          </Button>
+          {narracion ? <SpeakButton {...narracion} /> : null}
+        </div>
       </div>
     </article>
   );
