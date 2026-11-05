@@ -45,3 +45,13 @@ describe('every feature is reachable from the tabs', () => {
     expect(screen.getByText(/nivel 2\) están apagadas/)).toBeInTheDocument();
   });
 });
+
+describe('the museum group is the joined group (F1 session)', () => {
+  it('uses the class code and nickname of the join, not the demo group', async () => {
+    const { grupoActual } = await import('../features/mundo/grupo.ts');
+    await renderApp('/museo', GRUPO);
+    expect(grupoActual().apodo).toBe('Puma');
+    expect(grupoActual().id).not.toBe('01JC0000000000000000000G01');
+    expect(grupoActual().dispositivo).toHaveLength(10);
+  });
+});

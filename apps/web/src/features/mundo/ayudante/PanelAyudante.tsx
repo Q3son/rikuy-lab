@@ -4,7 +4,7 @@
  */
 import { GUIA_AYUDANTE, NECESIDADES, type Necesidad, RESULTADOS, type ResultadoAyuda } from '@rikuy/campus';
 import { useEffect, useState } from 'react';
-import { GRUPO_DEMO } from '../grupo.ts';
+import { grupoActual } from '../grupo.ts';
 import { NODOS_EXHIBICION, apodoDe, etiquetaNodo, juzgarFrase, useAyudante } from './servicio.ts';
 
 const PISTA_1: Record<string, string> = {
@@ -26,15 +26,15 @@ export function PanelAyudante({ exhibicionId, alIrAExhibicion }: { exhibicionId:
 
   if (!estado.config.activo) return null;
   const nodos = NODOS_EXHIBICION[exhibicionId] ?? [];
-  const mio = [...estado.pedidos].reverse().find((p) => p.grupoPideId === GRUPO_DEMO.id && ['ofrecido', 'en_curso', 'escalado'].includes(p.estado));
+  const mio = [...estado.pedidos].reverse().find((p) => p.grupoPideId === grupoActual().id && ['ofrecido', 'en_curso', 'escalado'].includes(p.estado));
   const invitaciones = estado.pedidos.flatMap((p) =>
-    p.estado === 'ofrecido' ? p.ofertas.filter((o) => o.estado === 'enviada' && o.grupoAyudaId === GRUPO_DEMO.id).map((o) => ({ p, o })) : [],
+    p.estado === 'ofrecido' ? p.ofertas.filter((o) => o.estado === 'enviada' && o.grupoAyudaId === grupoActual().id).map((o) => ({ p, o })) : [],
   );
-  const ayudando = estado.pedidos.find((p) => p.estado === 'en_curso' && p.grupoAyudaId === GRUPO_DEMO.id);
+  const ayudando = estado.pedidos.find((p) => p.estado === 'en_curso' && p.grupoAyudaId === grupoActual().id);
 
   const enviar = () => {
     if (!nodo || !necesidad) return;
-    despachar({ tipo: 'pedir', grupoPideId: GRUPO_DEMO.id, exhibicionId, nodoId: nodo, necesidad });
+    despachar({ tipo: 'pedir', grupoPideId: grupoActual().id, exhibicionId, nodoId: nodo, necesidad });
     setPidiendo(false);
   };
 
@@ -44,7 +44,7 @@ export function PanelAyudante({ exhibicionId, alIrAExhibicion }: { exhibicionId:
     despachar({
       tipo: 'cerrar',
       pedidoId: mio.id,
-      grupoId: GRUPO_DEMO.id,
+      grupoId: grupoActual().id,
       resultado,
       ...(conFrase ? { frase: conFrase, nivelJuez: juzgarFrase(conFrase) } : {}),
     });
@@ -62,10 +62,10 @@ export function PanelAyudante({ exhibicionId, alIrAExhibicion }: { exhibicionId:
           </strong>
           <span>Piden: {NECESIDADES[p.necesidad].toLowerCase()}.</span>
           <div className="rk-fila">
-            <button type="button" className="rk-btn" data-primario="" onClick={() => despachar({ tipo: 'responder', ofertaId: o.id, grupoId: GRUPO_DEMO.id, acepta: true })}>
+            <button type="button" className="rk-btn" data-primario="" onClick={() => despachar({ tipo: 'responder', ofertaId: o.id, grupoId: grupoActual().id, acepta: true })}>
               Vamos
             </button>
-            <button type="button" className="rk-btn" onClick={() => despachar({ tipo: 'responder', ofertaId: o.id, grupoId: GRUPO_DEMO.id, acepta: false })}>
+            <button type="button" className="rk-btn" onClick={() => despachar({ tipo: 'responder', ofertaId: o.id, grupoId: grupoActual().id, acepta: false })}>
               Ahora no
             </button>
           </div>

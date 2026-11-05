@@ -7,7 +7,7 @@ import { RETOS, type ProgresoReto, RepositorioProgresoMemoria, iniciar, responde
 import { useEffect, useId, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { registroMuseo } from '../mundo/eventos.ts';
-import { GRUPO_DEMO } from '../mundo/grupo.ts';
+import { grupoActual } from '../mundo/grupo.ts';
 import { Glifo, Rikuy } from '../mundo/Iconos.tsx';
 import '../mundo/mundo.css';
 
@@ -56,8 +56,8 @@ export function RetoPagina() {
   useEffect(() => {
     if (!reto) return;
     let vivo = true;
-    void progresoRetos.obtener(reto.id, GRUPO_DEMO.id).then((p) => {
-      if (vivo) setProgreso(p ?? iniciar(reto, GRUPO_DEMO.id));
+    void progresoRetos.obtener(reto.id, grupoActual().id).then((p) => {
+      if (vivo) setProgreso(p ?? iniciar(reto, grupoActual().id));
     });
     return () => {
       vivo = false;

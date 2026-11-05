@@ -9,7 +9,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { EXHIBICION_DEL_DIA, EXHIBICIONES_DEMO, TITULOS_DEMO, construirMuseo } from './catalogo.ts';
 import { ControladorMundo } from './controlador.ts';
 import { registroMuseo, visita } from './eventos.ts';
-import { GRUPO_DEMO } from './grupo.ts';
+import { grupoActual } from './grupo.ts';
 import { Glifo, Rikuy } from './Iconos.tsx';
 import { PanelAyudante } from './ayudante/PanelAyudante.tsx';
 import { useAyudante } from './ayudante/servicio.ts';
@@ -70,7 +70,7 @@ export function MuseoPagina() {
         setCuradorAbierto(true);
         return;
       }
-      if (d.exhibicionId && d.salaId) registroMuseo.registrar(visita(d.salaId, GRUPO_DEMO.id, d.exhibicionId));
+      if (d.exhibicionId && d.salaId) registroMuseo.registrar(visita(d.salaId, grupoActual().id, d.exhibicionId));
       if (d.tipo === 'puerta' && d.salaId) posiciones.delete(d.salaId);
       navegar(d.destino);
     },
@@ -83,7 +83,7 @@ export function MuseoPagina() {
   );
 
   useEffect(() => {
-    if (escena && escena.id !== 'vestibulo') registroMuseo.registrar(visita(escena.id, GRUPO_DEMO.id));
+    if (escena && escena.id !== 'vestibulo') registroMuseo.registrar(visita(escena.id, grupoActual().id));
   }, [escena]);
 
   if (!escena || !controlador) {
@@ -117,7 +117,7 @@ export function MuseoPagina() {
   const exhibicionesSala = escena.destinos.filter((d) => d.tipo === 'exhibicion' && d.exhibicionId);
   const exhibicionAyuda =
     exhibicionesSala.find((d) => d.exhibicionId === EXHIBICION_DEL_DIA)?.exhibicionId ?? exhibicionesSala[0]?.exhibicionId ?? EXHIBICION_DEL_DIA;
-  const pidoAyuda = ayudante.pedidos.some((p) => p.grupoPideId === GRUPO_DEMO.id && ['ofrecido', 'en_curso', 'escalado'].includes(p.estado));
+  const pidoAyuda = ayudante.pedidos.some((p) => p.grupoPideId === grupoActual().id && ['ofrecido', 'en_curso', 'escalado'].includes(p.estado));
 
   const ir = (d: Destino) => {
     if (textoBloqueo(d)) return;
@@ -148,15 +148,15 @@ export function MuseoPagina() {
         etiqueta={estilo ? `Mapa de la Sala ${estilo.nombre}` : 'Mapa del vestíbulo'}
         fuente={{
           jugador: () => ({
-            id: GRUPO_DEMO.dispositivo,
+            id: grupoActual().dispositivo,
             x: controlador.pos.x,
             y: controlador.pos.y,
             dir: controlador.dir,
-            color: GRUPO_DEMO.color,
+            color: grupoActual().color,
             etiqueta: piedra.nombre,
             cordon: colorDe(CORDONES, piedra.cordon),
             marco: colorDe(MARCOS, piedra.marco),
-            integrantes: GRUPO_DEMO.integrantes,
+            integrantes: grupoActual().integrantes,
             propio: true,
             pideAyuda: pidoAyuda,
           }),

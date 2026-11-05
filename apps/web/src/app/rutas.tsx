@@ -26,6 +26,7 @@ import { ALIAS_DOCENTE } from '../shell/navegacion.ts';
 import { Lab, Quipu, Yo } from '../shell/pantallas/Estudiante.tsx';
 import { Unirse } from '../shell/pantallas/Unirse.tsx';
 import { flagsActuales } from './flags.ts';
+import './grupoMuseo.ts';
 import { AjustesCompletos, ConIdentidad, RedirigirUrlVieja } from './piezas.tsx';
 import { Inicio } from './Inicio.tsx';
 import { Shell } from './Shell.tsx';

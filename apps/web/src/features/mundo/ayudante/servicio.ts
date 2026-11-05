@@ -14,7 +14,7 @@ import {
 } from '@rikuy/campus';
 import { create } from 'zustand';
 import { registroMuseo } from '../eventos.ts';
-import { GRUPO_DEMO } from '../grupo.ts';
+import { grupoActual } from '../grupo.ts';
 
 /** Concepts (Cerebro nodes) per exhibit, offered as request chips. */
 export const NODOS_EXHIBICION: Record<string, { id: string; etiqueta: string }[]> = {
@@ -40,11 +40,11 @@ export const GRUPOS_SIMULADOS: { id: string; apodo: string }[] = [
 ];
 
 export const apodoDe = (grupoId: string) =>
-  grupoId === GRUPO_DEMO.id ? GRUPO_DEMO.apodo : (GRUPOS_SIMULADOS.find((g) => g.id === grupoId)?.apodo ?? 'Otro grupo');
+  grupoId === grupoActual().id ? grupoActual().apodo : (GRUPOS_SIMULADOS.find((g) => g.id === grupoId)?.apodo ?? 'Otro grupo');
 
 /** Mock of the Cerebro read port: simulated groups reasoned the pendulum length; this group explored it. */
 export function estadoNodoSimulado(grupoId: string, nodoId: string): EstadoNodo {
-  if (grupoId === GRUPO_DEMO.id) return nodoId === 'medir-oscilaciones' ? 'razonado' : 'explorado';
+  if (grupoId === grupoActual().id) return nodoId === 'medir-oscilaciones' ? 'razonado' : 'explorado';
   return nodoId === 'medir-oscilaciones' ? 'explorado' : 'razonado';
 }
 
@@ -63,7 +63,7 @@ function contexto(estadoNodo: ContextoAyudante['estadoNodo'] = estadoNodoSimulad
   return {
     ahora: Date.now(),
     azar: Math.random,
-    gruposClase: [GRUPO_DEMO.id, ...GRUPOS_SIMULADOS.map((g) => g.id)],
+    gruposClase: [grupoActual().id, ...GRUPOS_SIMULADOS.map((g) => g.id)],
     estadoNodo,
     nuevoId,
   };
@@ -94,7 +94,7 @@ function simularRespuesta() {
     const { estado, despachar } = useAyudante.getState();
     for (const p of estado.pedidos) {
       if (p.estado !== 'ofrecido') continue;
-      const o = p.ofertas.find((x) => x.estado === 'enviada' && x.grupoAyudaId !== GRUPO_DEMO.id);
+      const o = p.ofertas.find((x) => x.estado === 'enviada' && x.grupoAyudaId !== grupoActual().id);
       if (o) despachar({ tipo: 'responder', ofertaId: o.id, grupoId: o.grupoAyudaId, acepta: true });
     }
   }, 2500);
@@ -105,6 +105,6 @@ export function simularPedidoEntrante() {
   const pide = GRUPOS_SIMULADOS[0]!.id;
   useAyudante.getState().despachar(
     { tipo: 'pedir', grupoPideId: pide, exhibicionId: 'exh-pendulo', nodoId: 'medir-oscilaciones', necesidad: 'como_medir' },
-    (g, n) => (g === GRUPO_DEMO.id && n === 'medir-oscilaciones' ? 'razonado' : 'explorado'),
+    (g, n) => (g === grupoActual().id && n === 'medir-oscilaciones' ? 'razonado' : 'explorado'),
   );
 }

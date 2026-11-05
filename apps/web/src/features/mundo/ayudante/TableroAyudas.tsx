@@ -5,7 +5,7 @@
  */
 import { type PedidoAyuda, tableroAyudas } from '@rikuy/campus';
 import { Link } from 'react-router';
-import { GRUPO_DEMO } from '../grupo.ts';
+import { grupoActual } from '../grupo.ts';
 import '../mundo.css';
 import { GRUPOS_SIMULADOS, apodoDe, etiquetaNodo, simularPedidoEntrante, useAyudante } from './servicio.ts';
 
@@ -107,7 +107,7 @@ export function TableroAyudas() {
       <section className="rk-panel" aria-labelledby="titulo-silenciar">
         <h2 id="titulo-silenciar">Pausar a un grupo</h2>
         <div className="rk-fila">
-          {[GRUPO_DEMO, ...GRUPOS_SIMULADOS].map((g) => {
+          {[grupoActual(), ...GRUPOS_SIMULADOS].map((g) => {
             const silenciado = estado.silenciados.includes(g.id);
             return (
               <button
