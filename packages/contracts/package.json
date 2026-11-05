@@ -1,0 +1,26 @@
+{
+  "name": "@rikuy/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zod schemas, types, versions and fixtures shared by every package. No logic. Changes go through the sprint 0 owner.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./bus": "./src/bus.ts",
+    "./tiempo-real": "./src/tiempo-real.ts",
+    "./tutor": "./src/tutor/comandos.ts",
+    "./sync": "./src/sync.ts",
+    "./rutas": "./src/rutas.ts",
+    "./guardian": "./src/guardian.ts",
+    "./fixtures": "./fixtures/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}
