@@ -88,7 +88,7 @@ export function MuseoPagina() {
 
   if (!escena || !controlador) {
     return (
-      <main className="rk-mundo">
+      <section className="rk-mundo">
         <div className="rk-burbuja" role="status">
           <Rikuy expresion="piensa" />
           <p>Esta sala aún no existe. ¿Volvemos al vestíbulo?</p>
@@ -96,7 +96,7 @@ export function MuseoPagina() {
         <Link className="rk-btn" to={RUTAS.museo}>
           Volver al vestíbulo
         </Link>
-      </main>
+      </section>
     );
   }
 
@@ -126,13 +126,13 @@ export function MuseoPagina() {
   };
 
   return (
-    <main className="rk-mundo" aria-labelledby="titulo-escena">
+    <section className="rk-mundo" aria-labelledby="titulo-escena">
       <header className="rk-sign" style={{ background: estilo ? colorDeSala(escena.id) : 'var(--m-primary)' }}>
         <span className="rk-glifo">
           <Glifo nombre={estilo?.glifo ?? 'museo'} />
         </span>
         <div>
-          <h1 id="titulo-escena">{estilo ? `Sala ${estilo.nombre}` : 'Vestíbulo del Museo Rikuy'}</h1>
+          <h2 id="titulo-escena">{estilo ? `Sala ${estilo.nombre}` : 'Vestíbulo del Museo Rikuy'}</h2>
           {estilo?.sublabel && <small lang="qu">{estilo.sublabel}</small>}
         </div>
       </header>
@@ -232,6 +232,6 @@ export function MuseoPagina() {
       />
 
       <Reacciones alReaccionar={presencia.reaccionar} />
-    </main>
+    </section>
   );
 }

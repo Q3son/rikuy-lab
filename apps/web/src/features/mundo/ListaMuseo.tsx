@@ -14,12 +14,12 @@ import './mundo.css';
 export function ListaMuseo({ retos = [] }: { retos?: { id: string; titulo: string }[] }) {
   const museo = useMemo(() => construirMuseo({ retos }), [retos]);
   return (
-    <main className="rk-mundo" aria-labelledby="titulo-lista">
+    <section className="rk-mundo" aria-labelledby="titulo-lista">
       <header className="rk-sign" style={{ background: 'var(--m-primary)' }}>
         <span className="rk-glifo">
           <Glifo nombre="museo" />
         </span>
-        <h1 id="titulo-lista">Museo Rikuy en lista</h1>
+        <h2 id="titulo-lista">Museo Rikuy en lista</h2>
       </header>
       <p style={{ padding: '8px 16px', margin: 0 }}>
         Todas las salas y exhibiciones del museo. <Link to={RUTAS.museo}>Volver al mapa</Link>
@@ -74,6 +74,6 @@ export function ListaMuseo({ retos = [] }: { retos?: { id: string; titulo: strin
           </section>
         );
       })}
-    </main>
+    </section>
   );
 }

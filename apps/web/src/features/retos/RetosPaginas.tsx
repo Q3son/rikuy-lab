@@ -16,12 +16,12 @@ const progresoRetos = new RepositorioProgresoMemoria();
 
 export function PatioRetos() {
   return (
-    <main className="rk-mundo" aria-labelledby="titulo-patio">
+    <section className="rk-mundo" aria-labelledby="titulo-patio">
       <header className="rk-sign" style={{ background: 'var(--m-sol)', color: 'var(--m-ink)' }}>
         <span className="rk-glifo">
           <Glifo nombre="juego" />
         </span>
-        <h1 id="titulo-patio">Patio de juegos</h1>
+        <h2 id="titulo-patio">Patio de juegos</h2>
       </header>
       <p style={{ padding: '8px 16px', margin: 0 }}>Retos cortos con contexto de aquí. Se juegan en grupo y sin apuro.</p>
       <ul style={{ listStyle: 'none', padding: '0 16px', display: 'grid', gap: 8 }}>
@@ -39,7 +39,7 @@ export function PatioRetos() {
       <p style={{ padding: '0 16px' }}>
         <Link to={RUTAS.museo}>Volver al vestíbulo</Link>
       </p>
-    </main>
+    </section>
   );
 }
 
@@ -66,15 +66,15 @@ export function RetoPagina() {
 
   if (!reto) {
     return (
-      <main className="rk-mundo">
+      <section className="rk-mundo">
         <p>Ese reto no existe.</p>
         <Link className="rk-btn" to={RUTAS.retos}>
           Volver al Patio
         </Link>
-      </main>
+      </section>
     );
   }
-  if (!progreso) return <main className="rk-mundo" aria-busy="true" />;
+  if (!progreso) return <section className="rk-mundo" aria-busy="true" />;
 
   const paso = reto.pasos[progreso.paso];
   const enviar = (valor: string) => {
@@ -91,13 +91,13 @@ export function RetoPagina() {
   };
 
   return (
-    <main className="rk-mundo" aria-labelledby="titulo-reto">
+    <section className="rk-mundo" aria-labelledby="titulo-reto">
       <header className="rk-sign" style={{ background: 'var(--m-sol)', color: 'var(--m-ink)' }}>
         <span className="rk-glifo">
           <Glifo nombre="juego" />
         </span>
         <div>
-          <h1 id="titulo-reto">{reto.titulo}</h1>
+          <h2 id="titulo-reto">{reto.titulo}</h2>
           <small style={{ fontStyle: 'normal' }}>
             Paso {Math.min(progreso.paso + 1, reto.pasos.length)} de {reto.pasos.length}
           </small>
@@ -155,6 +155,6 @@ export function RetoPagina() {
           Volver al museo
         </Link>
       </p>
-    </main>
+    </section>
   );
 }

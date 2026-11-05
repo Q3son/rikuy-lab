@@ -56,8 +56,8 @@ export function Relevo({ servicio }: { servicio?: RelevoService }) {
   const grupos = estado ? Object.keys(estado.grupos).length : 0;
 
   return (
-    <main className="mx-auto flex max-w-xl flex-col gap-4 p-4">
-      <h1 className="text-2xl font-bold">Relevo por QR</h1>
+    <div className="mx-auto flex max-w-xl flex-col gap-4 p-4">
+      <h2 className="text-2xl font-bold">Relevo por QR</h2>
       <div role="tablist" className="flex gap-2">
         {(['docente', 'grupo'] as const).map((r) => (
           <button key={r} role="tab" aria-selected={rol === r} type="button" className={`rounded px-3 py-1 ${rol === r ? 'bg-neutral-100 text-neutral-900' : 'border border-neutral-600'}`} onClick={() => setRol(r)}>
@@ -109,6 +109,6 @@ export function Relevo({ servicio }: { servicio?: RelevoService }) {
       </dl>
       {progreso && <p aria-live="polite">{progreso}</p>}
       {aviso && <p role="status">{aviso}</p>}
-    </main>
+    </div>
   );
 }

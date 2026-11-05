@@ -57,7 +57,9 @@ describe('Museo Rikuy (vestibule and halls)', () => {
 describe('list mode', () => {
   it('reaches every hall and exhibit with plain links', () => {
     abrir('/museo/lista');
-    expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(7);
+    // the list's own title plus one heading per hall; the shell's top bar owns the h1
+    expect(screen.queryAllByRole('heading', { level: 1 })).toHaveLength(0);
+    expect(screen.getAllByRole('heading', { level: 2 })).toHaveLength(8);
     expect(screen.getByRole('link', { name: 'Entrar a la Sala Física' }).getAttribute('href')).toBe('/museo/sala-fisica');
     expect(screen.getByRole('link', { name: /Entrar a la exhibición El péndulo/ }).getAttribute('href')).toBe('/exhibicion/exh-pendulo');
   });

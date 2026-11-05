@@ -29,9 +29,9 @@ export function PiedraPagina() {
   };
 
   return (
-    <main className="rk-mundo" aria-labelledby="titulo-piedra">
+    <section className="rk-mundo" aria-labelledby="titulo-piedra">
       <header className="rk-sign" style={{ background: 'var(--m-primary)' }}>
-        <h1 id="titulo-piedra">Nuestra piedra</h1>
+        <h2 id="titulo-piedra">Nuestra piedra</h2>
       </header>
       <div style={{ display: 'grid', placeItems: 'center', padding: 16 }}>
         <Rikuy tam={160} cordon={colorDe(CORDONES, borrador.cordon)} marco={colorDe(MARCOS, borrador.marco)} />
@@ -94,6 +94,6 @@ export function PiedraPagina() {
       <p style={{ padding: '0 16px' }}>
         <Link to={RUTAS.museo}>Volver al museo</Link>
       </p>
-    </main>
+    </section>
   );
 }

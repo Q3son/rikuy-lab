@@ -97,9 +97,9 @@ export function CreadorPage({ cliente: inyectado }: Props) {
   const editar = (cambio: (p: PropuestaCreador) => PropuestaCreador) => enviar({ tipo: 'editar', cambio });
 
   return (
-    <main className="mx-auto flex max-w-2xl flex-col gap-5 p-4 sm:p-6">
+    <div className="mx-auto flex max-w-2xl flex-col gap-5 p-4 sm:p-6">
       <header className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold">Creador de prácticas</h1>
+        <h2 className="text-2xl font-bold">Creador de prácticas</h2>
         <p className="text-sm text-neutral-400">La IA propone un borrador; las reglas lo verifican y tú decides. Nada llega a tu clase sin tu aprobación y tu firma.</p>
         {simulado && (
           <p role="status" className="w-fit rounded border border-amber-500/60 bg-amber-500/10 px-2 py-1 text-xs text-amber-200">
@@ -215,7 +215,7 @@ export function CreadorPage({ cliente: inyectado }: Props) {
           </button>
         </section>
       )}
-    </main>
+    </div>
   );
 }
 

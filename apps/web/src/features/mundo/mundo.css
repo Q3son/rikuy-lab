@@ -30,7 +30,7 @@
   color: #fff;
   border-bottom: 4px solid var(--m-sol);
 }
-.rk-sign h1 {
+.rk-sign :is(h1, h2) {
   font-size: 20px;
   font-weight: 800;
   margin: 0;

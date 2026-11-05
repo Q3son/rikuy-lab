@@ -37,7 +37,7 @@ test('the whole pendulum practice works offline and its events stay on the devic
   page.on('request', (r) => HOLO_CHUNK.test(r.url()) && holo.push(r.url()));
 
   await page.goto('./#/lab/pendulo');
-  await expect(page.getByRole('heading', { level: 1, name: /péndulo/i })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: /péndulo/i })).toBeVisible();
 
   // GATE: no measuring before predicting.
   await expect(page.getByRole('timer')).toHaveCount(0);
@@ -94,5 +94,5 @@ test('the whole pendulum practice works offline and its events stay on the devic
 
 test('the practice reopens after an offline reload', async ({ page }) => {
   await alModoAvion(page, './#/lab/pendulo');
-  await expect(page.getByRole('heading', { level: 1, name: /péndulo/i })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 2, name: /péndulo/i })).toBeVisible();
 });

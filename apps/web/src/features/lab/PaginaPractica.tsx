@@ -90,10 +90,10 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
   }
 
   return (
-    <main className="mx-auto flex max-w-md flex-col gap-4 bg-[#F5F6F1] p-4 pb-16 text-[#0D2B33]">
+    <div className="mx-auto flex max-w-md flex-col gap-4 bg-[#F5F6F1] p-4 pb-16 text-[#0D2B33]">
       <header>
-        <Link to="/" className="text-sm text-[#075E6C] underline">‹ Volver</Link>
-        <h1 className="mt-1 text-2xl font-extrabold">{practica.titulo}</h1>
+        <Link to="/museo" className="text-sm text-[#075E6C] underline">‹ Volver al museo</Link>
+        <h2 className="mt-1 text-2xl font-extrabold">{practica.titulo}</h2>
       </header>
 
       <section aria-label="Audio" className="flex flex-wrap items-center gap-2 rounded-2xl border-2 border-[#D3D9CC] bg-white p-2">
@@ -270,7 +270,7 @@ export function PaginaPractica({ registro: registroProp, tutor: tutorProp }: Pag
           <p className="text-sm">Todo quedó guardado en este celular, aunque no haya internet.</p>
         </section>
       )}
-    </main>
+    </div>
   );
 }
 

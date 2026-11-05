@@ -12,10 +12,10 @@ export function TutorPagina() {
   }, []);
   const visor = useMemo(() => visorSimulado(), []);
   return (
-    <main className="mx-auto flex max-w-xl flex-col gap-4 p-6">
-      <h1 className="text-2xl font-bold">Tutor Rikuy</h1>
+    <div className="mx-auto flex max-w-xl flex-col gap-4 p-6">
+      <h2 className="text-2xl font-bold">Tutor Rikuy</h2>
       <p className="text-neutral-400">{PRACTICA_DEMO.preguntaGuia}</p>
       <TutorPanel practica={PRACTICA_DEMO} visor={visor} grupoId="demo" eventosInterruptor={[]} memoria={memoria} estudianteId={RECUERDO_DEMO.estudianteId} />
-    </main>
+    </div>
   );
 }
