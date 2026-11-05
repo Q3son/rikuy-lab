@@ -6,8 +6,7 @@ FROM node:24-slim AS build
 WORKDIR /app
 COPY . .
 RUN npm ci --no-audit --no-fund
-# MediaPipe hand assets are optional at runtime (hand tracking degrades gracefully without them).
-RUN node apps/web/scripts/mediapipe-assets.mjs || echo "mediapipe assets unavailable, continuing"
+# MediaPipe hand assets are not bundled here (same as the Pages build): they exceed the PWA precache limit.
 ARG VITE_CLOUD_URL=/nube
 ENV VITE_CLOUD_URL=${VITE_CLOUD_URL}
 RUN npm run build -w @rikuy/web
