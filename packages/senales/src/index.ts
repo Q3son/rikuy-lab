@@ -7,3 +7,4 @@ export * from './vocabulario.ts';
 export * from './consentimiento.ts';
 export * from './checkin.ts';
 export * from './guardian.ts';
+export * from './pulso.ts';
