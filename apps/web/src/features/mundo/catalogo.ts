@@ -4,6 +4,7 @@
  */
 import type { Exhibicion } from '@rikuy/contracts';
 import { PLANTILLAS, SALAS_CONTENIDO, generarMuseo, type Museo } from '@rikuy/campus';
+import { RETOS } from '@rikuy/retos';
 
 const PRACTICA_PENDULO = '01JC0000000000000000000P01';
 const PRACTICA_LACTASA = '01JC0000000000000000000P02';
@@ -41,7 +42,7 @@ export function construirMuseo(opciones: { retos?: RetoResumen[]; rejasAbiertas?
     exhibiciones: EXHIBICIONES_DEMO,
     plantillas: PLANTILLAS,
     titulos: TITULOS_DEMO,
-    retos: opciones.retos ?? [],
+    retos: opciones.retos ?? RETOS.map((r) => ({ id: r.id, titulo: r.titulo })),
     ...(opciones.rejasAbiertas ? { rejasAbiertas: opciones.rejasAbiertas } : {}),
   });
 }
