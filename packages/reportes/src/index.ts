@@ -5,3 +5,4 @@
 export const packageName = '@rikuy/reportes' as const;
 export * from './suprimir.ts';
 export * from './competencias.ts';
+export * from './mensual.ts';
