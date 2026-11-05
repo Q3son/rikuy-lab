@@ -45,6 +45,7 @@ export interface EstadoClase {
   ingestar(eventos: Evento[]): { nuevos: number; ignorados: number };
   confirmar(evidenciaId: string, nivel?: 0 | 1 | 2 | 3 | 'NO'): void;
   setTutor(activo: boolean): void;
+  setInterruptor(cual: 'tutor' | 'gestos' | 'senales', activo: boolean): void;
   guardarContexto(c: ContextoAula | null): void;
   reiniciar(): void;
 }
@@ -164,10 +165,14 @@ export function crearAlmacenClase(srv: ServiciosDocente, memoria: AlmacenMemoria
       },
 
       setTutor(activo) {
+        get().setInterruptor('tutor', activo);
+      },
+
+      setInterruptor(cual, activo) {
         const claseId = claseIdActual();
         if (!claseId) return;
         const lista = get().eventos;
-        aplicar({ eventos: [...lista, emitir(lista, get().dispositivo, 'tutor.interruptor', { activo }, claseId)] });
+        aplicar({ eventos: [...lista, emitir(lista, get().dispositivo, `${cual}.interruptor`, { activo }, claseId)] });
       },
 
       guardarContexto(c) {
