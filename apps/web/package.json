@@ -39,7 +39,9 @@
     "intl-messageformat": "^12.1.4",
     "jsqr": "^1.4.0",
     "lucide-react": "^1.69.0",
+    "pako": "^3.0.3",
     "qrcode": "^1.5.4",
+    "qrcode-generator": "^2.0.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-i18next": "^17.1.12",
@@ -50,6 +52,7 @@
     "workbox-routing": "^7.4.1",
     "workbox-strategies": "^7.4.1",
     "workbox-window": "^7.4.1",
+    "zod": "^4.6.7",
     "zustand": "^5.0.16"
   },
   "devDependencies": {
