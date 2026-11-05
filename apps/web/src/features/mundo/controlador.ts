@@ -41,6 +41,12 @@ export class ControladorMundo {
     return true;
   }
 
+  /** Stops a walk without opening anything (the guide's "Cancelar"). */
+  detener(): void {
+    this.camino = [];
+    this.objetivo = null;
+  }
+
   /** Path for the director's highlight without walking. */
   caminoA(destinoId: string): Punto[] {
     const d = this.escena.destinos.find((x) => x.id === destinoId);
@@ -83,6 +89,19 @@ export class ControladorMundo {
       }
     }
     return mejor;
+  }
+
+  /**
+   * Opens what is near the group (E / Enter on desktop). Ported idea from AulaQuipu's `interactRef`
+   * (`apps/web-app/components/campus/world.tsx`, paoloose). Locked exhibits do not open.
+   */
+  interactuar(): Destino | undefined {
+    const d = this.cercano();
+    if (!d || d.bloqueada || d.trasReja) return undefined;
+    this.camino = [];
+    this.objetivo = null;
+    this.alLlegar(d);
+    return d;
   }
 
   private llegar() {

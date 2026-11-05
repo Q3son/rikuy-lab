@@ -40,4 +40,18 @@ describe('world controller', () => {
     for (let i = 0; i < 200; i++) c.paso(0.1);
     expect(c.cercano()?.id).toBe('exh-exh-pendulo');
   });
+
+  it('opens the nearby destination with the interact key, and nothing when far', () => {
+    const museo = construirMuseo();
+    const abrir = vi.fn();
+    const c = new ControladorMundo(museo.salas['sala-fisica']!, abrir);
+    c.camino = [];
+    const lejos = c.cercano() ? undefined : c.interactuar();
+    expect(lejos).toBeUndefined();
+    c.irA('exh-exh-pendulo', { abrir: false });
+    for (let i = 0; i < 200; i++) c.paso(0.1);
+    expect(abrir).not.toHaveBeenCalled();
+    expect(c.interactuar()?.id).toBe('exh-exh-pendulo');
+    expect(abrir).toHaveBeenCalledTimes(1);
+  });
 });
