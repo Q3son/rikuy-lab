@@ -5,6 +5,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ViewerAction } from '@rikuy/holo';
 import type { GestureStatus, HandGestureController, HandPose } from '../../platform/gestos/index.ts';
+import { gestureSwitch } from '../../platform/gestos/teacherSwitch.ts';
 
 export interface GestosMano {
   status: GestureStatus;
@@ -15,7 +16,7 @@ export interface GestosMano {
 }
 
 export function useGestosMano(onAction: (a: ViewerAction) => void): GestosMano {
-  const [status, setStatus] = useState<GestureStatus>('off');
+  const [status, setStatus] = useState<GestureStatus>(() => (gestureSwitch().enabled ? 'off' : 'blocked'));
   const [detail, setDetail] = useState<string>();
   const [pose, setPose] = useState<HandPose | null>(null);
   const ctl = useRef<HandGestureController | null>(null);
@@ -25,6 +26,15 @@ export function useGestosMano(onAction: (a: ViewerAction) => void): GestosMano {
   }, [onAction]);
 
   useEffect(() => () => ctl.current?.dispose(), []);
+
+  // The teacher switch can change at any time (this tab, another tab, or a class event).
+  useEffect(
+    () =>
+      gestureSwitch().subscribe((on) => {
+        if (!ctl.current) setStatus(on ? 'off' : 'blocked');
+      }),
+    [],
+  );
 
   const start = useCallback(async () => {
     if (!ctl.current) {
