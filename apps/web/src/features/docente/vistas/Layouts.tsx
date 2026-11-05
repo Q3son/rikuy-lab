@@ -1,5 +1,7 @@
 import { Outlet } from 'react-router';
 import { Segmentos } from '../PanelDocente.tsx';
+import { ResumenPlanClase } from '../plan/MiPlan.tsx';
+import { usePlanClase } from '../plan/usePlanClase.ts';
 import { useAcciones, useProyeccion } from '../Proveedor.tsx';
 
 export function LayoutClase() {
@@ -12,6 +14,7 @@ export function LayoutClase() {
           { a: '/docente/clase/ayudas', t: 'Ayudas' },
           { a: '/docente/clase/acercarse', t: 'Acercarse' },
           { a: '/docente/clase/llevar', t: 'Para llevar' },
+          { a: '/docente/clase/plan', t: 'Mi plan' },
         ]}
       />
       <Outlet />
@@ -54,18 +57,22 @@ export function LayoutReportes() {
 export function Preparar() {
   const practica = useAcciones().practica;
   const { p } = useProyeccion();
+  const plan = usePlanClase();
   if (!p.clase || !practica) return <p className="dc-card">Primero crea una clase en «Hoy».</p>;
   return (
-    <section className="dc-card" aria-labelledby="prep">
-      <h2 id="prep">{practica.titulo}</h2>
-      <span className="dc-chip dc-chip--ok">Aprobada · {practica.procedencia.generadoPor === 'catalogo' ? 'catálogo' : 'revisada por la docente'}</span>
-      <p style={{ margin: 0 }}>{practica.preguntaGuia}</p>
-      <p className="dc-muted" style={{ margin: 0 }}>
-        Materiales: {practica.materiales.map((m) => m.nombre).join(', ')}.
-      </p>
-      <p className="dc-muted" style={{ margin: 0 }}>
-        Límites del modelo: {practica.limitaciones.join(' ')}
-      </p>
-    </section>
+    <>
+      {plan ? <ResumenPlanClase plan={plan} compacto /> : null}
+      <section className="dc-card" aria-labelledby="prep">
+        <h2 id="prep">{practica.titulo}</h2>
+        <span className="dc-chip dc-chip--ok">Aprobada · {practica.procedencia.generadoPor === 'catalogo' ? 'catálogo' : 'revisada por la docente'}</span>
+        <p style={{ margin: 0 }}>{practica.preguntaGuia}</p>
+        <p className="dc-muted" style={{ margin: 0 }}>
+          Materiales: {practica.materiales.map((m) => m.nombre).join(', ')}.
+        </p>
+        <p className="dc-muted" style={{ margin: 0 }}>
+          Límites del modelo: {practica.limitaciones.join(' ')}
+        </p>
+      </section>
+    </>
   );
 }

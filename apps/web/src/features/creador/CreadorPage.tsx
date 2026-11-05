@@ -6,6 +6,8 @@
 import { exportarClavePublica, firmarPaquete, generarParClaves, paquetePractica, type FalloIA, type PropuestaCreador, type SolicitudPractica } from '@rikuy/ai';
 import { useEffect, useMemo, useReducer, useState } from 'react';
 import { crearClienteNube, type ClienteNube, type DesempenoListado, type EstadoNube, type HallazgoUI } from './clienteNube.ts';
+import { usePlanClase } from '../docente/plan/usePlanClase.ts';
+import { desempenosDelPlan } from '../docente/plan/revision.ts';
 import { estadoInicial, reducir } from './estado.ts';
 
 const claveRef = (d: DesempenoListado) => `${d.ref.nivel}-${d.ref.grado}:c${d.ref.competencia}:d${d.ref.desempeno}`;
@@ -29,6 +31,8 @@ export function CreadorPage({ cliente: inyectado }: Props) {
   const [desempenos, setDesempenos] = useState<DesempenoListado[]>([]);
   const [elegido, setElegido] = useState('');
   const [tema, setTema] = useState('');
+  const planClase = usePlanClase();
+  const delPlan = useMemo(() => (planClase ? desempenosDelPlan(planClase) : []), [planClase]);
 
   useEffect(() => {
     let vivo = true;
@@ -120,6 +124,32 @@ export function CreadorPage({ cliente: inyectado }: Props) {
           <h2 id="t-pedir" className="text-lg font-semibold">
             1. Elige el desempeño
           </h2>
+          {delPlan.length > 0 && (
+            <div className="flex flex-col gap-2 text-sm">
+              <p className="text-neutral-400">De tu plan de clase aprobado:</p>
+              <ul aria-label="Desempeños de tu plan" className="flex flex-col gap-1">
+                {delPlan.map((d, i) => {
+                  const clave = `${d.ref.nivel}-${d.ref.grado}:c${d.ref.competencia}:d${d.ref.desempeno}`;
+                  return (
+                    <li key={`${clave}-${i}`}>
+                      <button
+                        type="button"
+                        className="w-full rounded border border-neutral-700 p-2 text-left disabled:opacity-50"
+                        aria-pressed={elegido === clave}
+                        disabled={!desempenos.some((x) => claveRef(x) === clave)}
+                        onClick={() => {
+                          setElegido(clave);
+                          setTema(d.unidad.slice(0, 200));
+                        }}
+                      >
+                        <span className="text-neutral-400">{d.unidad}:</span> {d.texto}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
           <label className="flex flex-col gap-1 text-sm">
             Desempeño del CNEB
             <select className="rounded border border-neutral-700 bg-neutral-900 p-2" value={elegido} onChange={(ev) => setElegido(ev.target.value)}>

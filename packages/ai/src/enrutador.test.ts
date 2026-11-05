@@ -100,7 +100,7 @@ function montar(adaptadores: Adaptador[], politica: Politica = politicaGen, tope
   const presupuesto = new Presupuesto({ registro, topeMensualUsd: tope, reloj: () => new Date('2026-11-05T10:00:00Z') });
   const enrutador = crearEnrutador({
     adaptadores,
-    politicas: { generarPractica: politica, revisarPractica: politica, pictogramas: politica, visionTabla: politica, traducir: politica },
+    politicas: { generarPractica: politica, revisarPractica: politica, pictogramas: politica, visionTabla: politica, traducir: politica, extraerPlan: politica },
     presupuesto,
     registro,
   });

@@ -2,6 +2,7 @@
 import type { Lengua } from '@rikuy/contracts';
 import type { Result } from './result.ts';
 import type { BorradorPractica, FilaMedicion, PromptPictograma, RevisionIA, SolicitudPractica, TextoNoRevisado } from './esquemas.ts';
+import type { ArchivoPlan, PlanExtraido } from './plan/esquemas.ts';
 
 export type FalloIA = {
   tipo: 'sin_red' | 'timeout' | 'cuota' | 'esquema' | 'politica' | 'proveedor';
@@ -41,12 +42,18 @@ export interface BorradorTraduccion {
   traducir(texto: string, a: Lengua, ctx?: ContextoLlamada): Promise<Result<TextoNoRevisado, FalloIA>>;
 }
 
+/** Reads a teacher's plan (PDF or photos) into a structure with literal snippets. It never maps to the CNEB. */
+export interface ExtractorPlan {
+  extraer(archivos: ArchivoPlan[], ctx?: ContextoLlamada): Promise<Result<PlanExtraido, FalloIA>>;
+}
+
 export interface Capacidades {
   generarPractica: GeneradorPractica;
   revisarPractica: RevisorPractica;
   pictogramas: Pictogramas;
   visionTabla: VisionTabla;
   traducir: BorradorTraduccion;
+  extraerPlan: ExtractorPlan;
 }
 export type Capacidad = keyof Capacidades;
-export const CAPACIDADES: readonly Capacidad[] = ['generarPractica', 'revisarPractica', 'pictogramas', 'visionTabla', 'traducir'];
+export const CAPACIDADES: readonly Capacidad[] = ['generarPractica', 'revisarPractica', 'pictogramas', 'visionTabla', 'traducir', 'extraerPlan'];

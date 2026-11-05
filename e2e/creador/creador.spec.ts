@@ -12,7 +12,7 @@ import { comoDocente, expect, test } from '../_arnes/avion.ts';
 test.beforeEach(({ page }) => comoDocente(page));
 
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const ORIGEN_APP = 'https://localhost:4173';
+const ORIGEN_APP = `https://localhost:${process.env.RIKUY_E2E_PORT ?? 4173}`;
 
 async function puertoLibre(): Promise<number> {
   return new Promise((res) => {

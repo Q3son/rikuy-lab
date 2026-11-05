@@ -24,6 +24,7 @@ import { z } from 'zod';
 import { AgregadoSemanal, resumenPaquete, suprimir } from './almacen.ts';
 import type { DepsNube } from './deps.ts';
 import { limitePorIp } from './limites.ts';
+import { rutasPlan } from './plan.ts';
 import { rutasReportes } from './reportes/rutas.ts';
 
 type Vars = { Variables: { colegioId: string } };
@@ -51,7 +52,9 @@ export function crearApp(deps: DepsNube): Hono<Vars> {
   const lim = (l: DepsNube['limites']['ia']) => limitePorIp(l, { confiarProxy: deps.confiarProxy, reloj: deps.reloj });
 
   app.use('*', cors({ origin: deps.origenesPermitidos, allowHeaders: ['content-type', 'x-rikuy-colegio', 'x-rikuy-ugel-token'] }));
-  app.use('*', bodyLimit({ maxSize: 6 * 1024 * 1024, onError: (c) => c.json({ error: 'cuerpo_demasiado_grande' }, 413) }));
+  const limiteGeneral = bodyLimit({ maxSize: 6 * 1024 * 1024, onError: (c) => c.json({ error: 'cuerpo_demasiado_grande' }, 413) });
+  // The plan upload has its own (larger) limit on its route.
+  app.use('*', (c, next) => (c.req.path === '/ia/plan/extraer' ? next() : limiteGeneral(c, next)));
   app.get('/salud', (c) => c.json({ ok: true }));
 
   // ---------------------------------------------------------------- /ia/*
@@ -134,6 +137,8 @@ export function crearApp(deps: DepsNube): Hono<Vars> {
     if (!r.resultado.ok) return c.json({ fallo: r.resultado.error }, r.resultado.error.tipo === 'cuota' ? 429 : 502);
     return c.json({ traduccion: r.resultado.valor, simulado: r.simulado ?? false });
   });
+
+  rutasPlan(app, deps);
 
   // ---------------------------------------------------------------- /paquetes/*
   app.use('/paquetes/*', lim(deps.limites.escritura));

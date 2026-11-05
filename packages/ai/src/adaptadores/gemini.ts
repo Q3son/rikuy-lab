@@ -11,7 +11,8 @@ import type { ContextoLlamada } from '../puertos.ts';
 import { ErrorHttp, type OpcionesReintento } from '../reintentos.ts';
 import { err, ok } from '../result.ts';
 import type { z } from 'zod';
-import { INSTRUCCIONES_CREADOR, contenidoGeneracion, esquemaJsonDe, salidaEstructurada, type UsoTokens } from './comun.ts';
+import { PlanExtraido } from '../plan/esquemas.ts';
+import { INSTRUCCIONES_CREADOR, INSTRUCCIONES_PLAN, contenidoGeneracion, esquemaJsonDe, salidaEstructurada, type UsoTokens } from './comun.ts';
 
 export { esquemaJsonDe };
 
@@ -104,7 +105,7 @@ export function crearAdaptadorGemini(o: OpcionesGemini): Adaptador {
     fuente: 'ia-nube',
     modelo,
     disponible: () => true,
-    costoEstimadoUsd: (c) => (c === 'generarPractica' ? 0.02 : 0.005),
+    costoEstimadoUsd: (c) => (c === 'generarPractica' || c === 'extraerPlan' ? 0.02 : 0.005),
     capacidades: {
       generarPractica: {
         generar: (s: SolicitudPractica, ctx) => ejecutar('generarPractica', BorradorPractica, INSTRUCCIONES_CREADOR, [contenidoGeneracion(s)], ctx),
@@ -122,6 +123,11 @@ export function crearAdaptadorGemini(o: OpcionesGemini): Adaptador {
           );
           return r.ok ? ok(r.valor.filas) : r;
         },
+      },
+      extraerPlan: {
+        // Native PDF and image understanding: the files go as inline parts, never stored by the gateway.
+        extraer: (archivos, ctx) =>
+          ejecutar('extraerPlan', PlanExtraido, INSTRUCCIONES_PLAN, [...archivos.map((a) => ({ mimeType: a.mime, base64: a.base64 })), 'Extrae la planificación de este documento.'], ctx),
       },
       traducir: {
         async traducir(texto, a, ctx) {

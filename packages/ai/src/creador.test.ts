@@ -21,7 +21,7 @@ function montar(adaptadores: Adaptador[], tope = 10) {
   const presupuesto = new Presupuesto({ registro, topeMensualUsd: tope });
   const enrutador = crearEnrutador({
     adaptadores,
-    politicas: { generarPractica: politica, revisarPractica: politicaMeta, pictogramas: politicaMeta, visionTabla: politica, traducir: politica },
+    politicas: { generarPractica: politica, revisarPractica: politicaMeta, pictogramas: politicaMeta, visionTabla: politica, traducir: politica, extraerPlan: politica },
     presupuesto,
     registro,
   });
