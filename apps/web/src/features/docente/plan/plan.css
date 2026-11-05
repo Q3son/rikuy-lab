@@ -107,3 +107,6 @@
   gap: 8px;
   align-items: flex-start;
 }
+.pl-holo {
+  width: fit-content;
+}

@@ -35,6 +35,9 @@ describe('Mi plan', () => {
     expect(within(exacto).getByText(/CNEB exacta/)).toBeVisible();
     expect(within(exacto).getByText('secundaria-2:cyt:c2:d7')).toBeVisible();
     expect(within(exacto).getByText(/pág\. 3/)).toBeVisible();
+    expect(within(exacto).getByRole('link', { name: 'Ver en holograma: respiratorio' })).toHaveAttribute('href', '/holo/ver/respiratorio');
+    const leche = screen.getByRole('article', { name: 'Digestión de la leche: enzimas y lactosa' });
+    expect(within(leche).getByRole('link', { name: 'Ver en holograma: lactasa' })).toBeVisible();
 
     const sin = screen.getByRole('article', { name: 'Participa en la campaña de limpieza del río Chili con su familia.' });
     expect(within(sin).getByText('Sin correspondencia CNEB')).toBeVisible();

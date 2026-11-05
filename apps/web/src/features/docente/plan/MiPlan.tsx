@@ -8,6 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { almacenPlan, type AlmacenPlan } from './almacenPlan.ts';
 import { ErrorSinRed, crearClientePlan, type ClientePlan } from './clientePlan.ts';
+import { escenasHoloPorDefecto, type EscenasHolo } from './escenasHolo.ts';
 import { aprobar, contar, decidir, editar, iniciarRevision, lecturaDeEjemplo, mejorar, type ItemRevision, type PlanClase, type RevisionPlan } from './revision.ts';
 import './plan.css';
 
@@ -18,6 +19,7 @@ interface Props {
   almacen?: AlmacenPlan;
   ahora?: () => Date;
   enLinea?: () => boolean;
+  escenas?: EscenasHolo;
 }
 
 const TIPOS: Record<ItemRevision['tipo'], string> = {
@@ -75,7 +77,8 @@ export function ResumenPlanClase({ plan, compacto = false }: { plan: PlanClase; 
   );
 }
 
-function Item({ i, onDecidir, onEditar }: { i: ItemRevision; onDecidir: (d: ItemRevision['decision']) => void; onEditar: (texto: string) => void }) {
+function Item({ i, escenas, onDecidir, onEditar }: { i: ItemRevision; escenas: EscenasHolo; onDecidir: (d: ItemRevision['decision']) => void; onEditar: (texto: string) => void }) {
+  const escena = escenas.escenaPara(i);
   const [editando, setEditando] = useState(false);
   const [texto, setTexto] = useState(i.texto);
   const c = i.correspondencia;
@@ -114,6 +117,11 @@ function Item({ i, onDecidir, onEditar }: { i: ItemRevision; onDecidir: (d: Item
         <EstadoCneb c={c} />
         {c.id ? <code className="pl-id">{c.id}</code> : null}
         {c.textoOficial ? <blockquote className="pl-oficial">{c.textoOficial}</blockquote> : null}
+        {escena ? (
+          <Link className="dc-btn dc-btn--tonal pl-holo" to={escenas.ruta(escena)} aria-label={`Ver en holograma: ${escena}`}>
+            Ver en holograma
+          </Link>
+        ) : null}
       </div>
       <div className="pl-col">
         <span className="pl-etq">Fuente · pág. {i.fuente.pagina}</span>
@@ -209,7 +217,7 @@ function Sugerencias({
 const AHORA = () => new Date();
 const EN_LINEA = () => (typeof navigator === 'undefined' ? true : navigator.onLine);
 
-export function MiPlan({ cliente: inyectado, almacen: almacenInyectado, ahora = AHORA, enLinea = EN_LINEA }: Props) {
+export function MiPlan({ cliente: inyectado, almacen: almacenInyectado, ahora = AHORA, enLinea = EN_LINEA, escenas = escenasHoloPorDefecto }: Props) {
   const cliente = useMemo(() => inyectado ?? crearClientePlan(), [inyectado]);
   const almacen = useMemo(() => almacenInyectado ?? almacenPlan(), [almacenInyectado]);
   const [fase, setFase] = useState<Fase>('inicio');
@@ -397,7 +405,7 @@ export function MiPlan({ cliente: inyectado, almacen: almacenInyectado, ahora = 
               {u.periodo?.texto ? <span className="dc-muted">{u.periodo.texto}</span> : null}
               {u.situacionSignificativa ? <p className="dc-muted pl-situacion">{u.situacionSignificativa}</p> : null}
               {u.items.map((i) => (
-                <Item key={i.id} i={i} onDecidir={(d) => cambiar((r) => decidir(r, i.id, d))} onEditar={(t) => cambiar((r) => editar(r, i.id, t))} />
+                <Item key={i.id} i={i} escenas={escenas} onDecidir={(d) => cambiar((r) => decidir(r, i.id, d))} onEditar={(t) => cambiar((r) => editar(r, i.id, t))} />
               ))}
             </section>
           ))}

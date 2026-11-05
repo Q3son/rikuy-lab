@@ -6,3 +6,4 @@ export * from './mejoras.ts';
 export * from './privacidad.ts';
 export * from './muestra.ts';
 export * from './lectura.ts';
+export * from './escenas.ts';
