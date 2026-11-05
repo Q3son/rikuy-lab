@@ -1,7 +1,9 @@
 import tailwindcss from '@tailwindcss/vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'node:path';
+import { createHash } from 'node:crypto';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { join, relative, resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
@@ -29,6 +31,11 @@ export default defineConfig({
       manifest: false, // public/manifest.webmanifest is the manifest (also linked by the legacy pages)
       injectManifest: {
         globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,woff2,json,opus,task,wasm}'],
+        // MediaPipe models (gestos/senales groups) are far above the per-file limit: they skip the size
+        // check and are listed by hand below. The worker never precaches them with the shell; they are
+        // cached on first use or when the page asks for their group (src/sw.ts).
+        globIgnores: ['mediapipe/**'],
+        additionalManifestEntries: entradasMediapipe(resolve(import.meta.dirname, 'public')),
         // 8 MB is the whole precache budget (ARQUITECTURA 1.2); one file may not take more than 3 MB.
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
       },
@@ -57,3 +64,16 @@ export default defineConfig({
     },
   },
 });
+
+/** Every bundled MediaPipe file (if present) as a precache entry revisioned by its content hash. */
+function entradasMediapipe(publicDir: string): { url: string; revision: string }[] {
+  const raiz = join(publicDir, 'mediapipe');
+  if (!existsSync(raiz)) return [];
+  const archivos = (readdirSync(raiz, { recursive: true, withFileTypes: true }) as import('node:fs').Dirent[])
+    .filter((e) => e.isFile() && /\.(js|json|task|wasm)$/.test(e.name))
+    .map((e) => join(e.parentPath, e.name));
+  return archivos.map((f) => ({
+    url: relative(publicDir, f).replace(/\\/g, '/'),
+    revision: createHash('sha256').update(readFileSync(f)).digest('hex').slice(0, 16),
+  }));
+}
