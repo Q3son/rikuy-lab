@@ -11,3 +11,5 @@ export { crearResolutor, resolverTexto } from './resolver.ts';
 export type { Catalogo, EntradaCatalogo, Resolutor, Rol, TextoResuelto } from './resolver.ts';
 export { TASA_OPUS_KBPS, audioPara, coincideHash, validarManifiesto } from './manifiesto-audio.ts';
 export type { EntradaAudio, ManifiestoAudio } from './manifiesto-audio.ts';
+export { entradasVisibles, validarGlosarioLsp } from './lsp.ts';
+export type { EntradaGlosarioLsp, GlosarioLsp, VideoLsp } from './lsp.ts';

@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "lengua": "lsp",
+  "validacion": {
+    "estado": "pendiente",
+    "nota": "Pendiente de validación con personas sordas usuarias de LSP y una asociación local. No se inventan señas: cada video se graba y se revisa antes de publicarse (FUNCIONES_EXTRA 4.4, fase 1)."
+  },
+  "entradas": [
+    { "id": "pendulo", "termino": "péndulo", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "longitud", "termino": "longitud", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "tiempo", "termino": "tiempo", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "medir", "termino": "medir", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "predecir", "termino": "predecir", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "dato", "termino": "dato", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "comparar", "termino": "comparar", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "variable", "termino": "variable", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "oscilar", "termino": "oscilar", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "masa", "termino": "masa", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "hipotesis", "termino": "hipótesis", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } },
+    { "id": "conclusion", "termino": "conclusión", "video": { "estado": "pendiente", "archivo": null, "sha256": null, "bytes": null, "duracionS": null } }
+  ]
+}
