@@ -6,3 +6,4 @@ export const packageName = '@rikuy/presencia' as const;
 
 export * from './servidor.ts';
 export * from './propuestas.ts';
+export * from './cliente.ts';
