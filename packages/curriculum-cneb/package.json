@@ -2,7 +2,7 @@
   "name": "@rikuy/curriculum-cneb",
   "version": "0.1.0",
   "private": true,
-  "description": "CNEB subset (science and technology), literal quote checker, concept graph.",
+  "description": "CNEB subset (science and technology, primary and secondary), exact literal quote lookup, concept graph.",
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -11,7 +11,8 @@
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "extraer": "node --experimental-strip-types scripts/extraer-cyt.ts"
   },
   "dependencies": {
     "@rikuy/contracts": "*",
