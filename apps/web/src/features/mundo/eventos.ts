@@ -1,7 +1,7 @@
 /**
  * Learning events produced by the museum. Only `museo.visita` (hall and exhibit, never positions) and the
  * proposed `ayuda.*` / `quipu.nudo.*` events (PROPUESTAS_CONTRATOS.md, F5) are recorded; presence is not.
- * Port with an in-memory adapter until F2's event log (`@rikuy/sync`) is wired by the integrator.
+ * In-memory log of this device; the app forwards the contract events to F2's log (app/registroMuseo.ts).
  */
 import { DatosMuseoVisita } from '@rikuy/contracts';
 

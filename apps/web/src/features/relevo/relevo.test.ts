@@ -86,4 +86,17 @@ describe('relevo service (closing a class by QR, 6.3)', () => {
     expect(k.clavePrivada.extractable).toBe(false);
     expect(encodeFrames).toBeTypeOf('function');
   });
+
+  it('records a museum visit in the joined class log as this group, and the teacher accepts it', async () => {
+    const teacher = device();
+    const group = device();
+    expect(await group.appendAsJoinedGroup('museo.visita', { salaId: 'sala-fisica', exhibicionId: 'exh-pendulo' })).toBe(false);
+    const clase = await teacher.createClass();
+    await group.receive(scan(await teacher.joinFrames(clase.id)));
+    expect(await group.appendAsJoinedGroup('museo.visita', { salaId: 'sala-fisica', exhibicionId: 'exh-pendulo' })).toBe(true);
+    const visita = (await group.store.repo.all(clase.id)).find((e) => e.tipo === 'museo.visita');
+    expect(visita?.datos).toMatchObject({ salaId: 'sala-fisica', exhibicionId: 'exh-pendulo' });
+    const got = await teacher.receive(scan(await group.eventFrames(clase.id)));
+    expect(got).toMatchObject({ kind: 'events', rejected: 0 });
+  });
 });

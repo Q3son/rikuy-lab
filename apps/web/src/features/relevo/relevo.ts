@@ -5,7 +5,7 @@
  *   teacher: ackFrames (A, its version vector)              group: receive(A) -> peer vector saved
  * Everything goes through @rikuy/sync (seals, ingestion) and @rikuy/store-dexie (log + projections).
  */
-import { CuerpoUnion, type Paquete, type VectorVersion } from '@rikuy/contracts';
+import { CuerpoUnion, type Paquete, type TipoEvento, type VectorVersion } from '@rikuy/contracts';
 import { aleatorioSistema, createUlidFactory, formatHlc, relojSistema } from '@rikuy/core';
 import type { DexieStore } from '@rikuy/store-dexie';
 import {
@@ -41,6 +41,11 @@ export interface Relevo {
   ackFrames(claseId: string): Promise<string[]>;
   pendingCount(claseId: string): Promise<number>;
   receive(p: Paquete): Promise<ReceiveResult>;
+  /**
+   * Appends a group event to the class this device joined by QR (signed with the class MAC), with the
+   * device's projected group id. Returns false when the device has not joined any class yet.
+   */
+  appendAsJoinedGroup(tipo: TipoEvento, datos: Record<string, unknown>): Promise<boolean>;
 }
 
 export function createRelevo(store: DexieStore): Relevo {
@@ -127,6 +132,18 @@ export function createRelevo(store: DexieStore): Relevo {
 
     async pendingCount(claseId) {
       return (await pending(claseId)).length;
+    },
+
+    async appendAsJoinedGroup(tipo, datos) {
+      const mine = await store.deviceId();
+      for (const k of await store.db.claves.toArray()) {
+        if (k.docenteDispositivo === mine) continue;
+        const grupoId = Object.values((await store.classState(k.claseId))?.grupos ?? {}).find((g) => g.dispositivo === mine)?.id;
+        if (!grupoId) continue;
+        await (await writer(k.claseId)).append(tipo, { ...datos, grupoId }, { grupoId });
+        return true;
+      }
+      return false;
     },
 
     async receive(p) {

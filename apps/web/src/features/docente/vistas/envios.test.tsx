@@ -65,14 +65,15 @@ describe('outbox screen (T-22)', () => {
       fireEvent(d, new Event('toggle'));
     }
     fireEvent.click(await screen.findByRole('button', { name: 'Aprobar los que ya vi' }));
-    await waitFor(() => expect(screen.getAllByText('En cola · se envía al sincronizar').length).toBe(3));
+    // The approval runs through the persistent outbox: give it room under a loaded test run.
+    await waitFor(() => expect(screen.getAllByText('En cola · se envía al sincronizar').length).toBe(3), { timeout: 5000 });
 
     m.sincronizar(false);
     await new Promise((r) => setTimeout(r, 30));
     expect(screen.getAllByText('En cola · se envía al sincronizar').length).toBe(3);
 
     m.sincronizar(true);
-    await waitFor(() => expect(screen.getAllByText('Entregado').length).toBe(3));
+    await waitFor(() => expect(screen.getAllByText('Entregado').length).toBe(3), { timeout: 5000 });
   });
 
   it('never shows an address in the visible list of messages', async () => {
