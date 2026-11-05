@@ -72,7 +72,8 @@ export function Evidencias() {
   return (
     <>
       <p className="dc-muted" role="note">
-        Orienta, no califica. «No evaluable» no es cero. Ves {vista.porConfirmar} {vista.porConfirmar === 1 ? 'frase' : 'frases'} por confirmar.
+        Orienta, no califica. «No evaluable» no es cero. Ves {vista.porConfirmar} {vista.porConfirmar === 1 ? 'frase' : 'frases'} por confirmar
+        {confirmadas > 0 ? ` y ${confirmadas} ya ${confirmadas === 1 ? 'confirmada' : 'confirmadas'}` : ''}.
         {Object.keys(padron).length ? ' Los alias (E07) coinciden con tu lista privada.' : ''}
       </p>
       {vista.grupos.map((g) => (

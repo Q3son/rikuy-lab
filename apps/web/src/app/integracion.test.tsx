@@ -72,9 +72,14 @@ describe('golden demo (Ajustes > Cargar demo)', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Sí, cargar la demo' }));
     expect(await screen.findByText(/Demo cargada/)).toBeInTheDocument();
     expect(screen.getAllByText(/2\.º B/).length).toBeGreaterThan(0);
+    // the class line of the panel follows the loaded class (it used to keep the example fixture's section A)
+    expect(screen.getByText('2.º B · Ciencia y Tec.')).toBeInTheDocument();
+    expect(screen.queryByText(/2\.º A/)).toBeNull();
 
     await router.navigate('/docente/evidencia/evidencias');
     expect(await screen.findByText(/si la cuerda es más larga tarda más en volver/)).toBeInTheDocument();
+    // confirmed quotes are not counted as pending: 8 quotes, 2 already confirmed by the teacher
+    expect(screen.getByRole('note').textContent).toMatch(/Ves 6 frases por confirmar y 2 ya confirmadas/);
 
     await router.navigate('/docente/clase/acercarse');
     expect(await screen.findByText('Pidió hablar con usted.')).toBeInTheDocument();
