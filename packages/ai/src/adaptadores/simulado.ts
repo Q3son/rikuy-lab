@@ -64,6 +64,7 @@ export function crearAdaptadoresSimulados(opciones: OpcionesSimulado = {}): Adap
     modelo: 'simulado-gemini',
     simulado: true,
     disponible: () => true,
+    costoEstimadoUsd: () => 0.01, // lets the demo exercise the quota path
     capacidades: {
       generarPractica: {
         generar: async (s, ctx) => {
@@ -85,6 +86,7 @@ export function crearAdaptadoresSimulados(opciones: OpcionesSimulado = {}): Adap
     modelo: 'simulado-muse',
     simulado: true,
     disponible: () => true,
+    costoEstimadoUsd: () => 0.01, // lets the demo exercise the quota path
     capacidades: {
       revisarPractica: {
         revisar: async (_b, ctx) => {
