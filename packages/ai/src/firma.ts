@@ -82,3 +82,18 @@ export async function verificarPaquete(p: Paquete, clavePublicaB64: string): Pro
     return false;
   }
 }
+
+/** Signs any JSON-serializable value (for example an outgoing message envelope). */
+export async function firmarObjeto(valor: unknown, privada: Clave): Promise<string> {
+  const firma = new Uint8Array(await crypto.subtle.sign(FIRMA, privada, enc.encode(canonico(valor)) as Bytes));
+  return aBase64Url(firma);
+}
+
+export async function verificarObjeto(valor: unknown, firma: string, clavePublicaB64: string): Promise<boolean> {
+  try {
+    const clave = await importarClavePublica(clavePublicaB64);
+    return await crypto.subtle.verify(FIRMA, clave, deBase64Url(firma) as Bytes, enc.encode(canonico(valor)) as Bytes);
+  } catch {
+    return false;
+  }
+}

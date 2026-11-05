@@ -9,12 +9,21 @@ export type RefDesempeno = Pick<DesempenoRef, 'nivel' | 'grado' | 'competencia' 
 
 export interface CatalogoDesempenos {
   textoOficial(ref: RefDesempeno): string | undefined;
+  /** Optional listing for pickers (the UI of the Creador). */
+  listar?(): Array<{ ref: RefDesempeno; texto: string }>;
 }
 
 export const claveDesempeno = (r: RefDesempeno): string => `${r.nivel}-${r.grado}:c${r.competencia}:d${r.desempeno}`;
 
 export function crearCatalogoDesempenos(entradas: Record<string, string>): CatalogoDesempenos {
-  return { textoOficial: (ref) => entradas[claveDesempeno(ref)] };
+  return {
+    textoOficial: (ref) => entradas[claveDesempeno(ref)],
+    listar: () =>
+      Object.entries(entradas).flatMap(([clave, texto]) => {
+        const m = /^(primaria|secundaria)-(\d+):c(\d+):d(\d+)$/.exec(clave);
+        return m ? [{ ref: { nivel: m[1] as RefDesempeno['nivel'], grado: Number(m[2]), competencia: Number(m[3]), desempeno: Number(m[4]) }, texto }] : [];
+      }),
+  };
 }
 
 /**
