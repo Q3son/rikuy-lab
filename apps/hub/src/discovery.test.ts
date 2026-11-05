@@ -14,6 +14,20 @@ describe('discovery', () => {
     expect(urls).toEqual(['http://192.168.43.1:8787/', 'http://10.0.0.5:8787/', 'http://localhost:8787/']);
   });
 
+  it('puts wifi ahead of virtual adapters and skips link-local addresses', () => {
+    const urls = lanUrls(8787, {
+      'vEthernet (WSL)': [{ address: '192.168.224.1', family: 'IPv4', internal: false }],
+      'VirtualBox Host-Only Network': [{ address: '192.168.56.1', family: 'IPv4', internal: false }],
+      'Wi-Fi': [{ address: '192.168.1.4', family: 'IPv4', internal: false }],
+      Ethernet: [{ address: '169.254.160.78', family: 'IPv4', internal: false }],
+    });
+    expect(urls).toEqual(['http://192.168.1.4:8787/', 'http://192.168.224.1:8787/', 'http://192.168.56.1:8787/', 'http://localhost:8787/']);
+  });
+
+  it('honours an explicit public URL first', () => {
+    expect(lanUrls(8787, {}, 'http://10.42.0.1:8787')).toEqual(['http://10.42.0.1:8787/', 'http://localhost:8787/']);
+  });
+
   it('renders a QR code as inline SVG', async () => {
     const svg = await qrSvg('http://192.168.43.1:8787/');
     expect(svg).toMatch(/^<svg[\s\S]*<\/svg>\s*$/);

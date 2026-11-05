@@ -42,13 +42,18 @@ describe('channel multiplexing', () => {
 });
 
 describe('hologram rooms over the hub', () => {
-  it('creates a room with projector and control join links and QR codes', async () => {
-    const { base } = await start();
+  it('creates a room with projector and control join links (LAN address, never loopback) and QR codes', async () => {
+    const { base, hub } = await start({ interfaces: () => ({ 'Wi-Fi': [{ address: '192.168.1.4', family: 'IPv4', internal: false }] }) });
     const res = await fetch(`${base}/api/holo/salas`, { method: 'POST' });
     expect(res.status).toBe(201);
     const room = (await res.json()) as { codigo: string; proyector: string; control: string; qr: { control: string } };
-    expect(room.proyector).toBe(`${base}/display.html?sala=${room.codigo}`);
-    expect(room.control).toBe(`${base}/control.html?sala=${room.codigo}`);
+    const lan = `http://192.168.1.4:${hub.port}`;
+    expect(room.proyector).toBe(`${lan}/display.html?sala=${room.codigo}`);
+    expect(room.control).toBe(`${lan}/control.html?sala=${room.codigo}`);
+    // a phone that reached the hub by another LAN address gets links on that address
+    const { app } = createHub({ dbPath: ':memory:' });
+    const viaLan = (await (await app.request('/api/holo/salas', { method: 'POST', headers: { host: '10.0.0.9:8787' } })).json()) as { control: string };
+    expect(viaLan.control.startsWith('http://10.0.0.9:8787/control.html?sala=')).toBe(true);
     expect(room.qr.control).toContain('<svg');
     const page = await fetch(`${base}/holo/${room.codigo}`);
     expect(await page.text()).toContain(room.codigo);

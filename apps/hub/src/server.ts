@@ -45,6 +45,8 @@ export interface HubOptions {
   open?: boolean;
   /** Tutor timing (see TutorService). */
   tutor?: ConstructorParameters<typeof TutorService>[1];
+  /** URL the phones should use (HUB_PUBLIC_URL), when the interface guess is wrong. */
+  publicUrl?: string;
   /** Network interfaces for discovery (defaults to os.networkInterfaces()). */
   interfaces?: () => Record<string, NetIf[] | undefined>;
   /** Server-side WebSocket liveness ping. */
@@ -92,7 +94,7 @@ export function createHub(options: HubOptions) {
   let nextConn = 1;
 
   const interfaces = options.interfaces ?? (() => ({}));
-  const urls = () => lanUrls(port, interfaces());
+  const urls = () => lanUrls(port, interfaces(), options.publicUrl);
 
   sync.onAccepted((claseId) => {
     for (const l of panelListeners) l(claseId);
@@ -184,9 +186,11 @@ export function createHub(options: HubOptions) {
     const want = Buffer.from(adminToken);
     return given.length === want.length && timingSafeEqual(given, want);
   };
+  /** Origin for links shown as QR: the request host, unless it is loopback (useless on a phone). */
   const origin = (c: Context) => {
-    const host = c.req.header('host');
-    return host ? `http://${host}` : (urls()[0] ?? '').replace(/\/$/, '');
+    const host = c.req.header('host') ?? '';
+    const loopback = /^(localhost|127\.|\[::1\])/i.test(host);
+    return !host || loopback ? urls()[0]!.replace(/\/$/, '') : `http://${host}`;
   };
 
   app.get('/api/health', (c) => c.json({ ok: true, ia: tutor.modelAvailable ? 'ia-local' : 'reglas' }));
