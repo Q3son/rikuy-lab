@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components -- test helpers */
 import { render } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { MemoryRouter } from 'react-router';

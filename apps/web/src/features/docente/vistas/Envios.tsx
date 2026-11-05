@@ -4,8 +4,7 @@ import { enlaceWame } from '../../familia/compartir.ts';
 import { urlDeFamilia } from '../../familia/enlace.ts';
 import { crearBorradores, type ContactoFamilia, type Contactos } from '../entrega/borradores.ts';
 import { useEntrega, useSalida } from '../entrega/servicios.tsx';
-import { usarEnLinea } from '../PanelDocente.tsx';
-import { useClase, useProyeccion, useServicios } from '../Proveedor.tsx';
+import { useClase, useEnLinea, useProyeccion, useServicios } from '../Proveedor.tsx';
 
 const ETIQUETA: Record<ItemSalida['estado'], { t: string; c: string }> = {
   borrador: { t: 'Por aprobar', c: 'dc-chip dc-chip--warn' },
@@ -48,7 +47,7 @@ export function Envios() {
   const contexto = useClase((x) => x.contexto);
   const srv = useServicios();
   const { p } = useProyeccion();
-  const enLinea = usarEnLinea();
+  const enLinea = useEnLinea();
   const [contactos, setContactos] = useState<Contactos>(() => entrega.contactos.leer());
   const [vistos, setVistos] = useState<Record<string, boolean>>({});
   const [aviso, setAviso] = useState<string | null>(null);

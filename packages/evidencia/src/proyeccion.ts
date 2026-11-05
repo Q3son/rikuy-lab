@@ -17,6 +17,7 @@ import {
   type RespuestaRazonamiento,
   type TipoEvento,
 } from '@rikuy/contracts';
+import type { z } from 'zod';
 
 export interface Con<T> {
   dato: T;
@@ -46,8 +47,8 @@ export interface ProyeccionClase {
   diagnostico: { invalidos: number; duplicados: number };
 }
 
-function parsear<T extends TipoEvento>(e: Evento, tipo: T) {
-  return DATOS_POR_TIPO[tipo].safeParse(e.datos);
+function parsear<T extends TipoEvento>(e: Evento, tipo: T): z.ZodSafeParseResult<z.output<(typeof DATOS_POR_TIPO)[T]>> {
+  return DATOS_POR_TIPO[tipo].safeParse(e.datos) as z.ZodSafeParseResult<z.output<(typeof DATOS_POR_TIPO)[T]>>;
 }
 
 const porHlc = (a: Evento, b: Evento) => (a.hlc === b.hlc ? (a.dispositivo < b.dispositivo ? -1 : 1) : a.hlc < b.hlc ? -1 : 1);

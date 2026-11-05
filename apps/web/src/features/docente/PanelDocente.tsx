@@ -1,26 +1,10 @@
-import { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router';
 import './estilos.css';
-import { ProveedorDocente, useClase, useProyeccion } from './Proveedor.tsx';
-
-export function usarEnLinea(): boolean {
-  const [en, setEn] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
-  useEffect(() => {
-    const on = () => setEn(true);
-    const off = () => setEn(false);
-    window.addEventListener('online', on);
-    window.addEventListener('offline', off);
-    return () => {
-      window.removeEventListener('online', on);
-      window.removeEventListener('offline', off);
-    };
-  }, []);
-  return en;
-}
+import { ProveedorDocente, useClase, useEnLinea, useProyeccion } from './Proveedor.tsx';
 
 /** Neutral network chip: offline is a normal state, never red (IA section 5). */
 export function ChipRed() {
-  const enLinea = usarEnLinea();
+  const enLinea = useEnLinea();
   return <span className="dc-chip dc-chip--off">{enLinea ? 'En línea' : 'Sin red · todo funciona'}</span>;
 }
 

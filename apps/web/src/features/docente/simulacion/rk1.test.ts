@@ -68,11 +68,10 @@ describe('RK1 frames', () => {
     const r = new ReensambladorRk1();
     expect(r.agregar('hola')).toEqual({ estado: 'invalido' });
     const roto = marcos[1].slice(0, -3) + (marcos[1].endsWith('AAA') ? 'BBB' : 'AAA');
-    let fin = r.agregar(marcos[0]);
-    fin = r.agregar(roto);
-    for (const m of marcos.slice(2)) fin = r.agregar(m);
-    expect(fin).toEqual({ estado: 'invalido' });
-    for (const m of marcos) fin = r.agregar(m);
+    const primera = [marcos[0], roto, ...marcos.slice(2)].map((m) => r.agregar(m));
+    expect(primera.at(-1)).toEqual({ estado: 'invalido' });
+    const segunda = marcos.map((m) => r.agregar(m));
+    const fin = segunda.at(-1)!;
     expect(fin.estado).toBe('completo');
   });
 

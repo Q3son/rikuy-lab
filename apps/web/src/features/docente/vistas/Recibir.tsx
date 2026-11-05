@@ -60,7 +60,7 @@ export function Recibir({ ritmoSimulacionMs = 250 }: Props) {
     if (!claseId) return;
     const esc = construirEscenario();
     const { porGrupo } = partirEscenario(esc);
-    const yaUnidos = new Set(p.grupos.map((g) => g.apodo));
+    const yaUnidos = new Set<string>(p.grupos.map((g) => g.apodo));
     const apodo = Object.keys(porGrupo).find((a) => !yaUnidos.has(a)) ?? Object.keys(porGrupo)[0];
     const dispositivo = porGrupo[apodo][0].dispositivo;
     const marcos = marcosDeGrupo(claseId, dispositivo, porGrupo[apodo], porGrupo[apodo][0].hlc);

@@ -8,7 +8,7 @@ import {
   proyectar,
   type ProyeccionClase,
 } from '@rikuy/evidencia';
-import { createContext, useContext, useMemo, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useStore, type StoreApi } from 'zustand';
 import { crearAlmacenClase, memoriaLocal, type EstadoClase } from './estado/clase.ts';
 import type { ServiciosDocente } from './puertos.ts';
@@ -31,20 +31,20 @@ export function ProveedorDocente({ valor, children }: { valor?: Valor; children:
   return <Ctx.Provider value={valor ?? valorGlobal()}>{children}</Ctx.Provider>;
 }
 
-function usarValor(): Valor {
+function useValor(): Valor {
   return useContext(Ctx) ?? valorGlobal();
 }
 
 export function useServicios(): ServiciosDocente {
-  return usarValor().servicios;
+  return useValor().servicios;
 }
 
 export function useClase<T>(selector: (s: EstadoClase) => T): T {
-  return useStore(usarValor().almacen, selector);
+  return useStore(useValor().almacen, selector);
 }
 
 export function useAcciones(): EstadoClase {
-  return usarValor().almacen.getState();
+  return useValor().almacen.getState();
 }
 
 /** Everything the panel derives from the event log, recomputed only when the log changes. */
@@ -63,4 +63,20 @@ export function useProyeccion() {
       resumen: construirResumenClase(p, vista, esperadas),
     };
   }, [eventos, practica]);
+}
+
+/** True while the browser reports a network. Offline is a normal state, never an error. */
+export function useEnLinea(): boolean {
+  const [en, setEn] = useState(() => (typeof navigator === 'undefined' ? true : navigator.onLine));
+  useEffect(() => {
+    const on = () => setEn(true);
+    const off = () => setEn(false);
+    window.addEventListener('online', on);
+    window.addEventListener('offline', off);
+    return () => {
+      window.removeEventListener('online', on);
+      window.removeEventListener('offline', off);
+    };
+  }, []);
+  return en;
 }

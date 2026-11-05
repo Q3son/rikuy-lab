@@ -22,7 +22,7 @@ const PALABRAS: [RegExp, PictoId][] = [
   [/cuerda|hilo|piola|lana/, 'cuerda'],
   [/piedra|tuerca|pesa|masa/, 'piedra'],
   [/cronometro|reloj|temporizador|tiempo/, 'reloj'],
-  [/regla|cinta|metro|centimetro/, 'regla'],
+  [/regla|cinta|\bmetro\b|centimetro/, 'regla'],
   [/celular|telefono|movil/, 'celular'],
   [/agua|vaso|botella|liquido/, 'agua'],
   [/\bsal\b|azucar/, 'sal'],

@@ -1,7 +1,8 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { QrAnimado } from './QrAnimado.tsx';
-import { matrizQr, QrSvg } from './QrSvg.tsx';
+import { matrizQr } from './qr.ts';
+import { QrSvg } from './QrSvg.tsx';
 
 afterEach(() => {
   cleanup();
